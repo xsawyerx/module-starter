@@ -5,6 +5,8 @@ NEXT
         [FIXES]
         * Now properly reports on all files in --verbose mode.
 
+        * Add support for Module::Install
+
 1.42    Wed Nov  9 11:25:10 CST 2005
         [FIXES]
         * Don't build Build.PL or Makefile.PL multiple times

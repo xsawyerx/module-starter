@@ -106,6 +106,10 @@ You can find documentation for this module with the perldoc command.
 
 =over 4
 
+=item * Source code at Google Code
+
+L<http://code.google.com/p/module-starter/>
+
 =item * AnnoCPAN: Annotated CPAN documentation
 
 L<http://annocpan.org/dist/Module-Starter>

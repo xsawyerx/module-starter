@@ -47,6 +47,7 @@ GetOptions(
     "builder=s" =>   ($config{builder} ||= []),
     eumm =>         sub { push @{$config{builder}}, "ExtUtils::MakeMaker" },
     mb   =>         sub { push @{$config{builder}}, "Module::Build" },
+    mi   =>         sub { push @{$config{builder}}, "Module::Install" },
 
     "author=s"  =>  \$config{author},
     "email=s"   =>  \$config{email},
@@ -83,6 +84,7 @@ Options:
     --builder=module Build with 'ExtUtils::MakeMaker' or 'Module::Build'
     --eumm           Same as --build=ExtUtils::MakeMaker
     --mb             Same as --build=Module::Build
+    --mi             Same as --build=Module::Install
 
     --author=name    Author's name (required)
     --email=email    Author's email (required)

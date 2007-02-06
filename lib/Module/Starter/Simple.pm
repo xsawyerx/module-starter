@@ -101,6 +101,15 @@ sub create_distro {
     ./Build install
 HERE
         }
+        elsif ( $builder eq 'Module::Install' ) {
+            push @files, $self->create_MI_Makefile_PL( $self->{main_module} );
+            push @build_instructions, <<'HERE';
+    perl Makefile.PL
+    make
+    make test
+    make install
+HERE
+        }
         else {
             push @files, $self->create_Makefile_PL( $self->{main_module} );
             push @build_instructions, <<'HERE';
@@ -395,6 +404,34 @@ sub create_Makefile_PL {
     return "Makefile.PL";
 }
 
+=head2 create_MI_Makefile_PL( $main_module )
+
+This will create a Module::Install Makefile.PL for the distribution, and will use
+the module named in I<$main_module> as the main module of the distribution.
+
+=cut
+
+sub create_MI_Makefile_PL {
+    my $self = shift;
+    my $main_module = shift;
+
+    my @parts = split( /::/, $main_module );
+    my $pm = pop @parts;
+    my $main_pm_file = File::Spec->catfile( "lib", @parts, "${pm}.pm" );
+       $main_pm_file =~ s{\\}{/}g; # even on Win32, use forward slash
+
+    my $fname = File::Spec->catfile( $self->{basedir}, "Makefile.PL" );
+    open( my $fh, ">", $fname ) or die "Can't create $fname: $!\n";
+
+    print $fh $self->MI_Makefile_PL_guts($main_module, $main_pm_file);
+
+    close $fh;
+    $self->progress( "Created $fname" );
+
+    return "Makefile.PL";
+}
+
+
 =head2 Makefile_PL_guts( $main_module, $main_pm_file )
 
 This method is called by create_Makefile_PL and returns text used to populate
@@ -427,6 +464,39 @@ WriteMakefile(
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean               => { FILES => '$self->{distro}-*' },
 );
+HERE
+
+}
+
+=head2 MI_Makefile_PL_guts( $main_module, $main_pm_file )
+
+This method is called by create_MI_Makefile_PL and returns text used to populate
+Makefile.PL; I<$main_pm_file> is the filename of the distribution's main
+module, I<$main_module>.
+
+=cut
+
+sub MI_Makefile_PL_guts {
+    my $self = shift;
+    my $main_module = shift;
+    my $module_name = $main_module;
+    $module_name =~ s/::/-/g;
+    my $main_pm_file = shift;
+
+    (my $author = "$self->{author} <$self->{email}>") =~ s/'/\'/g;
+
+    return <<"HERE";
+use inc::Module::Install;
+
+name '$module_name';
+all_from '$main_pm_file';
+
+build_requires 'Test::More';
+
+auto_install;
+
+WriteAll;
+
 HERE
 
 }
