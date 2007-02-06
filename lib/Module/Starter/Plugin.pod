@@ -1,0 +1,60 @@
+=pod
+
+=head1 NAME
+
+Module::Starter::Plugin -- how Module::Starter plugins work
+
+=head1 DESCRIPTION
+
+This document is a guide to writing plugins for Module::Starter.  Currently, as
+is evident, it isn't very comprehensive.  It should provide enough information
+for writing effective plugins, though.  After all, Module::Starter's guts are
+nice and simple.
+
+=head2 C<< Module::Starter->import >>
+
+Module::Starter provides an import method, the arguments to which are plugins,
+in the order in which they should be loaded.  If no plugins are given,
+L<Module::Starter::Simple> (and only Module::Starter::Simple) is loaded.
+
+By default, the given modules are required and arranged in an I<is-a> chain.
+That is, Module::Starter subclasses the last plugin given, which subclasses the
+second-to-last, up to the first plugin given, which is the base class.  If a
+plugin provides a C<load_plugins> method, however, the remaining plugins to be
+loaded are passed to that method, which is responsible for loading the rest of
+the plugins.
+
+This architecture suggests two kinds of plugins:
+
+=head2 engine plugins
+
+An engine is a plugin that stands alone, implementing the public
+C<create_distro> method and all the functionality required to carry out that
+implementation.  The only engine included with Module::Starter is
+Module::Starter::Simple, and I'm not sure any more will be seen in the wild any
+time soon.
+
+=head2 plain old plugins
+
+Other plugins are designed to subclass an engine and alter its behavior,
+just as a normal subclass alters its parent class's.  These plugins may add
+features to Module::Starter engines, or may just provide general APIs for other
+plugins to exploit (like L<Module::Starter::Plugin::Template>.)
+
+The template plugin is a simple example of a plugin that alters an engine to
+accept further plugins.  Other plugins like template will probably be written
+in the near future, and plugins that exploit the API provided by
+Module::Starter::Plugin::Template will be available on the CPAN.
+
+=head1 AUTHOR
+
+Ricardo SIGNES C<< <rjbs at cpan.org> >>
+
+=head1 COPYRIGHT
+
+Copyright 2005, Ricardo SIGNES.  All Rights Reserved.
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+=cut

@@ -1,0 +1,100 @@
+Revision history for Perl extension Module::Starter
+
+NEXT
+
+        [FIXES]
+        * Now properly reports on all files in --verbose mode.
+
+1.42    Wed Nov  9 11:25:10 CST 2005
+        [FIXES]
+        * Don't build Build.PL or Makefile.PL multiple times
+        * Move Test::More from require to build_require in Build.PL
+
+        [ENHANCEMENTS]
+        * Documentation now includes references to search.cpan, AnnoCPAN,
+          RT and CPAN Ratings.
+        * Email addresses are now obfuscated very basically as
+          "andy at petdance.com".
+        * Include boilerplate.t to notice unchanged boilerplate text
+        * Experimental new method to handle plugin loading
+
+1.40    Wed Jul  6 19:30:00 CDT 2005
+        [FIXES]
+        * Document --dir option to module-starter
+        * Proper escaping of $] and $^X
+        * Never use \ for path delimiters in {Makefile,Build}.PL
+        * Don't always completely ignore --license
+
+1.38    Wed Mar 16 20:28:00 CST 2005
+        [FIXES]
+        * Don't allow invalid module names
+
+1.36    Mon Mar  7 08:38:00 CST 2005
+        [FIXES]
+        * 00.load.t is now 00-load.t, so VMS and RiscOS folks can use it.
+        * Escape apostrophes in author name in Makefile.PL
+        * Add a link directly to this dist's queue in RT, not just to RT
+        * Don't set configdir to something in $HOME if it's undef
+
+1.34    Mon Sep 20 19:15:00 CDT 2004
+        [ENHANCEMENTS]
+        * module-starter now reads a config file
+
+1.30    Mon Aug 16 14:00:00 CDT 2004
+        [ENHANCEMENTS]
+        * Module::Starter is now merely a public interface to plugins
+        * Module::Starter::Simple, the old M::S is now a plugin
+        * Module::Starter::Plugin::Template added
+        * module-starter now shows usage if no parms are passed.
+        * The t/pod.t and t/pod-coverage.t files now use tainting,
+          and require the appropriate versions of Test::Pod and
+          Test::Pod::Coverage, respectively.
+
+1.22    Mon Jul 12 17:05:26 CDT 2004
+
+        [FIXES]
+        * Another fix to inline POD, to cope with brain damage in Pod::Parser
+
+1.20    Sun Jul 11 22:28:57 CDT 2004
+
+        [ENHANCEMENTS]
+        * Moved some data (distro, basedir) from parameters to object data
+        * Moved some data (rtname) from routine-local to parameter data
+        * Correted lies in POD regarding args to create_distro
+        * Every create_file method now calls a file_guts method to get
+          contents.
+        * All the quoted POD inline should now not render in perldoc.
+        * The module-build script now respects --class
+        * Minor refactoring of parameters to create_directory and _module
+        * Everything is now an overridable object method.  Thanks to
+          Ricardo Signes.
+        * Added verbose() method.
+        * Added progress() method so subclass can decide how progress
+          is reported.
+
+        All of the above is courtesy the diligent work of Ricard Signes.
+
+        [DOCUMENTATION]
+        * Large expansion of POD (Starter.pm and module-starter)
+
+
+1.00    Fri Jun 25 17:57:31 CDT 2004
+
+        [ENHANCEMENTS]
+        * Added a README file.  The README file is somewhat intelligently
+          constructed, too.
+        * Now you can specify both EU::MM and M::B as your builders,
+          so the module can have a double life.
+
+        Thanks to Sébastien Aperghis-Tramonifor the help.
+
+0.04    Mon Apr  5 20:45:58 CDT 2004
+
+        [ENHANCEMENTS]
+
+        * Added support for Module::Build.  Thanks, Randy Sims.
+
+
+0.02    Thu Feb 26 00:11:57 CST 2004
+
+        First real version, released on an unsuspecting world.

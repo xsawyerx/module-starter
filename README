@@ -1,0 +1,20 @@
+NAME
+    Module::Starter - a simple starter kit for any module
+
+    Module::Starter is used to create a skeletal CPAN distribution,
+    including basic builder scripts, tests, documentation, and module code.
+
+    For more information, refer to the documentation for module-starter,
+    Module::Starter, and Module::Starter::Simple.
+
+AUTHORS
+    Andy Lester, "<petdance@cpan.org>"
+
+    Ricardo Signes, "<rjbs@cpan.org>"
+
+COPYRIGHT
+    Copyright 2004-5 Andy Lester, All Rights Reserved.
+
+    This program is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself.
+

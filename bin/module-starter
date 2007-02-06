@@ -1,0 +1,137 @@
+#!/usr/bin/perl -w
+
+=head1 NAME
+
+module-starter - creates a skeleton module distribution
+
+=cut
+
+use strict;
+use Getopt::Long;
+use Pod::Usage;
+
+sub config_read {
+	my $filename = shift;
+
+	return unless -e $filename;
+
+	open my $config_file, '<', $filename
+		or die "couldn't open config file $filename: $!";
+	
+	my %config;
+	while (<$config_file>) { 
+		chomp;
+		next if /\A\s*\Z/sm;
+		if (/\A(\w+):\s*(.+)\Z/sm) { $config{$1} = $2; }
+	}
+	return %config;
+}
+
+my $configdir = $ENV{MODULE_STARTER_DIR}
+	|| ($ENV{HOME} ? $ENV{HOME} . '/.module-starter' : '');
+
+my %config    = config_read( "$configdir/config" );
+
+$config{plugins}    = [ split /(?:\s*,\s*|\s+)/, $config{plugins} || '' ];
+$config{builder}    = [ split /(?:\s*,\s*|\s+)/, $config{builder} || '' ];
+
+pod2usage(2) unless @ARGV;
+
+GetOptions(
+    "class=s"   =>  \$config{class},
+    "plugin=s"  =>   ($config{plugins} ||= []),
+
+    "dir=s"     =>  \$config{dir},
+    "distro=s"  =>  \$config{distro},
+    "module=s"  =>   ($config{modules} ||= []),
+    "builder=s" =>   ($config{builder} ||= []),
+    eumm =>         sub { push @{$config{builder}}, "ExtUtils::MakeMaker" },
+    mb   =>         sub { push @{$config{builder}}, "Module::Build" },
+
+    "author=s"  =>  \$config{author},
+    "email=s"   =>  \$config{email},
+    "license=s" =>  \$config{license},
+    force   =>      \$config{force},
+    verbose =>      \$config{verbose},
+    version =>      sub { require Module::Starter; print "module-starter v$Module::Starter::VERSION\n"; exit 1; },
+    help    =>         sub { pod2usage(1); },
+) or pod2usage(2);
+
+$config{class} ||= 'Module::Starter';
+
+$config{builder} = ['ExtUtils::MakeMaker'] unless @{$config{builder}};
+
+eval "require $config{class};";
+die "invalid starter class $config{class}: $@" if $@;
+$config{class}->import(@{$config{plugins}});
+
+$config{class}->create_distro( %config );
+
+print "Created starter directories and files\n";
+
+
+=head1 SYNOPSIS
+
+module-starter [options]
+
+Options:
+
+    --module=module  Module name (required, repeatable)
+    --distro=name    Distribution name (optional)
+    --dir=dirname    Directory name to create new module in (optional)
+
+    --builder=module Build with 'ExtUtils::MakeMaker' or 'Module::Build'
+    --eumm           Same as --build=ExtUtils::MakeMaker
+    --mb             Same as --build=Module::Build
+
+    --author=name    Author's name (required)
+    --email=email    Author's email (required)
+    --license=type   License under which the module will be distributed
+                     (default is the same license as perl)
+
+    --verbose        Print progress messages while working
+    --force          Delete pre-existing files if needed
+
+    --help           Show this message
+
+Example:
+
+    module-starter --module=Foo::Bar,Foo::Bat \
+        --author="Andy Lester" --email=andy@petdance.com
+
+=head1 DESCRIPTION
+
+C<module-starter> is a command-line interface to L<Module::Starter>, which it
+uses to perform all the work of creating distributions.  An alternate backend
+for C<module-starter> can be specified with the C<--class> option.  Plugins to
+the standard Module::Starter module can be specified with one or more
+C<--plugin> options.
+
+If no directory name is supplied, the distribution name will be used for the
+directory.  If no distribution name is supplied, the first listed module name
+will be used as the distribution name.
+
+Multiple --builder options may be supplied to produce the files for multiple
+builders.
+
+=head1 CONFIGURATION
+
+module-starter will look for a configuration file before reading its command
+line parameters.  The default location is C<$HOME/.module-starter/config> but
+if the MODULE_STARTER_DIR environment variable is set, module-starter will look
+for C<config> in that directory.
+
+The configuration file is just a list of names and values, separated by colons.
+Values that take lists are just space separated.  A sample configuration file
+might read:
+
+ author: Ricardo SIGNES
+ email:  rjbs@cpan.org
+ plugins: Module::Starter::Simple Module::Starter::Plugin::XYZ
+ xyz_option: red green blue
+
+This format may become more elaborate in the future, but a file of this type
+should remain valid.
+
+=cut
+

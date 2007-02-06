@@ -1,0 +1,13 @@
+README
+MANIFEST
+META.yml
+Changes
+Makefile.PL
+bin/module-starter
+lib/Module/Starter.pm
+lib/Module/Starter/Simple.pm
+lib/Module/Starter/Plugin.pod
+lib/Module/Starter/Plugin/Template.pm
+t/00-load.t
+t/pod-coverage.t
+t/pod.t
