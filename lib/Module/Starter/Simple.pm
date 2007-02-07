@@ -557,6 +557,7 @@ my \$builder = Module::Build->new(
         'Test::More' => 0,
     },
     add_to_cleanup      => [ '$self->{distro}-*' ],
+    create_makefile_pl => 'traditional',
 );
 
 \$builder->create_build_script();
