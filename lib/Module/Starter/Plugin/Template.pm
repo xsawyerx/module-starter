@@ -49,7 +49,7 @@ sub new {
     my $self  = $class->SUPER::new(@_);
     $self->{templates} = { $self->templates };
     $self->{renderer} = $self->renderer;
-    bless $self => $class;
+    return bless $self => $class;
 }
 
 =head1 OBJECT METHODS

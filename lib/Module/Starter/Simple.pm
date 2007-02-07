@@ -129,6 +129,8 @@ HERE
     push @files, 'MANIFEST';
     push @files, 'META.yml # Will be created by "make dist"';
     $self->create_MANIFEST( @files );
+
+    return;
 }
 
 =head2 C<< new(%args) >>
@@ -181,6 +183,8 @@ sub create_basedir {
 
         die "Couldn't create $self->{basedir}: $!\n" unless -d $self->{basedir};
     }
+
+    return;
 }
 
 =head2 create_modules( @modules )
