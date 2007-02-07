@@ -3,6 +3,7 @@ package Module::Starter::Plugin::Template;
 
 use warnings;
 use strict;
+use Carp qw( confess );
 
 =head1 NAME
 
@@ -63,7 +64,7 @@ template.
 =cut
 
 sub templates {
-    die 'attempted to use abstract base templates method';
+    confess 'attempted to use abstract base templates method';
 }
 
 =head2 C<< renderer() >>
@@ -74,7 +75,7 @@ in the object's C<renderer> entry.  The implementation will determine its use.
 =cut
 
 sub renderer {
-    die 'attempted to use abstract base renderer method';
+    confess 'attempted to use abstract base renderer method';
 }
 
 =head2 C<< render($template, \%options) >>
@@ -89,7 +90,7 @@ sub render {
     my $template = shift;
     my $options = shift;
 
-    die 'attempted to use abstract base render method';
+    confess 'attempted to use abstract base render method';
 }
 
 =head2 _guts methods

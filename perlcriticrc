@@ -16,6 +16,8 @@ allow_leading_tabs = 0
 
 [-Modules::RequireVersionVar]
 
+[-NamingConventions::ProhibitMixedCaseSubs]
+
 [-RegularExpressions::RequireExtendedFormatting]
 [-RegularExpressions::RequireLineBoundaryMatching]
 

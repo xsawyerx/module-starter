@@ -6,29 +6,32 @@ module-starter - creates a skeleton module distribution
 
 =cut
 
+use warnings;
 use strict;
 use Getopt::Long;
 use Pod::Usage;
 
 sub config_read {
-	my $filename = shift;
+    my $filename = shift;
 
-	return unless -e $filename;
+    return unless -e $filename;
 
-	open my $config_file, '<', $filename
-		or die "couldn't open config file $filename: $!";
-	
-	my %config;
-	while (<$config_file>) { 
-		chomp;
-		next if /\A\s*\Z/sm;
-		if (/\A(\w+):\s*(.+)\Z/sm) { $config{$1} = $2; }
-	}
-	return %config;
+    open( my $config_file, '<', $filename )
+        or die "couldn't open config file $filename: $!\n";
+
+    my %config;
+    while (<$config_file>) { 
+        chomp;
+        next if /\A\s*\Z/sm;
+        if (/\A(\w+):\s*(.+)\Z/sm) { $config{$1} = $2; }
+    }
+    return %config;
 }
 
-my $configdir = $ENV{MODULE_STARTER_DIR}
-	|| ($ENV{HOME} ? $ENV{HOME} . '/.module-starter' : '');
+my $configdir = $ENV{MODULE_STARTER_DIR} || '';
+if ( !$configdir && $ENV{HOME} ) {
+    $configdir = "$ENV{HOME}/.module-starter";
+}
 
 my %config    = config_read( "$configdir/config" );
 
@@ -38,24 +41,24 @@ $config{builder}    = [ split /(?:\s*,\s*|\s+)/, $config{builder} || '' ];
 pod2usage(2) unless @ARGV;
 
 GetOptions(
-    "class=s"   =>  \$config{class},
-    "plugin=s"  =>   ($config{plugins} ||= []),
+    'class=s'   => \$config{class},
+    'plugin=s'  => ($config{plugins} ||= []),
 
-    "dir=s"     =>  \$config{dir},
-    "distro=s"  =>  \$config{distro},
-    "module=s"  =>   ($config{modules} ||= []),
-    "builder=s" =>   ($config{builder} ||= []),
-    eumm =>         sub { push @{$config{builder}}, "ExtUtils::MakeMaker" },
-    mb   =>         sub { push @{$config{builder}}, "Module::Build" },
-    mi   =>         sub { push @{$config{builder}}, "Module::Install" },
+    'dir=s'     => \$config{dir},
+    'distro=s'  => \$config{distro},
+    'module=s'  => ($config{modules} ||= []),
+    'builder=s' => ($config{builder} ||= []),
+    eumm        => sub { push @{$config{builder}}, 'ExtUtils::MakeMaker' },
+    mb          => sub { push @{$config{builder}}, 'Module::Build' },
+    mi          => sub { push @{$config{builder}}, 'Module::Install' },
 
-    "author=s"  =>  \$config{author},
-    "email=s"   =>  \$config{email},
-    "license=s" =>  \$config{license},
-    force   =>      \$config{force},
-    verbose =>      \$config{verbose},
-    version =>      sub { require Module::Starter; print "module-starter v$Module::Starter::VERSION\n"; exit 1; },
-    help    =>         sub { pod2usage(1); },
+    'author=s'  => \$config{author},
+    'email=s'   => \$config{email},
+    'license=s' => \$config{license},
+    force       => \$config{force},
+    verbose     => \$config{verbose},
+    version     => sub { require Module::Starter; print "module-starter v$Module::Starter::VERSION\n"; exit 1; },
+    help        => sub { pod2usage(1); },
 ) or pod2usage(2);
 
 $config{class} ||= 'Module::Starter';

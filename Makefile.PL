@@ -33,7 +33,7 @@ tags:
 		--languages=Perl --langmap=Perl:+.t \
 
 critic:
-	perlcritic -1 -q -profile perlcriticrc lib/ t/
+	perlcritic -1 -q -profile perlcriticrc bin/ lib/ t/
 MAKE_FRAG
 
     return $postamble;
