@@ -3,6 +3,7 @@ package Module::Starter;
 
 use warnings;
 use strict;
+use Carp qw( croak );
 
 =head1 NAME
 
@@ -78,16 +79,18 @@ sub import {
     no strict 'refs';
     while (my $child = shift @plugins) {
         eval "require $child";
-        die "couldn't load plugin $child: $@" if $@;
+        croak "couldn't load plugin $child: $@" if $@;
 
         push @{"${child}::ISA"}, $parent if $parent;
 
         if (@plugins && $child->can("load_plugins")) {
             $parent->load_plugins(@plugins);
             last;
-        } 
+        }
         $parent = $child;
     }
+
+    return;
 }
 
 =head1 AUTHORS
