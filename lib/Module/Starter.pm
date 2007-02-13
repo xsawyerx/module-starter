@@ -76,14 +76,14 @@ sub import {
     my @plugins = ((@_ ? @_ : 'Module::Starter::Simple'), $class);
     my $parent;
 
-    no strict 'refs';
     while (my $child = shift @plugins) {
         eval "require $child";
         croak "couldn't load plugin $child: $@" if $@;
 
+        no strict 'refs';
         push @{"${child}::ISA"}, $parent if $parent;
 
-        if (@plugins && $child->can("load_plugins")) {
+        if ( @plugins && $child->can('load_plugins') ) {
             $parent->load_plugins(@plugins);
             last;
         }

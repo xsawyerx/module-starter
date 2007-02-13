@@ -47,7 +47,7 @@ sub create_distro {
     my $self = $class->new( @_ );
 
     my $modules = $self->{modules} || [];
-    my @modules = map { split /,/ } @$modules;
+    my @modules = map { split /,/ } @{$modules};
     croak "No modules specified.\n" unless @modules;
     for (@modules) {
         croak "Invalid module name: $_" unless /\A[a-z_]\w*(?:::[\w]+)*\Z/i;
