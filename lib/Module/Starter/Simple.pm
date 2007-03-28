@@ -14,11 +14,11 @@ Module::Starter::Simple - a simple, comprehensive Module::Starter plugin
 
 =head1 VERSION
 
-Version 1.42
+Version 1.43_01
 
 =cut
 
-our $VERSION = '1.42';
+our $VERSION = '1.43_01';
 
 =head1 SYNOPSIS
 
@@ -296,8 +296,8 @@ sub create_Makefile_PL {
 
 =head2 create_MI_Makefile_PL( $main_module )
 
-This will create a Module::Install Makefile.PL for the distribution, and will use
-the module named in I<$main_module> as the main module of the distribution.
+This will create a Module::Install Makefile.PL for the distribution, and will
+use the module named in I<$main_module> as the main module of the distribution.
 
 =cut
 

@@ -1,10 +1,10 @@
 Revision history for Perl extension Module::Starter
 
-NEXT
-
+1.43_01 Wed Mar 28 12:21:00 EDT 2007
         [FIXES]
         * Now properly reports on all files in --verbose mode.
 
+        [ENHANCEMENTS]
         * Add support for Module::Install
 
 1.42    Wed Nov  9 11:25:10 CST 2005
