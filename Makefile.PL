@@ -33,7 +33,7 @@ tags:
 		--languages=Perl --langmap=Perl:+.t \
 
 critic:
-	perlcritic -1 -q -profile perlcriticrc bin/ lib/ t/
+	perlcritic -verbose "%f: [%p] %m at line %l, near '%r'.  (Severity: %s)\n" -q -profile perlcriticrc lib/ bin/ t/
 MAKE_FRAG
 
     return $postamble;

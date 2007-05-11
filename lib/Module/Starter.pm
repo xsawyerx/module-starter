@@ -11,11 +11,11 @@ Module::Starter - a simple starter kit for any module
 
 =head1 VERSION
 
-Version 1.43_01
+Version 1.43_02
 
 =cut
 
-our $VERSION = '1.43_01';
+our $VERSION = '1.43_02';
 
 =head1 SYNOPSIS
 
@@ -78,10 +78,14 @@ sub import {
 
     while (my $child = shift @plugins) {
         eval "require $child";
+
         croak "couldn't load plugin $child: $@" if $@;
 
-        no strict 'refs';
+        ## no critic
+        no strict 'refs'; #Violates ProhibitNoStrict
         push @{"${child}::ISA"}, $parent if $parent;
+        use strict 'refs';
+        ## use critic
 
         if ( @plugins && $child->can('load_plugins') ) {
             $parent->load_plugins(@plugins);
@@ -98,6 +102,8 @@ sub import {
 Andy Lester, C<< <petdance at cpan.org> >>
 
 Ricardo Signes, C<< <rjbs at cpan.org> >>
+
+C.J. Adams-Collier, C<< <cjac at colliertech.org> >>
 
 =head1 SUPPORT
 
@@ -140,7 +146,8 @@ notified of progress on your bug as I make changes.
 
 =head1 COPYRIGHT
 
-Copyright 2005-2007 Andy Lester and Ricardo Signes, All Rights Reserved.
+Copyright 2005-7 Andy Lester, Ricardo Signes and C.J. Adams-Collier,
+All Rights Reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

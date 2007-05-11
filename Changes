@@ -1,5 +1,25 @@
 Revision history for Perl extension Module::Starter
 
+1.43_02 Wed Apr 25 09:37-Wed May 09 14:46 PDT 2007	<cjac@colliertech.org>
+        [ENHANCEMENTS]
+        * broke Module::Starter::Simple's README_guts and module_guts
+          methods into smaller, override-able pieces
+        * re-factored Module::Starter::Simple's build system; the
+          build metadata now lives in Module::Starter::BuildSet.  This
+          allows us access to the metadata from the test suite.  It
+          also makes it a bit easier to add supported builders.
+        * added a test Plugin module (based on Module::Starter::PBP)
+        * wrote a test suite for running module-starter
+        * wrote a test suite for Module::Starter::BuildSet
+        * modified the critic Makefile target to name the policy which
+          raised the violation
+        * Split most long lines (>80 chars) on whitespace
+
+        [FIXES]
+        * Ensured that perlcritic succeeds without errors or warnings
+        * Added perlcriticrc to the MANIFEST
+        * corrected build -> builder in module-starter --help docs
+
 1.43_01 Wed Mar 28 12:21:00 EDT 2007
         [FIXES]
         * Now properly reports on all files in --verbose mode.

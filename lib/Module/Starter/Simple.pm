@@ -6,7 +6,9 @@ use warnings;
 
 use ExtUtils::Command qw( rm_rf mkpath touch );
 use File::Spec ();
-use Carp qw( confess croak );
+use Carp qw( carp confess croak );
+
+use Module::Starter::BuilderSet;
 
 =head1 NAME
 
@@ -14,15 +16,15 @@ Module::Starter::Simple - a simple, comprehensive Module::Starter plugin
 
 =head1 VERSION
 
-Version 1.43_01
+Version 1.43_02
 
 =cut
 
-our $VERSION = '1.43_01';
+our $VERSION = '1.43_02';
 
 =head1 SYNOPSIS
 
- use Module::Starter qw(Module::Starter::Simple);
+  use Module::Starter qw(Module::Starter::Simple);
 
  Module::Starter->create_distro(%args);
 
@@ -73,59 +75,11 @@ sub create_distro {
 
     push @files, $self->create_t( @modules );
     push @files, $self->create_cvsignore;
-
-    my @builders;
-    if (ref $self->{builder} eq 'ARRAY') {
-        my %unique = map { $_ => 1 } @{$self->{builder}};
-        @builders = keys %unique;
-    }
-    else {
-        @builders = ($self->{builder});
-    }
-
-    # this block should be pulled out to its own sub
-    my @build_instructions;
-    for my $builder ( @builders ) {
-        next unless $builder;
-        if ( !@build_instructions ) {
-            push @build_instructions, 'To install this module, run the following commands:';
-        }
-        else {
-            push @build_instructions, "Alternatively, to install with $builder, you can use the following commands:";
-        }
-        if ( $builder eq 'Module::Build' ) {
-            push @files, $self->create_Build_PL( $self->{main_module} );
-            push @build_instructions, <<'HERE';
-    perl Build.PL
-    ./Build
-    ./Build test
-    ./Build install
-HERE
-        }
-        elsif ( $builder eq 'Module::Install' ) {
-            push @files, $self->create_MI_Makefile_PL( $self->{main_module} );
-            push @build_instructions, <<'HERE';
-    perl Makefile.PL
-    make
-    make test
-    make install
-HERE
-        }
-        else {
-            push @files, $self->create_Makefile_PL( $self->{main_module} );
-            push @build_instructions, <<'HERE';
-    perl Makefile.PL
-    make
-    make test
-    make install
-HERE
-        }
-    }
-
-    my $build_instructions = join( "\n\n", @build_instructions );
+    my %build_results = $self->create_build();
+    push(@files, @{ $build_results{files} } );
 
     push @files, $self->create_Changes;
-    push @files, $self->create_README( $build_instructions );
+    push @files, $self->create_README( $build_results{instructions} );
     push @files, 'MANIFEST';
     push @files, 'META.yml # Will be created by "make dist"';
     $self->create_MANIFEST( @files );
@@ -143,8 +97,8 @@ the attention of subclass authors.
 =cut
 
 sub new {
-    my $class = shift;
-    return bless { @_ } => $class;
+  my $class = shift;
+  return bless { @_ } => $class;
 }
 
 =head1 OBJECT METHODS
@@ -167,12 +121,15 @@ sub create_basedir {
 
     # Make sure there's no directory
     if ( -e $self->{basedir} ) {
-        die "$self->{basedir} already exists.  Use --force if you want to stomp on it.\n" unless $self->{force};
+        die( "$self->{basedir} already exists.  ".
+             "Use --force if you want to stomp on it.\n"
+            ) unless $self->{force};
 
         local @ARGV = $self->{basedir};
         rm_rf();
 
-        die "Couldn't delete existing $self->{basedir}: $!\n" if -e $self->{basedir};
+        die "Couldn't delete existing $self->{basedir}: $!\n"
+          if -e $self->{basedir};
     }
 
     CREATE_IT: {
@@ -247,7 +204,8 @@ sub _create_module {
     my @parts = split( /::/, $module );
     my $filepart = (pop @parts) . '.pm';
     my @dirparts = ( $self->{basedir}, 'lib', @parts );
-    my $manifest_file = join( '/', 'lib', @parts, $filepart );
+    my $SLASH = q{/};
+    my $manifest_file = join( $SLASH, 'lib', @parts, $filepart );
     if ( @dirparts ) {
         my $dir = File::Spec->catdir( @dirparts );
         if ( not -d $dir ) {
@@ -270,6 +228,36 @@ sub _thisyear {
     return (localtime())[5] + 1900;
 }
 
+sub _module_to_pm_file {
+    my $self = shift;
+    my $module = shift;
+
+    my @parts = split( /::/, $module );
+    my $pm = pop @parts;
+    my $pm_file = File::Spec->catfile( 'lib', @parts, "${pm}.pm" );
+    $pm_file =~ s{\\}{/}g; # even on Win32, use forward slash
+
+    return $pm_file;
+}
+
+sub _reference_links {
+  return
+    ( { nickname => 'RT',
+        title    => 'CPAN\'s request tracker',
+        link     => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=%s',
+      },
+      { nickname => 'AnnoCPAN',
+        title    => 'Annotated CPAN documentation',
+        link     => 'http://annocpan.org/dist/%s',
+      },
+      { title    => 'CPAN Ratings',
+        link     => 'http://cpanratings.perl.org/d/%s',
+      },
+      { title    => 'Search CPAN',
+        link     => 'http://search.cpan.org/dist/%s',
+      },
+    );
+}
 
 =head2 create_Makefile_PL( $main_module )
 
@@ -279,19 +267,17 @@ named in I<$main_module> as the main module of the distribution.
 =cut
 
 sub create_Makefile_PL {
-    my $self = shift;
-    my $main_module = shift;
+    my $self         = shift;
+    my $main_module  = shift;
+    my $builder_name = 'ExtUtils::MakeMaker';
+    my $output_file  =
+      Module::Starter::BuilderSet->new()->file_for_builder($builder_name);
+    my $fname        = File::Spec->catfile( $self->{basedir}, $output_file );
 
-    my @parts = split( /::/, $main_module );
-    my $pm = pop @parts;
-    my $main_pm_file = File::Spec->catfile( 'lib', @parts, "${pm}.pm" );
-    $main_pm_file =~ s{\\}{/}g; # even on Win32, use forward slash
-
-    my $fname = File::Spec->catfile( $self->{basedir}, 'Makefile.PL' );
-    $self->create_file( $fname, $self->Makefile_PL_guts($main_module, $main_pm_file) );
+    $self->create_file( $fname, $self->Makefile_PL_guts($main_module) );
     $self->progress( "Created $fname" );
 
-    return 'Makefile.PL';
+    return $output_file;
 }
 
 =head2 create_MI_Makefile_PL( $main_module )
@@ -302,21 +288,18 @@ use the module named in I<$main_module> as the main module of the distribution.
 =cut
 
 sub create_MI_Makefile_PL {
-    my $self = shift;
-    my $main_module = shift;
+    my $self         = shift;
+    my $main_module  = shift;
+    my $builder_name = 'Module::Install';
+    my $output_file  =
+      Module::Starter::BuilderSet->new()->file_for_builder($builder_name);
+    my $fname        = File::Spec->catfile( $self->{basedir}, $output_file );
 
-    my @parts = split( /::/, $main_module );
-    my $pm = pop @parts;
-    my $main_pm_file = File::Spec->catfile( 'lib', @parts, "${pm}.pm" );
-    $main_pm_file =~ s{\\}{/}g; # even on Win32, use forward slash
-
-    my $fname = File::Spec->catfile( $self->{basedir}, 'Makefile.PL' );
-    $self->create_file( $fname, $self->MI_Makefile_PL_guts($main_module, $main_pm_file) );
+    $self->create_file( $fname, $self->MI_Makefile_PL_guts($main_module) );
     $self->progress( "Created $fname" );
 
-    return 'Makefile.PL';
+    return $output_file;
 }
-
 
 =head2 Makefile_PL_guts( $main_module, $main_pm_file )
 
@@ -329,7 +312,8 @@ module, I<$main_module>.
 sub Makefile_PL_guts {
     my $self = shift;
     my $main_module = shift;
-    my $main_pm_file = shift;
+
+    my $main_pm_file = $self->_module_to_pm_file($main_module);
 
     (my $author = "$self->{author} <$self->{email}>") =~ s/'/\'/g;
 
@@ -367,7 +351,8 @@ sub MI_Makefile_PL_guts {
     my $main_module = shift;
     my $module_name = $main_module;
     $module_name =~ s/::/-/g;
-    my $main_pm_file = shift;
+
+    my $main_pm_file = $self->_module_to_pm_file($main_module);
 
     (my $author = "$self->{author} <$self->{email}>") =~ s/'/\'/g;
 
@@ -395,19 +380,17 @@ named in I<$main_module> as the main module of the distribution.
 =cut
 
 sub create_Build_PL {
-    my $self = shift;
-    my $main_module = shift;
+    my $self         = shift;
+    my $main_module  = shift;
+    my $builder_name = 'Module::Build';
+    my $output_file  =
+      Module::Starter::BuilderSet->new()->file_for_builder($builder_name);
+    my $fname        = File::Spec->catfile( $self->{basedir}, $output_file );
 
-    my @parts = split( /::/, $main_module );
-    my $pm = pop @parts;
-    my $main_pm_file = File::Spec->catfile( 'lib', @parts, "${pm}.pm" );
-    $main_pm_file =~ s{\\}{/}g; # even on Win32, use forward slash
-
-    my $fname = File::Spec->catfile( $self->{basedir}, 'Build.PL' );
-    $self->create_file( $fname, $self->Build_PL_guts($main_module, $main_pm_file) );
+    $self->create_file( $fname, $self->Build_PL_guts($main_module) );
     $self->progress( "Created $fname" );
 
-    return 'Build.PL';
+    return $output_file;
 }
 
 =head2 Build_PL_guts( $main_module, $main_pm_file )
@@ -421,7 +404,8 @@ I<$main_module>.
 sub Build_PL_guts {
     my $self = shift;
     my $main_module = shift;
-    my $main_pm_file = shift;
+
+    my $main_pm_file = $self->_module_to_pm_file($main_module);
 
     (my $author = "$self->{author} <$self->{email}>") =~ s/'/\'/g;
 
@@ -504,16 +488,10 @@ Called by create_README, this method returns content for the README file.
 
 =cut
 
-sub README_guts {
+sub _README_intro {
     my $self = shift;
-    my $build_instructions = shift;
 
-    my $year = $self->_thisyear();
-    my $license_blurb = $self->_license_blurb();
-
-return <<"HERE";
-$self->{distro}
-
+    return <<"HERE";
 The README is used to introduce the module and provide instructions on
 how to install the module, any machine dependencies it may have (for
 example C compilers and installed libraries) and any other information
@@ -521,9 +499,61 @@ that should be provided before the module is installed.
 
 A README file is required for CPAN modules since CPAN extracts the README
 file from a module distribution so that people browsing the archive
-can use it get an idea of the modules uses. It is usually a good idea
+can use it to get an idea of the module's uses. It is usually a good idea
 to provide version information here so that people can decide whether
 fixes for the module are worth downloading.
+HERE
+}
+
+sub _README_information {
+    my $self = shift;
+
+    my @reference_links = _reference_links();
+
+    my $content = "You can also look for information at:\n";
+
+    foreach my $ref (@reference_links){
+      my $title;
+      $title = "$ref->{nickname}, " if exists $ref->{nickname};
+      $title .= $ref->{title};
+      my $link  = sprintf($ref->{link}, $self->{distro});
+
+      $content .= qq[
+    $title
+        $link
+];
+    }
+
+    return $content;
+}
+
+sub _README_license {
+    my $self = shift;
+
+    my $year          = $self->_thisyear();
+    my $license_blurb = $self->_license_blurb();
+
+return <<"HERE";
+COPYRIGHT AND LICENCE
+
+Copyright (C) $year $self->{author}
+
+$license_blurb
+HERE
+}
+
+sub README_guts {
+    my $self = shift;
+    my $build_instructions = shift;
+
+    my $intro         = $self->_README_intro();
+    my $information   = $self->_README_information();
+    my $license       = $self->_README_license();
+
+return <<"HERE";
+$self->{distro}
+
+$intro
 
 INSTALLATION
 
@@ -531,29 +561,14 @@ $build_instructions
 
 SUPPORT AND DOCUMENTATION
 
-After installing, you can find documentation for this module with the perldoc command.
+After installing, you can find documentation for this module with the
+perldoc command.
 
     perldoc $self->{main_module}
 
-You can also look for information at:
+$information
 
-    Search CPAN
-        http://search.cpan.org/dist/$self->{distro}
-
-    CPAN Request Tracker:
-        http://rt.cpan.org/NoAuth/Bugs.html?Dist=$self->{distro}
-
-    AnnoCPAN, annotated CPAN documentation:
-        http://annocpan.org/dist/$self->{distro}
-
-    CPAN Ratings:
-        http://cpanratings.perl.org/d/$self->{distro}
-
-COPYRIGHT AND LICENCE
-
-Copyright (C) $year $self->{author}
-
-$license_blurb
+$license
 HERE
 }
 
@@ -629,6 +644,10 @@ $use_lines
 diag( "Testing $main_module \$${main_module}::VERSION, Perl \$], \$^X" );
 HERE
 
+    my $module_boilerplate_tests;
+    $module_boilerplate_tests .=
+      "  module_boilerplate_ok('$self->{module_file}{$_}');\n" for @modules;
+
     my $boilerplate_tests = @modules + 2 + $[;
     $t_files{'boilerplate.t'} = <<"HERE";
 #!perl -T
@@ -639,7 +658,7 @@ use Test::More tests => $boilerplate_tests;
 
 sub not_in_file_ok {
     my (\$filename, \%regex) = \@_;
-    open( my \$fh, "<', \$filename )
+    open( my \$fh, '<', \$filename )
         or die "couldn't open \$filename for reading: \$!";
 
     my \%violated;
@@ -660,15 +679,6 @@ sub not_in_file_ok {
     }
 }
 
-not_in_file_ok(README =>
-    "The README is used..."       => qr/The README is used/,
-    "'version information here'"  => qr/to provide version information/,
-);
-
-not_in_file_ok(Changes =>
-    "placeholder date/time"       => qr(Date/time)
-);
-
 sub module_boilerplate_ok {
     my (\$module) = \@_;
     not_in_file_ok(\$module =>
@@ -678,10 +688,23 @@ sub module_boilerplate_ok {
     );
 }
 
-HERE
+TODO: {
+  local \$TODO = "Need to replace the boilerplate text";
 
-    $t_files{'boilerplate.t'}
-        .= "module_boilerplate_ok('$self->{module_file}{$_}');\n" for @modules;
+  not_in_file_ok(README =>
+    "The README is used..."       => qr/The README is used/,
+    "'version information here'"  => qr/to provide version information/,
+  );
+
+  not_in_file_ok(Changes =>
+    "placeholder date/time"       => qr(Date/time)
+  );
+
+$module_boilerplate_tests
+
+}
+
+HERE
 
     return %t_files;
 }
@@ -737,6 +760,66 @@ sub MANIFEST_guts {
     my @files = sort @_;
 
     return join( "\n", @files, '' );
+}
+
+=head2 create_build( )
+
+This method creates the build file(s) and puts together some build
+instructions.  The builders currently supported are:
+
+ExtUtils::MakeMaker
+Module::Build
+Module::Install
+
+=cut
+
+sub create_build {
+  my $self = shift;
+
+  # pass one: pull the builders out of $self->{builder}
+  my @tmp =
+    ref $self->{builder} eq 'ARRAY' ? @{$self->{builder}} : $self->{builder};
+
+  my @builders;
+  my $COMMA = q{,};
+  # pass two: expand comma-delimited builder lists
+  foreach my $builder (@tmp) {
+    push( @builders, split($COMMA, $builder) );
+  }
+
+  my $builder_set = Module::Starter::BuilderSet->new();
+
+  # Remove mutually exclusive and unsupported builders
+  @builders = $builder_set->check_compatibility( @builders );
+
+  # compile some build instructions, create a list of files generated
+  # by the builders' create_* methods, and call said methods
+
+  my @build_instructions;
+  my @files;
+
+  foreach my $builder ( @builders ) {
+    if ( !@build_instructions ) {
+      push( @build_instructions,
+            'To install this module, run the following commands:'
+          );
+    } else {
+      push( @build_instructions,
+            "Alternatively, to install with $builder, you can ".
+            "use the following commands:"
+          );
+    }
+    push( @files, $builder_set->file_for_builder($builder) );
+    my @commands = $builder_set->instructions_for_builder($builder);
+    push( @build_instructions, join('\n', map { "\t$_" } @commands) );
+
+    my $build_method = $builder_set->method_for_builder($builder);
+    $self->$build_method($self->{main_module})
+  }
+
+  return( files        => [ @files ],
+          instructions => join( "\n\n", @build_instructions ),
+        );
 }
 
 =head2 create_cvsignore( )
@@ -833,9 +916,11 @@ be notified of progress on your bug as I make changes.
 
 Andy Lester, C<< <andy@petdance.com> >>
 
+C.J. Adams-Collier, C<< <cjac@colliertech.org> >>
+
 =head1 Copyright & License
 
-Copyright 2005-2007 Andy Lester, All Rights Reserved.
+Copyright 2005-2007 Andy Lester and C.J. Adams-Collier, All Rights Reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
@@ -845,15 +930,10 @@ employers of the various contributors to the code.
 
 =cut
 
-
-sub module_guts {
+sub _module_header {
     my $self = shift;
     my $module = shift;
     my $rtname = shift;
-
-    my $year = $self->_thisyear();
-    my $license_blurb = $self->_license_blurb();
-
     my $content = <<"HERE";
 package $module;
 
@@ -871,6 +951,104 @@ Version 0.01
 \=cut
 
 our \$VERSION = '0.01';
+HERE
+    return $content;
+}
+
+sub _module_bugs {
+    my $self   = shift;
+    my $module = shift;
+    my $rtname = shift;
+
+    my $bug_email = "bug-$rtname at rt.cpan.org";
+    my $bug_link  =
+      "http://rt.cpan.org/NoAuth/ReportBug.html?Queue=$self->{distro}";
+
+    my $content = <<"HERE";
+\=head1 BUGS
+
+Please report any bugs or feature requests to C<$bug_email>, or through
+the web interface at L<$bug_link>.  I will be notified, and then you'll
+automatically be notified of progress on your bug as I make changes.
+
+HERE
+
+    return $content;
+}
+
+sub _module_support {
+    my $self   = shift;
+    my $module = shift;
+    my $rtname = shift;
+
+    my $content = qq[
+\=head1 SUPPORT
+
+You can find documentation for this module with the perldoc command.
+
+    perldoc $self->{main_module}
+];
+    my @reference_links = _reference_links();
+
+    return unless @reference_links;
+    $content .= qq[
+
+You can also look for information at:
+
+\=over 4
+];
+
+    foreach my $ref (@reference_links){
+      my $title;
+      my $link = sprintf($ref->{link}, $self->{distro});
+
+      $title = "$ref->{nickname}: " if exists $ref->{nickname};
+      $title .= $ref->{title};
+      $content .= qq[
+\=item * $title
+
+L<$link>
+];
+    }
+    $content .= qq[
+\=back
+];
+    return $content;
+}
+
+sub _module_license {
+    my $self = shift;
+
+    my $module = shift;
+    my $rtname = shift;
+
+    my $license_blurb = $self->_license_blurb();
+    my $year          = $self->_thisyear();
+
+    my $content = qq[
+\=head1 COPYRIGHT & LICENSE
+
+Copyright $year $self->{author}, all rights reserved.
+
+$license_blurb
+];
+
+    return $content;
+}
+
+sub module_guts {
+    my $self = shift;
+    my $module = shift;
+    my $rtname = shift;
+
+    # Sub-templates
+    my $header  = $self->_module_header($module, $rtname);
+    my $bugs    = $self->_module_bugs($module, $rtname);
+    my $support = $self->_module_support($module, $rtname);
+    my $license = $self->_module_license($module, $rtname);
+
+    my $content = <<"HERE";
+$header
 
 \=head1 SYNOPSIS
 
@@ -908,49 +1086,13 @@ sub function2 {
 
 $self->{author}, C<< <$self->{email_obfuscated}> >>
 
-\=head1 BUGS
+$bugs
 
-Please report any bugs or feature requests to
-C<bug-$rtname at rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=$self->{distro}>.
-I will be notified, and then you'll automatically be notified of progress on
-your bug as I make changes.
-
-\=head1 SUPPORT
-
-You can find documentation for this module with the perldoc command.
-
-    perldoc $self->{main_module}
-
-You can also look for information at:
-
-\=over 4
-
-\=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/$self->{distro}>
-
-\=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/$self->{distro}>
-
-\=item * RT: CPAN's request tracker
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=$self->{distro}>
-
-\=item * Search CPAN
-
-L<http://search.cpan.org/dist/$self->{distro}>
-
-\=back
+$support
 
 \=head1 ACKNOWLEDGEMENTS
 
-\=head1 COPYRIGHT & LICENSE
-
-Copyright $year $self->{author}, all rights reserved.
-
-$license_blurb
+$license
 
 \=cut
 
