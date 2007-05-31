@@ -811,7 +811,7 @@ sub create_build {
     }
     push( @files, $builder_set->file_for_builder($builder) );
     my @commands = $builder_set->instructions_for_builder($builder);
-    push( @build_instructions, join('\n', map { "\t$_" } @commands) );
+    push( @build_instructions, join("\n", map { "\t$_" } @commands) );
 
     my $build_method = $builder_set->method_for_builder($builder);
     $self->$build_method($self->{main_module})
