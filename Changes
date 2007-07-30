@@ -1,5 +1,10 @@
 Revision history for Perl extension Module::Starter
 
+1.43_03 (under development)
+        [FIXES]
+        * pod.t and pod-coverage.t boilerplate updated to skip unless
+          $ENV{AUTHOR_TESTING} is true
+        
 1.43_02 Wed Apr 25 09:37-Wed May 09 14:46 PDT 2007	<cjac@colliertech.org>
         [ENHANCEMENTS]
         * broke Module::Starter::Simple's README_guts and module_guts

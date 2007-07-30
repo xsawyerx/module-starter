@@ -16,11 +16,11 @@ Module::Starter::Simple - a simple, comprehensive Module::Starter plugin
 
 =head1 VERSION
 
-Version 1.43_02
+Version 1.43_03
 
 =cut
 
-our $VERSION = '1.43_02';
+our $VERSION = '1.43_03';
 
 =head1 SYNOPSIS
 
@@ -612,19 +612,39 @@ sub t_guts {
 use strict;
 use warnings;
 use Test::More;
-eval 'use Test::Pod 1.14';
-plan skip_all => 'Test::Pod 1.14 required for testing POD' if $@;
+
+# End-users shouldn't need to run these tests
+plan skip_all => "Skipping author tests" if not $ENV{AUTHOR_TESTING};
+
+# Ensure a recent version of Test::Pod
+my $min_tp = 1.22;
+eval "use Test::Pod $min_tp";
+plan skip_all => "Test::Pod $min_tp required for testing POD" if $@;
+
 all_pod_files_ok();
 HERE
 
     $t_files{'pod-coverage.t'} = <<'HERE';
-#!perl -T
-
 use strict;
 use warnings;
 use Test::More;
-eval 'use Test::Pod::Coverage 1.04';
-plan skip_all => 'Test::Pod::Coverage 1.04 required for testing POD coverage' if $@;
+
+# End-users shouldn't need to run these tests
+plan skip_all => "Skipping author tests" if not $ENV{AUTHOR_TESTING};
+
+# Ensure a recent version of Test::Pod::Coverage
+my $min_tpc = 1.08;
+eval "use Test::Pod::Coverage $min_tpc";
+plan skip_all => "Test::Pod::Coverage $min_tpc required for testing POD coverage"
+    if $@;
+
+# Test::Pod::Coverage doesn't require a minimum Pod::Coverage version,
+# but older versions don't recognize some common documentation styles
+my $min_pc = 0.18;
+eval "use Pod::Coverage $min_pc";
+plan skip_all => "Pod::Coverage $min_pc required for testing POD coverage"
+    if $@;
+
 all_pod_coverage_ok();
 HERE
 
