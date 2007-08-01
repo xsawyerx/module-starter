@@ -3,7 +3,9 @@ Revision history for Perl extension Module::Starter
 1.43_03 (under development)
         [FIXES]
         * pod-coverage.t includes Pod::Coverage version check
-        
+        * Test::Pod and Test::Pod::Coverage are now requirements.
+            Thanks, David Golden.
+
 1.43_02 Wed Apr 25 09:37-Wed May 09 14:46 PDT 2007	<cjac@colliertech.org>
         [ENHANCEMENTS]
         * broke Module::Starter::Simple's README_guts and module_guts
