@@ -186,7 +186,7 @@ under the same terms as Perl itself.
 EOT
     }
     else {
-        $license_blurb = <<'EOT';
+        $license_blurb = <<"EOT";
 This program is released under the following license: $self->{license}
 EOT
     }
