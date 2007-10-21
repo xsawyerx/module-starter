@@ -22,9 +22,10 @@ We test...
 use strict;
 use warnings;
 
-use English '-no_match_vars';
+use Test::More;
+plan skip_all => "these tests must be completely rewritten";
 
-use Test::More tests => 60;
+use English '-no_match_vars';
 
 use File::Spec;
 use File::Temp qw/ tempdir /;
@@ -250,6 +251,7 @@ sub build_module_starter {
 
       foreach my $command (@commands){
         my $cmd = "$env $command > /dev/null 2>&1";
+        diag "RUNNING: $cmd";
         if( $command !~ /install/ ){
             system( $cmd );
 
