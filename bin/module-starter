@@ -44,10 +44,10 @@ foreach my $key ( qw( plugins modules builder ) ){
 }
 
 $config{plugins} = [ split /(?:\s*,\s*|\s+)/, $config{plugins} ]
-  if @{ $config{plugins} };
+  if $config{plugins};
 
 $config{builder} = [ split /(?:\s*,\s*|\s+)/, $config{builder} ]
-  if @{ $config{builder} };
+  if $config{builder};
 
 pod2usage(2) unless @ARGV;
 
