@@ -1,7 +1,7 @@
 # vi:et:sw=4 softtabstop=4
 use strict;
 use warnings;
-use 5.6.1;
+use 5.006001;
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
