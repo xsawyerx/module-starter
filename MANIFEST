@@ -5,6 +5,7 @@ Changes
 Makefile.PL
 bin/module-starter
 lib/Module/Starter.pm
+lib/Module/Starter/App.pm
 lib/Module/Starter/Simple.pm
 lib/Module/Starter/BuilderSet.pm
 lib/Module/Starter/Plugin.pod
