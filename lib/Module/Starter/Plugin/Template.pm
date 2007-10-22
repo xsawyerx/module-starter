@@ -123,8 +123,6 @@ sub module_guts {
 
     my $template = $self->{templates}{'Module.pm'};
     $self->render($template, \%options);
-
-    return;
 }
 
 =item Makefile_PL_guts
@@ -138,8 +136,6 @@ sub Makefile_PL_guts {
 
     my $template = $self->{templates}{'Makefile.PL'};
     $self->render($template, \%options);
-
-    return;
 }
 
 =item Build_PL_guts
@@ -153,8 +149,6 @@ sub Build_PL_guts {
 
     my $template = $self->{templates}{'Build.PL'};
     $self->render($template, \%options);
-
-    return;
 }
 
 =item Changes_guts
@@ -166,8 +160,6 @@ sub Changes_guts {
 
     my $template = $self->{templates}{'Changes'};
     $self->render($template);
-
-    return;
 }
 
 =item README_guts
@@ -181,8 +173,6 @@ sub README_guts {
 
     my $template = $self->{templates}{'README'};
     $self->render($template, \%options);
-
-    return;
 }
 
 =item t_guts
@@ -215,8 +205,6 @@ sub MANIFEST_guts {
 
     my $template = $self->{templates}{MANIFEST};
     $self->render($template, \%options);
-
-    return;
 }
 
 =item item cvsignore_guts
@@ -228,8 +216,6 @@ sub cvsignore_guts {
 
     my $template = $self->{templates}{cvsignore};
     $self->render($template);
-
-    return;
 }
 
 =back
