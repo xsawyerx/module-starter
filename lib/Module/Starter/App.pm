@@ -11,7 +11,7 @@ use Getopt::Long;
 use Pod::Usage;
 use Carp qw( croak );
 
-sub config_read {
+sub _config_read {
     my $filename = shift;
 
     return unless -e $filename;
@@ -28,6 +28,14 @@ sub config_read {
     return %config;
 }
 
+=head2 run
+
+  Module::Starter::App->run;
+
+This is equivalent to runnint F<module-starter>.  Its behavior is still subject
+to change.
+
+=cut
 
 sub run {
 
@@ -36,7 +44,7 @@ sub run {
       $configdir = "$ENV{HOME}/.module-starter";
   }
 
-  my %config    = config_read( "$configdir/config" );
+  my %config    = _config_read( "$configdir/config" );
 
   # The options that accept multiple arguments must be set to an
   # arrayref
