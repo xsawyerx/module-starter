@@ -1,7 +1,8 @@
 Revision history for Perl extension Module::Starter
 
-1.45_01 (under development)
+1.46    Wed Oct 31 08:49 America/New_York 2007
         * put nearly all of the module-starter program into a module (to test)
+        * add license to META.yml
 
 1.44    Sun Oct 11 19:09 America/New_York 2007
         * no changes since 1.43_03

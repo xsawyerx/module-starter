@@ -8,6 +8,7 @@ WriteMakefile(
     NAME                => 'Module::Starter',
     AUTHOR              => 'Andy Lester <andy@petdance.com>',
     VERSION_FROM        => 'lib/Module/Starter.pm',
+    (eval { ExtUtils::MakeMaker->VERSION(6.21) } ? (LICENSE => 'perl') : ()),
     ABSTRACT_FROM       => 'lib/Module/Starter.pm',
     EXE_FILES           => [ 'bin/module-starter' ],
     PREREQ_PM => {

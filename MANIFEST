@@ -1,6 +1,5 @@
 README
 MANIFEST
-META.yml
 Changes
 Makefile.PL
 bin/module-starter
