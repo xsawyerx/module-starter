@@ -12,11 +12,11 @@ Module::Starter::BuilderSet - determine builder metadata
 
 =head1 VERSION
 
-Version 1.44
+Version 1.470
 
 =cut
 
-our $VERSION = '1.44';
+our $VERSION = '1.470';
 
 =head1 SYNOPSIS
 

@@ -16,11 +16,11 @@ Module::Starter::Simple - a simple, comprehensive Module::Starter plugin
 
 =head1 VERSION
 
-Version 1.44
+Version 1.470
 
 =cut
 
-our $VERSION = '1.44';
+our $VERSION = '1.470;
 
 =head1 SYNOPSIS
 
@@ -81,8 +81,7 @@ sub create_distro {
     push @files, $self->create_Changes;
     push @files, $self->create_README( $build_results{instructions} );
     push @files, 'MANIFEST';
-    push @files, 'META.yml # Will be created by "make dist"';
-    $self->create_MANIFEST( @files );
+    $self->create_MANIFEST( grep { $_ ne 't/boilerplate.t' } @files );
 
     return;
 }
@@ -274,7 +273,14 @@ sub create_Makefile_PL {
       Module::Starter::BuilderSet->new()->file_for_builder($builder_name);
     my $fname        = File::Spec->catfile( $self->{basedir}, $output_file );
 
-    $self->create_file( $fname, $self->Makefile_PL_guts($main_module) );
+    $self->create_file(
+      $fname,
+      $self->Makefile_PL_guts(
+        $main_module,
+        $self->_module_to_pm_file($main_module),
+      ),
+    );
+
     $self->progress( "Created $fname" );
 
     return $output_file;
@@ -295,7 +301,14 @@ sub create_MI_Makefile_PL {
       Module::Starter::BuilderSet->new()->file_for_builder($builder_name);
     my $fname        = File::Spec->catfile( $self->{basedir}, $output_file );
 
-    $self->create_file( $fname, $self->MI_Makefile_PL_guts($main_module) );
+    $self->create_file(
+      $fname,
+      $self->MI_Makefile_PL_guts(
+        $main_module,
+        $self->_module_to_pm_file($main_module),
+      ),
+    );
+
     $self->progress( "Created $fname" );
 
     return $output_file;
@@ -312,8 +325,7 @@ module, I<$main_module>.
 sub Makefile_PL_guts {
     my $self = shift;
     my $main_module = shift;
-
-    my $main_pm_file = $self->_module_to_pm_file($main_module);
+    my $main_pm_file = shift;
 
     (my $author = "$self->{author} <$self->{email}>") =~ s/'/\'/g;
 
@@ -349,18 +361,16 @@ module, I<$main_module>.
 sub MI_Makefile_PL_guts {
     my $self = shift;
     my $main_module = shift;
-    my $module_name = $main_module;
-    $module_name =~ s/::/-/g;
-
-    my $main_pm_file = $self->_module_to_pm_file($main_module);
+    my $main_pm_file = shift;
 
     (my $author = "$self->{author} <$self->{email}>") =~ s/'/\'/g;
 
     return <<"HERE";
 use inc::Module::Install;
 
-name '$module_name';
+name     '$self->{distro}';
 all_from '$main_pm_file';
+author   '$author';
 
 build_requires 'Test::More';
 
@@ -387,7 +397,14 @@ sub create_Build_PL {
       Module::Starter::BuilderSet->new()->file_for_builder($builder_name);
     my $fname        = File::Spec->catfile( $self->{basedir}, $output_file );
 
-    $self->create_file( $fname, $self->Build_PL_guts($main_module) );
+    $self->create_file(
+      $fname,
+      $self->Build_PL_guts(
+        $main_module,
+        $self->_module_to_pm_file($main_module),
+      ),
+    );
+
     $self->progress( "Created $fname" );
 
     return $output_file;
@@ -404,8 +421,7 @@ I<$main_module>.
 sub Build_PL_guts {
     my $self = shift;
     my $main_module = shift;
-
-    my $main_pm_file = $self->_module_to_pm_file($main_module);
+    my $main_pm_file = shift;
 
     (my $author = "$self->{author} <$self->{email}>") =~ s/'/\'/g;
 

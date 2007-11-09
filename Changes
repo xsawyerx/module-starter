@@ -1,5 +1,16 @@
 Revision history for Perl extension Module::Starter
 
+1.46    Fri Nov  9 18:36 America/New_York 2007
+        [ENHANCEMENTS
+        * add Module::Install compat for ::Template plugin
+        * boilerplate.t no longer appears in default MANIFEST
+        * META.yml no longer appears in default MANIFEST
+
+        [FIXES]
+        * undo some bugs introduced by changing API of subclassable "guts"
+          methods
+        * remove some duplicated code
+
 1.46    Wed Oct 31 08:49 America/New_York 2007
         * put nearly all of the module-starter program into a module (to test)
         * add license to META.yml

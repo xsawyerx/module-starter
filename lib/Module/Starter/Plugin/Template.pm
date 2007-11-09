@@ -11,13 +11,13 @@ Module::Starter::Plugin::Template - module starter with templates
 
 =head1 VERSION
 
-Version 0.02
+Version 1.470
 
     $Id: Template.pm 54 2007-02-06 22:04:46Z andy $
 
 =cut
 
-our $VERSION = '0.02';
+our $VERSION = '1.470';
 
 =head1 SYNOPSIS
 
@@ -135,6 +135,19 @@ sub Makefile_PL_guts {
     @options{qw(main_module main_pm_file)} = @_;
 
     my $template = $self->{templates}{'Makefile.PL'};
+    $self->render($template, \%options);
+}
+
+=item MI_Makefile_PL_guts
+
+=cut
+
+sub MI_Makefile_PL_guts {
+    my $self = shift;
+    my %options;
+    @options{qw(main_module main_pm_file)} = @_;
+
+    my $template = $self->{templates}{'MI_Makefile.PL'};
     $self->render($template, \%options);
 }
 
