@@ -1,7 +1,9 @@
-README
-MANIFEST
 Changes
+getting-started.html
+MANIFEST
 Makefile.PL
+README
+
 bin/module-starter
 lib/Module/Starter.pm
 lib/Module/Starter/App.pm
@@ -25,4 +27,3 @@ t/data/templates/Changes
 t/data/templates/Build.PL
 t/data/templates/README
 perlcriticrc
-

@@ -1,0 +1,235 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<title>
+Perl Training Australia - 
+Starting a module with Module::Starter</title>
+		<link rel="shortcut icon" href="/favicon.ico" />
+		<link rel="stylesheet" type="text/css" href="/pta.css" />
+		
+<link rel="alternate" title="Atom" href="/tips/index.atom" type="application/atom+xml" />
+
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	</head>
+	<body>
+
+<h1>
+
+Starting a module with Module::Starter
+</h1>
+
+
+
+
+<p>
+<a href="http://perltraining.com.au/tips/"><b>[ Perl tips index] </b></a><br />
+<a href="http://perltraining.com.au/tips/cgi-bin/mailman/listinfo/perl-tips"><b>[ Subscribe to Perl tips ]</b></a>
+</p>
+
+
+<p>Starting a new module can be a lot of work.  A good module should have
+a build system, documentation, a test suite, and numerous other bits
+and pieces to assist in its easy packaging and development.  These are
+useful even if we never release our module to CPAN.</p>
+<p>Setting this up can be a lot of work, especially if you've never done
+it before.  While the <code>h2xs</code> tool that comes with Perl will do some
+of this for you, it's showing its age, and doesn't allow us to take
+advantage of recent tools.  We want to spend our time writing code,
+not trying to decode our build system.</p>
+<p>That's where <code>Module::Starter</code> comes in handy.  It provides
+a simple, command-line tool to create a skeleton module quickly and
+easily.</p>
+
+<!-- END_SUMMARY -->
+
+<h2>Using module-starter</h2>
+<p>Before we can build our module, we need to install <code>Module::Starter</code>
+from the CPAN.   <code>Module::Starter</code> allows us to choose from a variety
+of build frameworks, from the aging <code>ExtUtils::MakeMaker</code> to
+<code>Module::Install</code> and <code>Module::Build</code>.  While <code>ExtUtils::MakeMaker</code>
+comes standard with Perl, you may need to install the other build
+frameworks.  At Perl Training Australia we generally use
+<code>Module::Install</code>.</p>
+<p>Creating a module with <code>Module::Starter</code> couldn't be easier.  On
+the command line we simply write:</p>
+<pre>
+    module-starter --module=My::Module --author=&quot;Jane Smith&quot;
+        --email=jane.smith@example.com --builder=Module::Install</pre>
+<p>The module name, author, and e-mail switches are all required.
+We've used the optional <code>--builder</code> switch to specify we want
+to use <code>Module::Install</code> as our build-system, instead of
+the default <code>ExtUtils::MakeMaker</code>.</p>
+<p>Once this is done, you should have a <code>My-Module</code> directory with a
+skeleton module inside.</p>
+<p>
+</p>
+<h2>A skeleton tour</h2>
+<p>If you've never created a module before, or you've been making them
+by hand, then it's nice to take a look at what you get for your
+<code>Module::Starter</code> skeleton.</p>
+<pre>
+    $ ls -la</pre>
+<pre>
+    total 8
+    drwxr-xr-x   4 pjf pjf    0 Jul  4 16:59 .
+    drwxr-xr-x  51 pjf pjf    0 Jul  4 16:59 ..
+    -rw-r--r--   1 pjf pjf   96 Jul  4 16:59 .cvsignore
+    -rw-r--r--   1 pjf pjf  109 Jul  4 16:59 Changes
+    -rw-r--r--   1 pjf pjf   90 Jul  4 16:59 MANIFEST
+    -rw-r--r--   1 pjf pjf  183 Jul  4 16:59 Makefile.PL
+    -rw-r--r--   1 pjf pjf 1378 Jul  4 16:59 README
+    drwxr-xr-x   3 pjf pjf    0 Jul  4 16:59 lib
+    drwxr-xr-x   2 pjf pjf    0 Jul  4 16:59 t</pre>
+<p>Let's look at each of these files in turn:</p>
+<dl>
+<dt><strong>.cvsignore</strong></dt>
+
+<dd>
+<p><code>Module::Starter</code> assumes you'll be using CVS for revision control, and
+provides a <em>.cvsignore</em> file with the names of files that are auto-generated
+and not to be tracked with revision control.  At Perl Training Australia
+we use git for new projects, and so we rename this to <em>.gitignore</em>.</p>
+</dd>
+<dt><strong>Changes</strong></dt>
+
+<dd>
+<p>This is a human-readable file tracking module revisions and changes.
+If you're going to release your code to the CPAN, it's essential for
+your users to know what has changed in each release.  Even if you're
+only using your code internally, this is a good place to document the
+history of your project.</p>
+</dd>
+<dt><strong>MANIFEST</strong></dt>
+
+<dd>
+<p>The <em>MANIFEST</em> file tracks all the files that should be packaged when
+you run a <code>make tardist</code> to distribute your module.  Normally it
+includes your source code, any file needed for the build system,
+a <em>META.yml</em> that contains module meta-data (usually auto-generated
+by your build system), tests, documentation, and anything else that
+you want your end-user to have.</p>
+</dd>
+<dd>
+<p>If you don't want to manually worry about adding entries to the
+<em>MANIFEST</em> file yourself, most build systems (including
+<code>Module::Install</code>) allow you to write <code>make manifest</code> to auto-generate
+it.  For this to work, you'll want to make a <em>MANIFEST.skip</em> file
+which contains filenames and regular expressions that match files
+which should be excluded from the <em>MANIFEST</em>.</p>
+</dd>
+<dt><strong>Makefile.PL</strong></dt>
+
+<dd>
+<p>This is the front-end onto our build system.  When we wish to build,
+test, or install our module, we'll always invoke <em>Makefile.PL</em> first:</p>
+</dd>
+<dd>
+<pre>
+    perl Makefile.PL
+    make
+    make test
+    make install</pre>
+</dd>
+<dd>
+<p>Most build systems will provide a <code>make tardist</code> target for
+building a tarball of all the files in our <em>MANIFEST</em>, a
+<code>make disttest</code> for making sure our tests work with only the
+<em>MANIFEST</em> listed files, and <code>make clean</code> and <code>make distclean</code>
+targets for clearing up auto-generated files, including those
+from the build system itself if a <code>make distclean</code> is run.</p>
+</dd>
+<dd>
+<p>You'll almost certainly wish to customise your <em>Makefile.PL</em> a little,
+especially if your module has dependencies.  You'll want to consult
+your build system documentation for what options you can uses.  For
+<code>Module::Install</code> this documentation can be found at
+<a href="http://search.cpan.org/perldoc?Module::Install">http://search.cpan.org/perldoc</a>.</p>
+</dd>
+<dt><strong>README</strong></dt>
+
+<dd>
+<p>The <em>README</em> file should contain basic information for someone thinking
+of installing your module.  Mentioning dependencies, how to build, and
+how to find/report bugs are all good things to mention in the <em>README</em>
+file.  Some systems (including the CPAN) will extract the <em>README</em>
+and make it available separate from the main distribution.</p>
+</dd>
+<dt><strong>lib/</strong></dt>
+
+<dd>
+<p>The <em>lib/</em> directory will contain your skeleton module, and is
+where you'll be doing much of your work.  <code>Module::Starter</code> will
+have already added some skeleton documentation, a version number,
+and some skeleton functions.</p>
+</dd>
+<dd>
+<p>You can add more modules to the <em>lib/</em> directory if you wish.  Splitting
+a very large module into smaller, logical pieces can significantly
+improve maintainability.</p>
+</dd>
+<dt><strong>t/</strong></dt>
+
+<dd>
+<p>The <em>t/</em> directory contains all the tests that will be executed
+when you run a <code>make test</code>.  By default, <code>Module::Starter</code> will
+provide some simple tests to ensure that your module compiles, that
+you'll filled in relevant sections of the boilerplate documentation,
+and that your documentation covers all your subroutines and doesn't
+contain any syntax errors.</p>
+</dd>
+<dd>
+<p>If you're new to testing in Perl, then you should start by reading
+the <code>Test::Tutorial</code> at <a href="http://search.cpan.org/perldoc?Test::Tutorial">http://search.cpan.org/perldoc</a>.</p>
+</dd>
+<dd>
+<p>At Perl Training Australia, we usually add a test based on
+<code>Test::Perl::Critic</code> <a href="http://search.cpan.org/perldoc?Test::Perl::Critic">http://search.cpan.org/perldoc</a>
+to encourage good coding practices, and <code>Test::Kwalitee</code>
+<a href="http://search.cpan.org/perldoc?Test::Kwalittee">http://search.cpan.org/perldoc</a> to catch common
+mistakes that are made in distributions.</p>
+</dd>
+<dd>
+<p>Ideally when developing your module, the more tests you have, the better.
+If you already have a test suite and you're wondering which parts of
+your code are not being tested, you can use the excellent
+<code>Devel::Cover</code> tool from <a href="http://search.cpan.org/perldoc?Devel::Cover">http://search.cpan.org/perldoc</a>.</p>
+</dd>
+</dl>
+
+<p>
+<a href="http://perltraining.com.au/tips/"><b>[ Perl tips index ] </b></a><br />
+<a href="http://perltraining.com.au/cgi-bin/mailman/listinfo/perl-tips"><b>[ Subscribe to Perl tips ]</b></a>
+</p>
+
+<hr />
+
+<p>
+This Perl tip and associated text is copyright Perl Training
+Australia. You may freely distribute this text so long as it is
+distributed in full with this Copyright noticed attached.
+</p>
+<p>
+If you have any questions please don't hesitate to contact us:
+</p>
+<table>
+<tbody><tr>
+<td>Email: </td><td>contact@perltraining.com.au</td>
+</tr>
+<tr>
+<td>Phone: </td><td>03 9354 6001 (Australia)</td>
+</tr>
+<tr>
+<td>International: </td><td>+61 3 9354 6001</td>
+</tr>
+</tbody></table>
+
+
+<p id="copyright">Copyright 2001-2008 Perl Training Australia.  Contact us at <a href="mailto:contact@perltraining.com.au">contact@perltraining.com.au</a></p>
+
+
+</body>
+</html>
+
+
+
