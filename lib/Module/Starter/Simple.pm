@@ -339,6 +339,9 @@ WriteMakefile(
     AUTHOR              => '$author',
     VERSION_FROM        => '$main_pm_file',
     ABSTRACT_FROM       => '$main_pm_file',
+    (\$ExtUtils::MakeMaker::VERSION >= 6.3002
+      ? ('LICENSE'=> '$self->{license}')
+      : ()),
     PL_FILES            => {},
     PREREQ_PM => {
         'Test::More' => 0,
@@ -371,6 +374,7 @@ use inc::Module::Install;
 name     '$self->{distro}';
 all_from '$main_pm_file';
 author   '$author';
+license  '$self->{license}';
 
 build_requires 'Test::More';
 
