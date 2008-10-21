@@ -3,6 +3,7 @@ Revision history for Perl extension Module::Starter
 NEXT
 
 Added Perl Training Australia's getting-started.html
+Add license setting to default Makefile.PL output (Thanks, Gabor!)
 
 
 1.46    Fri Nov  9 18:36 America/New_York 2007
