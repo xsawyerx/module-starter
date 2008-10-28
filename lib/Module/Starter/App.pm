@@ -7,7 +7,7 @@ Module::Starter::App - the code behind the command line program
 
 =cut
 
-our $VERSION = '1.470';
+our $VERSION = '1.50';
 
 use Getopt::Long;
 use Pod::Usage;

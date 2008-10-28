@@ -12,27 +12,27 @@ Module::Starter::BuilderSet - determine builder metadata
 
 =head1 VERSION
 
-Version 1.470
+Version 1.50
 
 =cut
 
-our $VERSION = '1.470';
+our $VERSION = '1.50';
 
 =head1 SYNOPSIS
 
-  use Module::Starter::BuilderSet;
+    use Module::Starter::BuilderSet;
 
- my $builder_set = Module::Starter::BuilderSet->new;
- my @supported_builders = $builder_set->supported_builders();
- my $default_builder = $builder_set->default_builder();
- my $output_file = $builder_set->file_for_builder($default_builder);
+    my $builder_set = Module::Starter::BuilderSet->new;
+    my @supported_builders = $builder_set->supported_builders();
+    my $default_builder = $builder_set->default_builder();
+    my $output_file = $builder_set->file_for_builder($default_builder);
 
- my $create_method = $builder_set->method_for_builder($default_builder);
- Module::Starter::Simple->$create_method($default_builder); # eeew.
+    my $create_method = $builder_set->method_for_builder($default_builder);
+    Module::Starter::Simple->$create_method($default_builder); # eeew.
 
- my @build_commands = $builder_set->instructions_for_builder($default_builder);
- my @builder_dependencies = $builder_set->deps_for_builder($default_builder);
- my @compatible_builders = $builder_set->check_compatibility(@builder_list);
+    my @build_commands = $builder_set->instructions_for_builder($default_builder);
+    my @builder_dependencies = $builder_set->deps_for_builder($default_builder);
+    my @compatible_builders = $builder_set->check_compatibility(@builder_list);
 
 =head1 DESCRIPTION
 

@@ -1,13 +1,15 @@
 Revision history for Perl extension Module::Starter
 
-NEXT
+1.50    Tue Oct 28 00:27:37 CDT 2008
+        * Added Perl Training Australia's getting-started.html
 
-Added Perl Training Australia's getting-started.html
-Add license setting to default Makefile.PL output (Thanks, Gabor!)
+        * Add license setting to default Makefile.PL output (Thanks, Gabor!)
+
+        * Fixed the RT link in the boilerplate. (Thanks, Shlomi)
 
 
 1.46    Fri Nov  9 18:36 America/New_York 2007
-        [ENHANCEMENTS
+        [ENHANCEMENTS]
         * add Module::Install compat for ::Template plugin
         * boilerplate.t no longer appears in default MANIFEST
         * META.yml no longer appears in default MANIFEST

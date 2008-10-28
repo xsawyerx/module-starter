@@ -16,17 +16,17 @@ Module::Starter::Simple - a simple, comprehensive Module::Starter plugin
 
 =head1 VERSION
 
-Version 1.470
+Version 1.50
 
 =cut
 
-our $VERSION = '1.470';
+our $VERSION = '1.50';
 
 =head1 SYNOPSIS
 
-  use Module::Starter qw(Module::Starter::Simple);
+    use Module::Starter qw(Module::Starter::Simple);
 
- Module::Starter->create_distro(%args);
+    Module::Starter->create_distro(%args);
 
 =head1 DESCRIPTION
 
@@ -253,7 +253,7 @@ sub _reference_links {
         link     => 'http://cpanratings.perl.org/d/%s',
       },
       { title    => 'Search CPAN',
-        link     => 'http://search.cpan.org/dist/%s',
+        link     => 'http://search.cpan.org/dist/%s/',
       },
     );
 }
@@ -994,7 +994,7 @@ sub _module_bugs {
     my $module = shift;
     my $rtname = shift;
 
-    my $bug_email = "bug-$rtname at rt.cpan.org";
+    my $bug_email = "bug-\L$self->{distro}\E at rt.cpan.org";
     my $bug_link  =
       "http://rt.cpan.org/NoAuth/ReportBug.html?Queue=$self->{distro}";
 
@@ -1020,7 +1020,7 @@ sub _module_support {
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc $self->{main_module}
+    perldoc $module
 ];
     my @reference_links = _reference_links();
 
