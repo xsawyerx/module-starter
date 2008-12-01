@@ -27,4 +27,5 @@ t/data/templates/Makefile.PL
 t/data/templates/Changes
 t/data/templates/Build.PL
 t/data/templates/README
+t/test-dist.t
 perlcriticrc

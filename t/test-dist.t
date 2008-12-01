@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 61;
+use Test::More tests => 197;
 
 use Module::Starter;
 use File::Spec;
@@ -34,7 +34,9 @@ sub new {
 sub _filename {
     my $self = shift;
 
-    $self->{_filename} = shift if @_;
+    if (@_) {
+        $self->{_filename} = shift;
+    }
 
     return $self->{_filename};
 }
@@ -42,7 +44,9 @@ sub _filename {
 sub _text {
     my $self = shift;
 
-    $self->{_text} = shift if @_;
+    if (@_) {
+        $self->{_text} = shift;
+    }
 
     return $self->{_text};
 }
@@ -63,7 +67,7 @@ sub _slurp_to_ref {
 
     local $/;
     open my $in, '<', $filename
-        or Carp::confess( "Cannot open file $filename: $!" );
+        or Carp::confess( "Cannot open $filename" );
     $text = <$in>;
     close($in);
 
@@ -77,8 +81,8 @@ sub parse {
 
     my $verdict = ok (scalar(${$self->_text()} =~ s{$re}{}ms), $self->format_msg($msg));
 
-    if ( !$verdict ) {
-        diag("Filename == " . $self->_filename());
+    if (!$verdict ) {
+        diag('Filename == ' . $self->_filename());
     }
 
     return $verdict;
@@ -98,7 +102,7 @@ sub consume {
         ${$self->_text()} = substr(${$self->_text()}, length($prefix));
     }
     else {
-        diag("Filename == " . $self->_filename());
+        diag('Filename == ' . $self->_filename());
     }
 
     return $verdict;
@@ -111,7 +115,7 @@ sub is_end {
 
     my $verdict = is (${$self->_text()}, "", $self->format_msg($msg));
 
-    if ( !$verdict ) {
+    if (!$verdict ) {
         diag("Filename == " . $self->_filename());
     }
 
@@ -131,7 +135,7 @@ Here's an example:
         'Quick summary of what the module does.',
         'Perhaps a little code snippet.',
         { re => q{\s*} . quotemeta(q{use MyModule::Test;}), },
-        { re => q{\s*} .
+        { re => q{\s*} . 
             quotemeta(q{my $foo = MyModule::Test->new();})
             . q{\n\s*} . quotemeta("..."), },
     );
@@ -155,10 +159,7 @@ sub parse_paras {
         map { (ref($_) eq 'HASH') ? $_->{re} : quotemeta($_) }
         @{$paras};
 
-    return $self->parse(
-        $regex,
-        $msg,
-    );
+    return $self->parse( $regex, $msg );
 }
 
 sub format_msg {
@@ -176,7 +177,9 @@ use vars qw(@ISA);
 sub _perl_name {
     my $self = shift;
 
-    $self->{_perl_name} = shift if @_;
+    if (@_) {
+        $self->{_perl_name} = shift;
+    }
 
     return $self->{_perl_name};
 }
@@ -184,9 +187,21 @@ sub _perl_name {
 sub _dist_name {
     my $self = shift;
 
-    $self->{_dist_name} = shift if @_;
+    if (@_) {
+        $self->{_dist_name} = shift;
+    }
 
     return $self->{_dist_name};
+}
+
+sub _author_name {
+    my $self = shift;
+
+    if (@_) {
+        $self->{_author_name} = shift;
+    }
+
+    return $self->{_author_name};
 }
 
 sub _init {
@@ -197,6 +212,8 @@ sub _init {
     $self->_perl_name($args->{perl_name});
 
     $self->_dist_name($args->{dist_name});
+
+    $self->_author_name($args->{author_name});
 
     return;
 }
@@ -213,12 +230,13 @@ sub parse_module_start {
 
     my $perl_name = $self->_perl_name();
     my $dist_name = $self->_dist_name();
+    my $author_name = $self->_author_name();
     my $lc_dist_name = lc($dist_name);
 
     # TEST:$cnt++;
     $self->parse(
         qr/\Apackage \Q$perl_name\E;\n\nuse warnings;\nuse strict;\n\n/ms,
-        "start",
+        'start',
     );
 
     {
@@ -227,14 +245,14 @@ sub parse_module_start {
         # TEST:$cnt++;
         $self->parse(
             qr/\A=head1 NAME\n\n\Q$s1\E\n\n/ms,
-            'NAME Pod.',
+            "NAME Pod.",
         );
     }
 
     # TEST:$cnt++;
     $self->parse(
         qr/\A=head1 VERSION\n\nVersion 0\.01\n\n=cut\n\nour \$VERSION = '0\.01';\n+/,
-        'module version',
+        "module version",
     );
 
     {
@@ -246,7 +264,7 @@ sub parse_module_start {
             { re => q{\s*} . quotemeta(qq{use $perl_name;}), },
             { re => q{\s*} .
                 quotemeta(q{my $foo = } . $perl_name . q{->new();})
-                . q{\n\s*} . quotemeta("..."),
+                . q{\n\s*} . quotemeta('...'),
             },
         );
 
@@ -266,62 +284,62 @@ sub parse_module_start {
 . "if you don't export anything, such as for a purely object-oriented module."
             ),
         ],
-        'EXPORT',
+        "EXPORT",
     );
 
     # TEST:$cnt++
     $self->parse_paras(
         [
-            '=head1 FUNCTIONS',
-            '=head2 function1',
-            '=cut',
+            "=head1 FUNCTIONS",
+            "=head2 function1",
+            "=cut",
             "sub function1 {\n}",
         ],
-        'function1',
+        "function1",
     );
 
     # TEST:$cnt++
     $self->parse_paras(
         [
-            '=head2 function2',
-            '=cut',
+            "=head2 function2",
+            "=cut",
             "sub function2 {\n}",
         ],
-        'function2',
+        "function2",
     );
 
     # TEST:$cnt++
     $self->parse_paras(
         [
-            '=head1 AUTHOR',
-            { re => q{Baruch Spinoza[^\n]+} },
+            "=head1 AUTHOR",
+            { re => quotemeta($author_name) . q{[^\n]+} },
         ],
-        'AUTHOR',
+        "AUTHOR",
     );
 
     # TEST:$cnt++
     $self->parse_paras(
         [
-            '=head1 BUGS',
-            { re =>
-                  q/Please report any bugs.*C<bug-/
+            "=head1 BUGS",
+            { re => 
+                  q/Please report any bugs.*C<bug-/ 
                 . quotemeta($lc_dist_name)
-                .  q/ at rt\.cpan\.org>.*changes\./
+                .  q/ at rt\.cpan\.org>.*changes\./ 
             },
         ],
-        'BUGS',
+        "BUGS",
     );
 
     # TEST:$cnt++
     $self->parse_paras(
         [
-            '=head1 SUPPORT',
+            "=head1 SUPPORT",
             { re => q/You can find documentation for this module.*/ },
             { re => q/\s+perldoc / . quotemeta($perl_name), },
-            'You can also look for information at:',
-            '=over 4',
+            "You can also look for information at:",
+            "=over 4",
         ],
-        'Support 1',
+        "Support 1",
     );
 
     # TEST:$cnt++
@@ -330,7 +348,7 @@ sub parse_module_start {
             { re => q/=item \* RT:[^\n]*/, },
             "L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=$dist_name>",
         ],
-        'Support - RT',
+        "Support - RT",
     );
 
 
@@ -340,7 +358,7 @@ sub parse_module_start {
             { re => q/=item \* AnnoCPAN:[^\n]*/, },
             "L<http://annocpan.org/dist/$dist_name>",
         ],
-        'AnnoCPAN',
+        "AnnoCPAN",
     );
 
     # TEST:$cnt++
@@ -349,7 +367,7 @@ sub parse_module_start {
             { re => q/=item \* CPAN Ratings[^\n]*/, },
             "L<http://cpanratings.perl.org/d/$dist_name>",
         ],
-        'CPAN Ratings',
+        "CPAN Ratings",
     );
 
     # TEST:$cnt++
@@ -358,50 +376,54 @@ sub parse_module_start {
             { re => q/=item \* Search CPAN[^\n]*/, },
             "L<http://search.cpan.org/dist/$dist_name/>",
         ],
-        'CPAN Ratings',
+        "CPAN Ratings",
     );
 
     # TEST:$cnt++
     $self->parse_paras(
         [
-            '=back',
+            "=back",
         ],
-        'Support - =back',
+        "Support - =back",
     );
 
     # TEST:$cnt++
     $self->parse_paras(
         [
-            '=head1 ACKNOWLEDGEMENTS',
+            "=head1 ACKNOWLEDGEMENTS",
         ],
-        'acknowledgements',
+        "acknowledgements",
     );
 
     # TEST:$cnt++
     $self->parse_paras(
         [
-            '=head1 COPYRIGHT & LICENSE',
-            { re => q/Copyright \d+ Baruch Spinoza, all rights reserved\./ },
+            "=head1 COPYRIGHT & LICENSE",
+            { re =>
+                  q/Copyright \d+ /
+                . quotemeta($author_name)
+                . q/, all rights reserved\./
+            },
             ::chomp_me(<<'EOF'),
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
 EOF
         ],
-        'copyright',
+        "copyright",
     );
 
     # TEST:$cnt++
     $self->parse_paras(
         [
-            '=cut',
+            "=cut",
         ],
-        '=cut POD end',
+        "=cut POD end",
     );
 
     # TEST:$cnt++
     $self->consume(
         qq{1; # End of $perl_name},
-        'End of module',
+        "End of module",
     );
 
     return;
@@ -411,9 +433,10 @@ EOF
 
 package main;
 
-
 {
-    my $module_base_dir = File::Spec->catdir('t', 'data', 'MyModule-Test');
+    my $module_base_dir = 
+        File::Spec->catdir("t", "data", "MyModule-Test")
+        ;
 
     Module::Starter->create_distro(
         distro  => 'MyModule-Test',
@@ -428,39 +451,41 @@ package main;
     );
 
     {
-        my $readme = TestParseFile->new( {
-            fn => File::Spec->catfile($module_base_dir, 'README'),
-        });
+        my $readme = TestParseFile->new(
+            {
+                fn => File::Spec->catfile($module_base_dir, "README"),
+            }
+        );
 
         # TEST
         $readme->parse(qr{\AMyModule-Test\n\n}ms,
-            'Starts with the package name',
+            "Starts with the package name",
         );
 
         # TEST
         $readme->parse(qr{\AThe README is used to introduce the module and provide instructions.*?\n\n}ms,
-            'README used to introduce',
+            "README used to introduce",
         );
 
         # TEST
         $readme->parse(
             qr{\AA README file is required for CPAN modules since CPAN extracts the.*?\n\n\n}ms,
-            'A README file is required',
+            "A README file is required",
         );
 
         # TEST
         $readme->parse(qr{\A\n*INSTALLATION\n\nTo install this module, run the following commands:\n\n\s+\Qperl Build.PL\E\n\s+\Q./Build\E\n\s+\Q./Build test\E\n\s+\Q./Build install\E\n\n},
-            'INSTALLATION section',
+            "INSTALLATION section",
         );
 
         # TEST
         $readme->parse(qr{\ASUPPORT AND DOCUMENTATION\n\nAfter installing.*?^\s+perldoc MyModule::Test\n\n}ms,
-            'Support and docs 1'
+            "Support and docs 1"
         );
 
         # TEST
         $readme->parse(qr{\AYou can also look for information at:\n\n\s+RT[^\n]+\n\s+\Qhttp://rt.cpan.org/NoAuth/Bugs.html?Dist=MyModule-Test\E\n\n}ms,
-            'README - RT'
+            "README - RT"
         );
     }
 
@@ -473,53 +498,55 @@ package main;
 
         # TEST
         $build_pl->parse(qr{\Ause strict;\nuse warnings;\nuse Module::Build;\n\n}ms,
-            'Build.PL - Standard stuff at the beginning'
+            "Build.PL - Standard stuff at the beginning"
         );
 
         # TEST
         $build_pl->parse(qr{\A.*module_name *=> *'MyModule::Test',\n}ms,
-            'Build.PL - module_name',
+            "Build.PL - module_name",
         );
 
         # TEST
         $build_pl->parse(qr{\A\s*license *=> *'perl',\n}ms,
-            'Build.PL - license',
+            "Build.PL - license",
         );
 
         # TEST
         $build_pl->parse(qr{\A\s*dist_author *=> *\Q'Baruch Spinoza <spinoza\E\@\Qphilosophers.tld>',\E\n}ms,
-            'Build.PL - dist_author',
+            "Build.PL - dist_author",
         );
 
         # TEST
         $build_pl->parse(qr{\A\s*dist_version_from *=> *\Q'lib/MyModule/Test.pm',\E\n}ms,
-            'Build.PL - dist_version_from',
+            "Build.PL - dist_version_from",
         );
 
         # TEST
         $build_pl->parse(
             qr/\A\s*build_requires => \{\n *\Q'Test::More' => 0\E,\n\s*\},\n/ms,
-            'Build.PL - Build Requires',
+            "Build.PL - Build Requires",
         );
 
         # TEST
         $build_pl->parse(
             qr/\A\s*add_to_cleanup *=> \Q[ 'MyModule-Test-*' ],\E\n/ms,
-            'Build.PL - add_to_cleanup',
+            "Build.PL - add_to_cleanup",
         );
 
         # TEST
         $build_pl->parse(
             qr/\A\s*create_makefile_pl *=> \Q'traditional',\E\n/ms,
-            'Build.PL - create_makefile_pl',
+            "Build.PL - create_makefile_pl",
         );
 
     }
 
     {
-        my $manifest = TestParseFile->new( {
-            fn => File::Spec->catfile($module_base_dir, 'MANIFEST'),
-        } );
+        my $manifest = TestParseFile->new(
+            {
+                fn => File::Spec->catfile($module_base_dir, 'MANIFEST'),
+            }
+        );
 
         # TEST
         $manifest->consume(<<'EOF', 'MANIFEST - Contents');
@@ -539,9 +566,11 @@ EOF
     }
 
     {
-        my $pod_t = TestParseFile->new( {
-            fn => File::Spec->catfile($module_base_dir, 't', 'pod.t'),
-        } );
+        my $pod_t = TestParseFile->new(
+            {
+                fn => File::Spec->catfile($module_base_dir, 't', 'pod.t'),
+            }
+        );
 
         my $minimal_test_pod = "1.22";
         # TEST
@@ -561,18 +590,22 @@ all_pod_files_ok();
 EOF
 
         # TEST
-        $pod_t->is_end("pod.t - end.");
+        $pod_t->is_end('pod.t - end.');
     }
 
     {
-        my $pc_t = TestParseFile->new( {
-            fn => File::Spec->catfile( $module_base_dir, 't', 'pod-coverage.t' )
-        } );
+        my $pc_t = TestParseFile->new(
+            {
+                fn => File::Spec->catfile(
+                    $module_base_dir, 't', 'pod-coverage.t'
+                ),
+            }
+        );
 
         # TEST
         $pc_t->parse(
             qr/\Ause strict;\nuse warnings;\nuse Test::More;\n\n/ms,
-            'pod-coverage.t - header',
+            "pod-coverage.t - header",
         );
 
         my $l1 = q{eval "use Test::Pod::Coverage $min_tpc";};
@@ -580,7 +613,7 @@ EOF
         # TEST
         $pc_t->parse(
             qr/\A# Ensure a recent[^\n]+\nmy \$min_tpc = \d+\.\d+;\n\Q$l1\E\nplan skip_all[^\n]+\n *if \$\@;\n\n/ms,
-            'pod-coverage.t - min_tpc block',
+            "pod-coverage.t - min_tpc block",
         );
 
         $l1 = q{eval "use Pod::Coverage $min_pc";};
@@ -605,11 +638,16 @@ EOF
     }
 
     {
-        my $mod1 = TestParseModuleFile->new( {
-            fn        => File::Spec->catfile( $module_base_dir, qw(lib MyModule Test.pm) ),
-            perl_name => 'MyModule::Test',
-            dist_name => 'MyModule-Test',
-        } );
+        my $mod1 = TestParseModuleFile->new(
+            {
+                fn => File::Spec->catfile(
+                    $module_base_dir, qw(lib MyModule Test.pm),
+                ),
+                perl_name   => 'MyModule::Test',
+                dist_name   => 'MyModule-Test',
+                author_name => 'Baruch Spinoza',
+            }
+        );
 
         # TEST*$parse_module_start_num_tests
         $mod1->parse_module_start();
@@ -617,11 +655,16 @@ EOF
     }
 
     {
-        my $mod2 = TestParseModuleFile->new( {
-            fn        => File::Spec->catfile( $module_base_dir, qw(lib MyModule Test App.pm) ),
-            perl_name => 'MyModule::Test::App',
-            dist_name => 'MyModule-Test',
-        } );
+        my $mod2 = TestParseModuleFile->new(
+            {
+                fn => File::Spec->catfile(
+                    $module_base_dir, qw(lib MyModule Test App.pm),
+                ),
+                perl_name   => 'MyModule::Test::App',
+                dist_name   => 'MyModule-Test',
+                author_name => 'Baruch Spinoza',
+            }
+        );
 
         # TEST*$parse_module_start_num_tests
         $mod2->parse_module_start();
@@ -629,7 +672,323 @@ EOF
     }
 
     my $files_list;
-    if (!$ENV{'DONT_DEL'}) {
+    if (!$ENV{"DONT_DEL"})
+    {
+        rmtree ($module_base_dir, {result => \$files_list});
+    }
+}
+
+{
+    my $module_base_dir = 
+        File::Spec->catdir('t', 'data', 'Book-Park-Mansfield')
+        ;
+
+    Module::Starter->create_distro(
+        distro  => 'Book-Park-Mansfield',
+        modules => [
+            'Book::Park::Mansfield',
+            'Book::Park::Mansfield::Base',
+            'Book::Park::Mansfield::FannyPrice',
+            'JAUSTEN::Utils',
+        ],
+        dir     => $module_base_dir,
+        builder => 'Module::Build',
+        license => 'perl',
+        author  => 'Jane Austen',
+        email   => 'jane.austen@writers.tld',
+        verbose => 0,
+        force   => 0,
+    );
+
+    {
+        my $readme = TestParseFile->new(
+            {
+                fn => File::Spec->catfile($module_base_dir, "README"),
+            }
+        );
+
+        # TEST
+        $readme->parse(qr{\ABook-Park-Mansfield\n\n}ms,
+            'Starts with the package name',
+        );
+
+        # TEST
+        $readme->parse(qr{\AThe README is used to introduce the module and provide instructions.*?\n\n}ms,
+            'README used to introduce',
+        );
+
+        # TEST
+        $readme->parse(
+            qr{\AA README file is required for CPAN modules since CPAN extracts the.*?\n\n\n}ms,
+            'A README file is required',
+        );
+
+        # TEST
+        $readme->parse(qr{\A\n*INSTALLATION\n\nTo install this module, run the following commands:\n\n\s+\Qperl Build.PL\E\n\s+\Q./Build\E\n\s+\Q./Build test\E\n\s+\Q./Build install\E\n\n},
+            'INSTALLATION section',
+        );
+
+        # TEST
+        $readme->parse(qr{\ASUPPORT AND DOCUMENTATION\n\nAfter installing.*?^\s+perldoc Book::Park::Mansfield\n\n}ms,
+            'Support and docs 1'
+        );
+
+        # TEST
+        $readme->parse(qr{\AYou can also look for information at:\n\n\s+RT[^\n]+\n\s+\Qhttp://rt.cpan.org/NoAuth/Bugs.html?Dist=Book-Park-Mansfield\E\n\n}ms,
+            'README - RT'
+        );
+    }
+
+    {
+        my $mod1 = TestParseModuleFile->new(
+            {
+                fn => File::Spec->catfile(
+                    $module_base_dir, qw(lib Book Park Mansfield.pm),
+                ),
+                perl_name   => 'Book::Park::Mansfield',
+                dist_name   => 'Book-Park-Mansfield',
+                author_name => 'Jane Austen',
+            }
+        );
+
+        # TEST*$parse_module_start_num_tests
+        $mod1->parse_module_start();
+
+    }
+
+    {
+        my $jausten_mod = TestParseModuleFile->new(
+            {
+                fn => File::Spec->catfile(
+                    $module_base_dir, qw(lib JAUSTEN Utils.pm),
+                ),
+                perl_name   => 'JAUSTEN::Utils',
+                dist_name   => 'Book-Park-Mansfield',
+                author_name => 'Jane Austen',
+            }
+        );
+
+        # TEST*$parse_module_start_num_tests
+        $jausten_mod->parse_module_start();
+    }
+
+    {
+        my $mod2 = TestParseModuleFile->new(
+            {
+                fn => File::Spec->catfile(
+                    $module_base_dir, qw(lib Book Park Mansfield Base.pm),
+                ),
+                perl_name   => 'Book::Park::Mansfield::Base',
+                dist_name   => 'Book-Park-Mansfield',
+                author_name => 'Jane Austen',
+            }
+        );
+
+        # TEST*$parse_module_start_num_tests
+        $mod2->parse_module_start();
+
+    }
+
+    my $files_list;
+    if (!$ENV{'DONT_DEL_JANE'})
+    {
+        rmtree ($module_base_dir, {result => \$files_list});
+    }
+}
+
+{
+    my $module_base_dir = 
+        File::Spec->catdir("t", "data", "second-Book-Park-Mansfield")
+        ;
+
+    Module::Starter->create_distro(
+        distro  => 'Book-Park-Mansfield',
+        modules => [
+            'Book::Park::Mansfield',
+            'Book::Park::Mansfield::Base',
+            'Book::Park::Mansfield::FannyPrice',
+            'JAUSTEN::Utils',
+        ],
+        dir     => $module_base_dir,
+        builder => 'ExtUtils::MakeMaker',
+        license => 'perl',
+        author  => 'Jane Austen',
+        email   => 'jane.austen@writers.tld',
+        verbose => 0,
+        force   => 0,
+    );
+
+    {
+        my $readme = TestParseFile->new(
+            {
+                fn => File::Spec->catfile($module_base_dir, "README"),
+            }
+        );
+
+        # TEST
+        $readme->parse(qr{\ABook-Park-Mansfield\n\n}ms,
+            'Starts with the package name',
+        );
+
+        # TEST
+        $readme->parse(qr{\AThe README is used to introduce the module and provide instructions.*?\n\n}ms,
+            'README used to introduce',
+        );
+
+        # TEST
+        $readme->parse(
+            qr{\AA README file is required for CPAN modules since CPAN extracts the.*?\n\n\n}ms,
+            'A README file is required',
+        );
+
+        # TEST
+        $readme->parse(qr{\A\n*INSTALLATION\n\nTo install this module, run the following commands:\n\n\s+\Qperl Makefile.PL\E\n\s+\Qmake\E\n\s+\Qmake test\E\n\s+\Qmake install\E\n\n},
+            'INSTALLATION section',
+        );
+
+        # TEST
+        $readme->parse(qr{\ASUPPORT AND DOCUMENTATION\n\nAfter installing.*?^\s+perldoc Book::Park::Mansfield\n\n}ms,
+            'Support and docs 1'
+        );
+
+        # TEST
+        $readme->parse(qr{\AYou can also look for information at:\n\n\s+RT[^\n]+\n\s+\Qhttp://rt.cpan.org/NoAuth/Bugs.html?Dist=Book-Park-Mansfield\E\n\n}ms,
+            'README - RT'
+        );
+    }
+
+    {
+        my $makefile_pl = TestParseFile->new(
+            {
+                fn => File::Spec->catfile($module_base_dir, "Makefile.PL"),
+            }
+        );
+
+        # TEST
+        $makefile_pl->parse(qr{\Ause strict;\nuse warnings;\nuse ExtUtils::MakeMaker;\n\n}ms,
+            "Makefile.PL - Standard stuff at the beginning"
+        );
+
+        # TEST
+        $makefile_pl->parse(qr{\A.*NAME *=> *'Book::Park::Mansfield',\n}ms,
+            "Makefile.PL - NAME",
+        );
+
+        # TEST
+        $makefile_pl->parse(qr{\A\s*AUTHOR *=> *\Q'Jane Austen <jane.austen\E\@\Qwriters.tld>',\E\n}ms,
+            "Makefile.PL - AUTHOR",
+        );
+
+        # TEST
+        $makefile_pl->parse(qr{\A\s*VERSION_FROM *=> *\Q'lib/Book/Park/Mansfield.pm',\E\n}ms,
+            "Makefile.PL - VERSION_FROM",
+        );
+
+        # TEST
+        $makefile_pl->parse(qr{\A\s*ABSTRACT_FROM *=> *\Q'lib/Book/Park/Mansfield.pm',\E\n}ms,
+            "Makefile.PL - ABSTRACT_FROM",
+        );
+
+        # TEST
+        $makefile_pl->parse(qr{\A\s*\(\$ExtUtils::MakeMaker::VERSION \>= \d+\.\d+\n\s*\? \(\s*'LICENSE'\s*=>\s*'perl'\s*\)\n\s*:\s*\(\s*\)\)\s*,\n}ms,
+            "Makefile.PL - LICENSE",
+        );
+
+        # TEST
+        $makefile_pl->parse(qr{\A\s*PL_FILES *=> *\{\},\n}ms,
+            "Makefile.PL - PL_FILES",
+        );
+
+        # TEST
+        $makefile_pl->parse(qr{\A\s*PREREQ_PM *=> *\{\n\s*'Test::More' *=> *0,\n\s*\},\n}ms,
+            "Makefile.PL - PREREQ_PM",
+        );
+
+    }
+
+    {
+        my $manifest = TestParseFile->new(
+            {
+                fn => File::Spec->catfile($module_base_dir, 'MANIFEST'),
+            }
+        );
+
+        my $contents = <<'EOF';
+Changes
+MANIFEST
+Makefile.PL
+README
+lib/Book/Park/Mansfield.pm
+lib/Book/Park/Mansfield/Base.pm
+lib/Book/Park/Mansfield/FannyPrice.pm
+lib/JAUSTEN/Utils.pm
+t/00-load.t
+t/pod-coverage.t
+t/pod.t
+EOF
+
+        # TEST
+        $manifest->consume(
+            $contents,
+            "MANIFEST for Makefile.PL'ed Module",
+        );
+
+        # TEST
+        $manifest->is_end("MANIFEST - that's all folks!");
+    }
+
+    {
+        my $mod1 = TestParseModuleFile->new(
+            {
+                fn => File::Spec->catfile(
+                    $module_base_dir, qw(lib Book Park Mansfield.pm),
+                ),
+                perl_name   => 'Book::Park::Mansfield',
+                dist_name   => 'Book-Park-Mansfield',
+                author_name => 'Jane Austen',
+            }
+        );
+
+        # TEST*$parse_module_start_num_tests
+        $mod1->parse_module_start();
+
+    }
+
+    {
+        my $jausten_mod = TestParseModuleFile->new(
+            {
+                fn => File::Spec->catfile(
+                    $module_base_dir, qw(lib JAUSTEN Utils.pm),
+                ),
+                perl_name   => 'JAUSTEN::Utils',
+                dist_name   => 'Book-Park-Mansfield',
+                author_name => 'Jane Austen',
+            }
+        );
+
+        # TEST*$parse_module_start_num_tests
+        $jausten_mod->parse_module_start();
+    }
+
+    {
+        my $mod2 = TestParseModuleFile->new(
+            {
+                fn => File::Spec->catfile(
+                    $module_base_dir, qw(lib Book Park Mansfield Base.pm),
+                ),
+                perl_name   => 'Book::Park::Mansfield::Base',
+                dist_name   => 'Book-Park-Mansfield',
+                author_name => 'Jane Austen',
+            }
+        );
+
+        # TEST*$parse_module_start_num_tests
+        $mod2->parse_module_start();
+
+    }
+
+    my $files_list;
+    if (!$ENV{'DONT_DEL_JANE2'}) {
         rmtree ($module_base_dir, {result => \$files_list});
     }
 }
@@ -641,4 +1000,3 @@ t/test-dist.t - test the integrity of prepared distributions.
 =head1 AUTHOR
 
 Shlomi Fish, L<http://www.shlomifish.org/>
-
