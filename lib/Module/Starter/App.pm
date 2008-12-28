@@ -1,4 +1,3 @@
-
 package Module::Starter::App;
 
 =head1 NAME
@@ -6,6 +5,9 @@ package Module::Starter::App;
 Module::Starter::App - the code behind the command line program
 
 =cut
+
+use warnings;
+use strict;
 
 our $VERSION = '1.50';
 
