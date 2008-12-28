@@ -1,5 +1,9 @@
 Revision history for Perl extension Module::Starter
 
+NEXT
+        * Support for more licenses.  Thanks to Shlomi Fish.
+
+
 1.50    Tue Oct 28 00:27:37 CDT 2008
         * Added Perl Training Australia's getting-started.html
 
