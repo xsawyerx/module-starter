@@ -135,7 +135,7 @@ Here's an example:
         'Quick summary of what the module does.',
         'Perhaps a little code snippet.',
         { re => q{\s*} . quotemeta(q{use MyModule::Test;}), },
-        { re => q{\s*} . 
+        { re => q{\s*} .
             quotemeta(q{my $foo = MyModule::Test->new();})
             . q{\n\s*} . quotemeta("..."), },
     );
@@ -452,10 +452,10 @@ sub parse_module_start {
     $self->parse_paras(
         [
             "=head1 BUGS",
-            { re => 
-                  q/Please report any bugs.*C<bug-/ 
+            { re =>
+                  q/Please report any bugs.*C<bug-/
                 . quotemeta($lc_dist_name)
-                .  q/ at rt\.cpan\.org>.*changes\./ 
+                .  q/ at rt\.cpan\.org>.*changes\./
             },
         ],
         "BUGS",
@@ -562,7 +562,7 @@ sub parse_module_start {
 package main;
 
 {
-    my $module_base_dir = 
+    my $module_base_dir =
         File::Spec->catdir("t", "data", "MyModule-Test")
         ;
 
@@ -809,7 +809,7 @@ EOF
 }
 
 {
-    my $module_base_dir = 
+    my $module_base_dir =
         File::Spec->catdir('t', 'data', 'Book-Park-Mansfield')
         ;
 
@@ -930,7 +930,7 @@ EOF
 }
 
 {
-    my $module_base_dir = 
+    my $module_base_dir =
         File::Spec->catdir("t", "data", "second-Book-Park-Mansfield")
         ;
 
