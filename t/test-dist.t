@@ -283,7 +283,7 @@ EOF
             split(/\n\n+/, <<"EOF")
 This program is distributed under the (Revised) BSD License:
 L<http://www.opensource.org/licenses/bsd-license.php>
-            
+
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
 are met:
@@ -1130,7 +1130,7 @@ EOF
 }
 
 {
-    my $module_base_dir = 
+    my $module_base_dir =
         File::Spec->catdir("t", "data", "x11l-Book-Park-Mansfield")
         ;
 
@@ -1330,7 +1330,7 @@ EOF
 }
 
 {
-    my $module_base_dir = 
+    my $module_base_dir =
         File::Spec->catdir("t", "data", "bsdl-Book-Park-Mansfield")
         ;
 
@@ -1530,7 +1530,7 @@ EOF
 }
 
 {
-    my $module_base_dir = 
+    my $module_base_dir =
         File::Spec->catdir('t', 'data', 'gpl-Book-Park-Mansfield')
         ;
 
@@ -1651,7 +1651,7 @@ EOF
 }
 
 {
-    my $module_base_dir = 
+    my $module_base_dir =
         File::Spec->catdir('t', 'data', 'lgpl-Book-Park-Mansfield')
         ;
 
