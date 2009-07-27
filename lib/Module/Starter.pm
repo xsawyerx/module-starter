@@ -111,7 +111,7 @@ You can find documentation for this module with the perldoc command.
 
     perldoc Module::Starter
 
-    You can also look for information at:
+You can also look for information at:
 
 =over 4
 
@@ -146,7 +146,7 @@ notified of progress on your bug as I make changes.
 
 =head1 COPYRIGHT
 
-Copyright 2005-7 Andy Lester, Ricardo Signes and C.J. Adams-Collier,
+Copyright 2005-2009 Andy Lester, Ricardo Signes and C.J. Adams-Collier,
 All Rights Reserved.
 
 This program is free software; you can redistribute it and/or modify it
