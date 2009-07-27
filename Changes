@@ -8,7 +8,7 @@ NEXT
         * Complains about extra unparsed options to try to detect
         problems that come out of misquoted variables. Thanks to Gunnar Wolf.
 
-        * The list of files to ignore is now called ignores.txt,
+        * The list of files to ignore is now called ignore.txt,
         which you can turn into .cvsignore, .gitignore, MANIFEST.SKIP
         or whatever.
 
