@@ -93,7 +93,7 @@ sub generated_files {
      catfile($starter_dir, 't', 'pod.t')          => 'f',
      catfile($starter_dir, 'README')              => 'f',
      catfile($starter_dir, 'Changes')             => 'f',
-     catfile($starter_dir, '.cvsignore')          => 'f',
+     catfile($starter_dir, 'ignores.txt')         => 'f',
     );
 
   foreach my $module (@modules){

@@ -218,14 +218,14 @@ sub MANIFEST_guts {
     $self->render($template, \%options);
 }
 
-=item item cvsignore_guts
+=item item ignores_guts
 
 =cut
 
-sub cvsignore_guts {
+sub ignores_guts {
     my $self = shift;
 
-    my $template = $self->{templates}{cvsignore};
+    my $template = $self->{templates}{ignores};
     $self->render($template);
 }
 

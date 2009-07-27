@@ -74,7 +74,7 @@ sub create_distro {
     push @files, $self->create_modules( @modules );
 
     push @files, $self->create_t( @modules );
-    push @files, $self->create_cvsignore;
+    push @files, $self->create_ignores;
     my %build_results = $self->create_build();
     push(@files, @{ $build_results{files} } );
 
@@ -985,31 +985,31 @@ sub create_build {
         );
 }
 
-=head2 create_cvsignore( )
+=head2 create_ignores()
 
-This creates a .cvsignore file in the distribution's directory so that your CVS
+This creates a ignore.txt file in the distribution's directory so that your CVS
 knows to ignore certain files.
 
 =cut
 
-sub create_cvsignore {
+sub create_ignores {
     my $self = shift;
 
-    my $fname = File::Spec->catfile( $self->{basedir}, '.cvsignore' );
-    $self->create_file( $fname, $self->cvsignore_guts() );
+    my $fname = File::Spec->catfile( $self->{basedir}, 'ignore.txt' );
+    $self->create_file( $fname, $self->ignores_guts() );
     $self->progress( "Created $fname" );
 
     return; # Not a file that goes in the MANIFEST
 }
 
-=head2 cvsignore_guts
+=head2 ignores_guts()
 
-Called by C<create_cvsignore>, this method returns the contents of the
-cvsignore file.
+Called by C<create_ignores>, this method returns the contents of the
+ignore.txt file.
 
 =cut
 
-sub cvsignore_guts {
+sub ignores_guts {
     my $self = shift;
 
     return <<"HERE";
