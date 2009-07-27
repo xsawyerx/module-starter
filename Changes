@@ -1,6 +1,6 @@
 Revision history for Perl extension Module::Starter
 
-NEXT
+1.52    Mon Jul 27 01:25:03 CDT 2009
         * Support for more licenses.  Thanks to Shlomi Fish.
 
         * Fix slashing problems for Windows.  Thanks Olivier Mengué.
