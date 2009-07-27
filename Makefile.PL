@@ -13,8 +13,6 @@ WriteMakefile(
     EXE_FILES           => [ 'bin/module-starter' ],
     PREREQ_PM => {
         'Test::More'            => 0,
-        'Test::Pod'             => 1.22,
-        'Test::Pod::Coverage'   => 1.08,
         'ExtUtils::Command'     => 0,
         'File::Spec'            => 0,
         'Getopt::Long'          => 0,
