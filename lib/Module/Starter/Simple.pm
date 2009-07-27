@@ -183,7 +183,10 @@ sub _get_licenses_mapping {
         license => 'perl',
         blurb => <<'EOT',
 This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
+under the terms of either: the GNU General Public License as published
+by the Free Software Foundation; or the Artistic License.
+
+See http://dev.perl.org/licenses/ for more information.
 EOT
     },
     {
