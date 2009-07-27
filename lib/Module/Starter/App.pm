@@ -76,6 +76,7 @@ sub run {
       mb           => sub { push @{$config{builder}}, 'Module::Build' },
       mi           => sub { push @{$config{builder}}, 'Module::Install' },
 
+
       'author=s'   => \$config{author},
       'email=s'    => \$config{email},
       'license=s'  => \$config{license},
@@ -87,6 +88,13 @@ sub run {
                         },
       help         => sub { pod2usage(1); },
   ) or pod2usage(2);
+
+  if (@ARGV) {
+      pod2usage(
+          -msg =>  "Unparseable arguments received: " . join(',', @ARGV),
+          -exitval => 2,
+      );
+  }
 
   $config{class} ||= 'Module::Starter';
 
