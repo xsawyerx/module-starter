@@ -643,7 +643,7 @@ package main;
         );
 
         # TEST
-        $build_pl->parse(qr{\A\s*dist_author *=> *\Q'Baruch Spinoza <spinoza\E\@\Qphilosophers.tld>',\E\n}ms,
+        $build_pl->parse(qr{\A\s*dist_author *=> *\Qq{Baruch Spinoza <spinoza\E\@\Qphilosophers.tld>},\E\n}ms,
             "Build.PL - dist_author",
         );
 
@@ -1011,7 +1011,7 @@ EOF
         );
 
         # TEST
-        $makefile_pl->parse(qr{\A\s*AUTHOR *=> *\Q'Jane Austen <jane.austen\E\@\Qwriters.tld>',\E\n}ms,
+        $makefile_pl->parse(qr{\A\s*AUTHOR *=> *\Qq{Jane Austen <jane.austen\E\@\Qwriters.tld>},\E\n}ms,
             "Makefile.PL - AUTHOR",
         );
 
@@ -1211,7 +1211,7 @@ EOF
         );
 
         # TEST
-        $makefile_pl->parse(qr{\A\s*AUTHOR *=> *\Q'Jane Austen <jane.austen\E\@\Qwriters.tld>',\E\n}ms,
+        $makefile_pl->parse(qr{\A\s*AUTHOR *=> *\Qq{Jane Austen <jane.austen\E\@\Qwriters.tld>},\E\n}ms,
             "Makefile.PL - AUTHOR",
         );
 
@@ -1411,7 +1411,7 @@ EOF
         );
 
         # TEST
-        $makefile_pl->parse(qr{\A\s*AUTHOR *=> *\Q'Jane Austen <jane.austen\E\@\Qwriters.tld>',\E\n}ms,
+        $makefile_pl->parse(qr{\A\s*AUTHOR *=> *\Qq{Jane Austen <jane.austen\E\@\Qwriters.tld>},\E\n}ms,
             "Makefile.PL - AUTHOR",
         );
 

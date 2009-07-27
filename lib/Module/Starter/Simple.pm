@@ -465,7 +465,7 @@ use ExtUtils::MakeMaker;
 
 WriteMakefile(
     NAME                => '$main_module',
-    AUTHOR              => '$author',
+    AUTHOR              => q{$author},
     VERSION_FROM        => '$main_pm_file',
     ABSTRACT_FROM       => '$main_pm_file',
     (\$ExtUtils::MakeMaker::VERSION >= 6.3002
@@ -495,14 +495,15 @@ sub MI_Makefile_PL_guts {
     my $main_module = shift;
     my $main_pm_file = shift;
 
-    (my $author = "$self->{author} <$self->{email}>") =~ s/'/\'/g;
+    my $author = "$self->{author} <$self->{email}>";
+    $author =~ s/'/\'/g;
 
     return <<"HERE";
 use inc::Module::Install;
 
 name     '$self->{distro}';
 all_from '$main_pm_file';
-author   '$author';
+author   q{$author};
 license  '$self->{license}';
 
 build_requires 'Test::More';
@@ -566,7 +567,7 @@ use Module::Build;
 my \$builder = Module::Build->new(
     module_name         => '$main_module',
     license             => '$self->{license}',
-    dist_author         => '$author',
+    dist_author         => q{$author},
     dist_version_from   => '$main_pm_file',
     build_requires => {
         'Test::More' => 0,
