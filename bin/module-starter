@@ -38,6 +38,9 @@ Options:
 
     --help           Show this message
 
+Available Licenses:
+    perl, bsd, gpl, lgpl, mit
+
 Example:
 
     module-starter --module=Foo::Bar,Foo::Bat \

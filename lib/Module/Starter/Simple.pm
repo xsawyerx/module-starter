@@ -174,18 +174,21 @@ method eventually.)
 
 =cut
 
-sub _license_blurb {
+sub _get_licenses_mapping {
     my $self = shift;
-    my $license_blurb;
 
-    if ($self->{license} eq 'perl') {
-        $license_blurb = <<'EOT';
+    return
+    [
+    {
+        license => 'perl',
+        blurb => <<'EOT',
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
 EOT
-    }
-    elsif ($self->{license} eq 'mit') {
-        $license_blurb = <<'EOT';
+    },
+    {
+        license => 'mit',
+        blurb => <<'EOT',
 This program is distributed under the MIT (X11) License:
 L<http://www.opensource.org/licenses/mit-license.php>
 
@@ -210,9 +213,10 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 EOT
-    }
-    elsif ($self->{license} eq 'bsd') {
-        $license_blurb = <<"EOT"
+    },
+    {
+        license => 'bsd',
+        blurb => <<"EOT",
 This program is distributed under the (Revised) BSD License:
 L<http://www.opensource.org/licenses/bsd-license.php>
 
@@ -244,9 +248,10 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 EOT
-    }
-    elsif ($self->{license} eq 'gpl') {
-        $license_blurb = <<'EOT'
+    },
+    {
+        license => 'gpl',
+        blurb => <<'EOT',
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; version 2 dated June, 1991 or at your option
@@ -261,9 +266,10 @@ A copy of the GNU General Public License is available in the source tree;
 if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 EOT
-    }
-    elsif ($self->{license} eq 'lgpl') {
-        $license_blurb = <<'EOT'
+    },
+    {
+        license => 'lgpl',
+        blurb => <<'EOT',
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
 License as published by the Free Software Foundation; either
@@ -279,6 +285,30 @@ License along with this program; if not, write to the Free
 Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
 02111-1307 USA.
 EOT
+    },
+    ];
+}
+
+sub _license_record {
+    my $self = shift;
+
+    foreach my $record (@{$self->_get_licenses_mapping()}) {
+        if ($record->{license} eq $self->{license}) {
+            return $record;
+        }
+    }
+
+    return;
+}
+
+sub _license_blurb {
+    my $self = shift;
+
+    my $record = $self->_license_record();
+
+    my $license_blurb;
+    if (defined($record)) {
+        $license_blurb = $record->{blurb};
     }
     else {
         $license_blurb = <<"EOT";
@@ -1158,7 +1188,7 @@ sub _module_license {
     my $content = qq[
 \=head1 COPYRIGHT & LICENSE
 
-Copyright $year $self->{author}, all rights reserved.
+Copyright $year $self->{author}.
 
 $license_blurb
 ];

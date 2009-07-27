@@ -533,7 +533,7 @@ sub parse_module_start {
             { re =>
                   q/Copyright \d+ /
                 . quotemeta($author_name)
-                . q/, all rights reserved\./
+                . q/\./
             },
             $self->_get_license_blurb(),
         ],
