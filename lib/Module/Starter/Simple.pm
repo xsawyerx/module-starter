@@ -96,8 +96,8 @@ the attention of subclass authors.
 =cut
 
 sub new {
-  my $class = shift;
-  return bless { @_ } => $class;
+    my $class = shift;
+    return bless { @_ } => $class;
 }
 
 =head1 OBJECT METHODS
@@ -399,15 +399,15 @@ sub create_Makefile_PL {
     my $main_module  = shift;
     my $builder_name = 'ExtUtils::MakeMaker';
     my $output_file  =
-      Module::Starter::BuilderSet->new()->file_for_builder($builder_name);
+    Module::Starter::BuilderSet->new()->file_for_builder($builder_name);
     my $fname        = File::Spec->catfile( $self->{basedir}, $output_file );
 
     $self->create_file(
-      $fname,
-      $self->Makefile_PL_guts(
-        $main_module,
-        $self->_module_to_pm_file($main_module),
-      ),
+        $fname,
+        $self->Makefile_PL_guts(
+            $main_module,
+            $self->_module_to_pm_file($main_module),
+        ),
     );
 
     $self->progress( "Created $fname" );
@@ -431,11 +431,11 @@ sub create_MI_Makefile_PL {
     my $fname        = File::Spec->catfile( $self->{basedir}, $output_file );
 
     $self->create_file(
-      $fname,
-      $self->MI_Makefile_PL_guts(
-        $main_module,
-        $self->_module_to_pm_file($main_module),
-      ),
+        $fname,
+        $self->MI_Makefile_PL_guts(
+            $main_module,
+            $self->_module_to_pm_file($main_module),
+        ),
     );
 
     $self->progress( "Created $fname" );
@@ -532,11 +532,11 @@ sub create_Build_PL {
     my $fname        = File::Spec->catfile( $self->{basedir}, $output_file );
 
     $self->create_file(
-      $fname,
-      $self->Build_PL_guts(
-        $main_module,
-        $self->_module_to_pm_file($main_module),
-      ),
+        $fname,
+        $self->Build_PL_guts(
+            $main_module,
+            $self->_module_to_pm_file($main_module),
+        ),
     );
 
     $self->progress( "Created $fname" );
@@ -663,12 +663,12 @@ sub _README_information {
     my $content = "You can also look for information at:\n";
 
     foreach my $ref (@reference_links){
-      my $title;
-      $title = "$ref->{nickname}, " if exists $ref->{nickname};
-      $title .= $ref->{title};
-      my $link  = sprintf($ref->{link}, $self->{distro});
+        my $title;
+        $title = "$ref->{nickname}, " if exists $ref->{nickname};
+        $title .= $ref->{title};
+        my $link  = sprintf($ref->{link}, $self->{distro});
 
-      $content .= qq[
+        $content .= qq[
     $title
         $link
 ];
@@ -938,58 +938,61 @@ Module::Install
 =cut
 
 sub create_build {
-  my $self = shift;
+    my $self = shift;
 
-  # pass one: pull the builders out of $self->{builder}
-  my @tmp =
+    # pass one: pull the builders out of $self->{builder}
+    my @tmp =
     ref $self->{builder} eq 'ARRAY' ? @{$self->{builder}} : $self->{builder};
 
-  my @builders;
-  my $COMMA = q{,};
-  # pass two: expand comma-delimited builder lists
-  foreach my $builder (@tmp) {
-    push( @builders, split($COMMA, $builder) );
-  }
-
-  my $builder_set = Module::Starter::BuilderSet->new();
-
-  # Remove mutually exclusive and unsupported builders
-  @builders = $builder_set->check_compatibility( @builders );
-
-  # compile some build instructions, create a list of files generated
-  # by the builders' create_* methods, and call said methods
-
-  my @build_instructions;
-  my @files;
-
-  foreach my $builder ( @builders ) {
-    if ( !@build_instructions ) {
-      push( @build_instructions,
-            'To install this module, run the following commands:'
-          );
-    } else {
-      push( @build_instructions,
-            "Alternatively, to install with $builder, you can ".
-            "use the following commands:"
-          );
+    my @builders;
+    my $COMMA = q{,};
+    # pass two: expand comma-delimited builder lists
+    foreach my $builder (@tmp) {
+        push( @builders, split($COMMA, $builder) );
     }
-    push( @files, $builder_set->file_for_builder($builder) );
-    my @commands = $builder_set->instructions_for_builder($builder);
-    push( @build_instructions, join("\n", map { "\t$_" } @commands) );
 
-    my $build_method = $builder_set->method_for_builder($builder);
-    $self->$build_method($self->{main_module})
-  }
+    my $builder_set = Module::Starter::BuilderSet->new();
 
-  return( files        => [ @files ],
-          instructions => join( "\n\n", @build_instructions ),
-        );
+    # Remove mutually exclusive and unsupported builders
+    @builders = $builder_set->check_compatibility( @builders );
+
+    # compile some build instructions, create a list of files generated
+    # by the builders' create_* methods, and call said methods
+
+    my @build_instructions;
+    my @files;
+
+    foreach my $builder ( @builders ) {
+        if ( !@build_instructions ) {
+            push( @build_instructions,
+                'To install this module, run the following commands:'
+            );
+        }
+        else {
+            push( @build_instructions,
+                "Alternatively, to install with $builder, you can ".
+                "use the following commands:"
+            );
+        }
+        push( @files, $builder_set->file_for_builder($builder) );
+        my @commands = $builder_set->instructions_for_builder($builder);
+        push( @build_instructions, join("\n", map { "\t$_" } @commands) );
+
+        my $build_method = $builder_set->method_for_builder($builder);
+        $self->$build_method($self->{main_module})
+    }
+
+    return(
+        files        => [ @files ],
+        instructions => join( "\n\n", @build_instructions ),
+    );
 }
+
 
 =head2 create_ignores()
 
-This creates a ignore.txt file in the distribution's directory so that your CVS
-knows to ignore certain files.
+This creates an ignore.txt file for use as MANIFEST.SKIP, .cvsignore,
+.gitignore, or whatever you use.
 
 =cut
 
@@ -1162,13 +1165,13 @@ You can also look for information at:
 \=over 4
 ];
 
-    foreach my $ref (@reference_links){
-      my $title;
-      my $link = sprintf($ref->{link}, $self->{distro});
+    foreach my $ref (@reference_links) {
+        my $title;
+        my $link = sprintf($ref->{link}, $self->{distro});
 
-      $title = "$ref->{nickname}: " if exists $ref->{nickname};
-      $title .= $ref->{title};
-      $content .= qq[
+        $title = "$ref->{nickname}: " if exists $ref->{nickname};
+        $title .= $ref->{title};
+        $content .= qq[
 \=item * $title
 
 L<$link>
