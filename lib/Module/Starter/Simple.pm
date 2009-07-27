@@ -369,8 +369,8 @@ sub _module_to_pm_file {
 }
 
 sub _reference_links {
-  return
-    ( { nickname => 'RT',
+  return (
+      { nickname => 'RT',
         title    => 'CPAN\'s request tracker',
         link     => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=%s',
       },
@@ -793,7 +793,7 @@ HERE
 
     my $nmodules = @modules;
     my $main_module = $modules[0];
-    my $use_lines = join( "\n", map { "\tuse_ok( '$_' );" } @modules );
+    my $use_lines = join( "\n", map { "    use_ok( '$_' );" } @modules );
 
     $t_files{'00-load.t'} = <<"HERE";
 #!perl -T
@@ -809,7 +809,7 @@ HERE
 
     my $module_boilerplate_tests;
     $module_boilerplate_tests .=
-      "  module_boilerplate_ok('$self->{module_file}{$_}');\n" for @modules;
+      "  module_boilerplate_ok('".$self->_module_to_pm_file($_)."');\n" for @modules;
 
     my $boilerplate_tests = @modules + 2 + $[;
     $t_files{'boilerplate.t'} = <<"HERE";
