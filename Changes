@@ -1,5 +1,11 @@
 Revision history for Perl extension Module::Starter
 
+NEXT
+
+        [ENHANCEMENTS]
+        Added more exclusions.  Thanks to Olivier Mengué.
+
+
 1.52    Mon Jul 27 01:25:03 CDT 2009
         * Support for more licenses.  Thanks to Shlomi Fish.
 

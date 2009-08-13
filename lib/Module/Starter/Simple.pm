@@ -1021,12 +1021,14 @@ blib*
 Makefile
 Makefile.old
 Build
+Build.bat
 _build*
 pm_to_blib*
 *.tar.gz
 .lwpcookies
-$self->{distro}-*
 cover_db
+pod2htm*.tmp
+$self->{distro}-*
 HERE
 }
 
