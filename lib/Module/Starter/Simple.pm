@@ -806,7 +806,9 @@ HERE
 
     my $nmodules = @modules;
     my $main_module = $modules[0];
-    my $use_lines = join( "\n", map { "    use_ok( '$_' );" } @modules );
+    my $use_lines = join(
+        "\n", map { qq{    use_ok( '$_' ) || print "Bail out!\n";} } @modules
+    );
 
     $t_files{'00-load.t'} = <<"HERE";
 #!perl -T

@@ -13,6 +13,7 @@ WriteMakefile(
     EXE_FILES           => [ 'bin/module-starter' ],
     PREREQ_PM => {
         'Test::More'            => 0,
+        'Test::Harness'         => 0.21,
         'ExtUtils::Command'     => 0,
         'File::Spec'            => 0,
         'Getopt::Long'          => 0,
