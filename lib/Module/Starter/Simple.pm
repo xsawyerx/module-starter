@@ -771,6 +771,18 @@ plan skip_all => "Test::Pod $min_tp required for testing POD" if $@;
 all_pod_files_ok();
 HERE
 
+    $t_files{'manifest.t'} = <<'HERE';
+#!perl -T
+
+use strict;
+use warnings;
+use Test::More;
+
+eval "use Test::CheckManifest 0.9";
+plan skip_all => "Test::CheckManifest 0.9 required" if $@;
+ok_manifest();
+HERE
+
     $t_files{'pod-coverage.t'} = <<'HERE';
 use strict;
 use warnings;

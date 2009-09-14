@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 469;
+use Test::More tests => 471;
 
 use Module::Starter;
 use File::Spec;
@@ -688,12 +688,35 @@ README
 lib/MyModule/Test.pm
 lib/MyModule/Test/App.pm
 t/00-load.t
+t/manifest.t
 t/pod-coverage.t
 t/pod.t
 EOF
 
         # TEST
         $manifest->is_end("MANIFEST - that's all folks!");
+    }
+
+    {
+        my $manifest_t = TestParseFile->new( {
+            fn => File::Spec->catfile( $module_base_dir, 't', 'manifest.t' )
+        } );
+
+        my $minimal_test_checkmanifest = '0.9';
+        $manifest_t->consume( <<"EOF", 'manifest.t - contents' );
+#!perl -T
+
+use strict;
+use warnings;
+use Test::More;
+
+eval "use Test::CheckManifest $minimal_test_checkmanifest";
+plan skip_all => "Test::CheckManifest 0.9 required" if \$\@;
+ok_manifest();
+EOF
+
+        # TEST
+        $manifest_t->is_end('manifest.t - end.');
     }
 
     {
@@ -1059,6 +1082,7 @@ lib/Book/Park/Mansfield/Base.pm
 lib/Book/Park/Mansfield/FannyPrice.pm
 lib/JAUSTEN/Utils.pm
 t/00-load.t
+t/manifest.t
 t/pod-coverage.t
 t/pod.t
 EOF
@@ -1259,6 +1283,7 @@ lib/Book/Park/Mansfield/Base.pm
 lib/Book/Park/Mansfield/FannyPrice.pm
 lib/JAUSTEN/Utils.pm
 t/00-load.t
+t/manifest.t
 t/pod-coverage.t
 t/pod.t
 EOF
@@ -1459,6 +1484,7 @@ lib/Book/Park/Mansfield/Base.pm
 lib/Book/Park/Mansfield/FannyPrice.pm
 lib/JAUSTEN/Utils.pm
 t/00-load.t
+t/manifest.t
 t/pod-coverage.t
 t/pod.t
 EOF

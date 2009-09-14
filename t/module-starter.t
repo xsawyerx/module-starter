@@ -91,6 +91,7 @@ sub generated_files {
      catfile($starter_dir, 't', '00-load.t')      => 'f',
      catfile($starter_dir, 't', 'boilerplate.t')  => 'f',
      catfile($starter_dir, 't', 'pod.t')          => 'f',
+     catfile($starter_dir, 't', 'manifest.t')     => 'f',
      catfile($starter_dir, 'README')              => 'f',
      catfile($starter_dir, 'Changes')             => 'f',
      catfile($starter_dir, 'ignores.txt')         => 'f',
