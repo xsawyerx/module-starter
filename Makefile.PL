@@ -16,7 +16,7 @@ WriteMakefile(
         'ExtUtils::Command'     => 0,
         'File::Spec'            => 0,
         'Getopt::Long'          => 0,
-        'Pod::Usage'            => 0,
+        'Pod::Usage'            => 1.21,
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean               => { FILES => 'Module-Release-*' },
