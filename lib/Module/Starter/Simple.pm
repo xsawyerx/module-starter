@@ -684,7 +684,7 @@ sub _README_license {
     my $license_blurb = $self->_license_blurb();
 
 return <<"HERE";
-COPYRIGHT AND LICENCE
+LICENSE AND COPYRIGHT
 
 Copyright (C) $year $self->{author}
 
@@ -1213,7 +1213,7 @@ sub _module_license {
     my $year          = $self->_thisyear();
 
     my $content = qq[
-\=head1 COPYRIGHT & LICENSE
+\=head1 LICENSE AND COPYRIGHT
 
 Copyright $year $self->{author}.
 
@@ -1253,7 +1253,7 @@ Perhaps a little code snippet.
 A list of functions that can be exported.  You can delete this section
 if you don't export anything, such as for a purely object-oriented module.
 
-\=head1 FUNCTIONS
+\=head1 SUBROUTINES/METHODS
 
 \=head2 function1
 

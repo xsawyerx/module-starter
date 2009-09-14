@@ -5,8 +5,12 @@ NEXT
         [ENHANCEMENTS]
         Added more exclusions.  Thanks to Olivier Mengué.
 
-        * [RT #13847] Bail out if load fail, addming minimum Test::Harness
+        * [RT #45941] Correcting POD sections for Perl Critic (Sawyer X)
+
+        * [RT #13847] Bail out if load fails, minimum Test::Harness (Sawyer X)
+
         * [RT #24110] Support for Test::CheckManifest + tests for it (Sawyer X)
+
         * [RT #22648] Pod::Parser (Pod::Usage) >= 1.21 (Sawyer X)
         (earlier version Backpan, tested to work)
 

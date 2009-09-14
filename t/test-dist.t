@@ -424,7 +424,7 @@ sub parse_module_start {
     # TEST:$cnt++
     $self->parse_paras(
         [
-            "=head1 FUNCTIONS",
+            "=head1 SUBROUTINES/METHODS",
             "=head2 function1",
             "=cut",
             "sub function1 {\n}",
@@ -532,7 +532,7 @@ sub parse_module_start {
     # TEST:$cnt++
     $self->parse_paras(
         [
-            "=head1 COPYRIGHT & LICENSE",
+            "=head1 LICENSE AND COPYRIGHT",
             { re =>
                   q/Copyright \d+ /
                 . quotemeta($author_name)
