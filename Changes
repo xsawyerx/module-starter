@@ -14,6 +14,8 @@ NEXT
         * [RT #22648] Pod::Parser (Pod::Usage) >= 1.21 (Sawyer X)
         (earliest Backpan version tested to work)
 
+        * [RT #48723] Add metadata to META.yml (Sawyer X)
+        (Patch provided by Olivier Mengué, thank you!)
 
 1.52    Mon Jul 27 01:25:03 CDT 2009
         * Support for more licenses.  Thanks to Shlomi Fish.
