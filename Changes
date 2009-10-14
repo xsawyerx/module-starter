@@ -12,7 +12,7 @@ NEXT
         * [RT #24110] Support for Test::CheckManifest + tests for it (Sawyer X)
 
         * [RT #22648] Pod::Parser (Pod::Usage) >= 1.21 (Sawyer X)
-        (earlier version Backpan, tested to work)
+        (earliest Backpan version tested to work)
 
 
 1.52    Mon Jul 27 01:25:03 CDT 2009
