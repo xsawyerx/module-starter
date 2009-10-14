@@ -47,19 +47,32 @@ populates it with the all the requires files.
 
 It takes a hash of params, as follows:
 
-    distro  => $distroname,      # distribution name (defaults to first module)
-    modules => [ module names ], # modules to create in distro
-    dir     => $dirname,         # directory in which to build distro
-    builder => 'Module::Build',  # defaults to ExtUtils::MakeMaker
-                                 # or specify more than one builder in an
-                                 # arrayref
+    distro       => $distroname,      # distribution name (defaults to first module)
+    modules      => [ module names ], # modules to create in distro
+    dir          => $dirname,         # directory in which to build distro
+    builder      => 'Module::Build',  # defaults to ExtUtils::MakeMaker
+                                      # or specify more than one builder in an
+                                      # arrayref
 
-    license => $license,  # type of license; defaults to 'perl'
-    author  => $author,   # author's full name (required)
-    email   => $email,    # author's email address (required)
+    license      => $license,  # type of license; defaults to 'perl'
+    author       => $author,   # author's full name (required)
+    email        => $email,    # author's email address (required)
+    ignores_type => $type,     # ignores file type ('generic', 'cvs', 'git', 'manifest' )
 
-    verbose => $verbose,  # bool: print progress messages; defaults to 0
-    force   => $force     # bool: overwrite existing files; defaults to 0
+    verbose      => $verbose,  # bool: print progress messages; defaults to 0
+    force        => $force     # bool: overwrite existing files; defaults to 0
+
+The ignores_type is a new feature that allows to create SCM-specific ignore files.
+These are the mappings:
+
+    ignores_type => 'generic'  # default, creates 'ignore.txt'
+    ignores_type => 'cvs'      # creates .cvsignore
+    ignores_type => 'git'      # creates .gitignore
+    ignores_type => 'manifest' # creates MANIFEST.SKIP
+
+It is also possible to provide an array ref with multiple types wanted:
+
+    ignores_type => [ 'git', 'manifest' ]
 
 =head1 PLUGINS
 

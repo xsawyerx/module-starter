@@ -17,6 +17,8 @@ NEXT
         * [RT #48723] Add metadata to META.yml (Sawyer X)
         (Patch provided by Olivier Mengué, thank you!)
 
+        * [RT #39397] Add option to create .gitignore (Sawyer X)
+
 1.52    Mon Jul 27 01:25:03 CDT 2009
         * Support for more licenses.  Thanks to Shlomi Fish.
 

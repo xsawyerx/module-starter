@@ -59,7 +59,8 @@ sub create_distro {
     croak "Must specify an email address\n" unless $self->{email};
     ($self->{email_obfuscated} = $self->{email}) =~ s/@/ at /;
 
-    $self->{license} ||= 'perl';
+    $self->{license}      ||= 'perl';
+    $self->{ignores_type} ||= 'generic';
 
     $self->{main_module} = $modules[0];
     if ( not $self->{distro} ) {
@@ -1015,11 +1016,30 @@ This creates an ignore.txt file for use as MANIFEST.SKIP, .cvsignore,
 =cut
 
 sub create_ignores {
-    my $self = shift;
+    my $self  = shift;
+    my $type  = $self->{ignores_type};
+    my %names = (
+        cvs      => '.cvsignore',
+        git      => '.gitignore',
+        generic  => 'ignore.txt',
+        manifest => 'MANIFEST.SKIP',
+    );
 
-    my $fname = File::Spec->catfile( $self->{basedir}, 'ignore.txt' );
-    $self->create_file( $fname, $self->ignores_guts() );
-    $self->progress( "Created $fname" );
+    my $create_file = sub {
+        my $type  = shift;
+        my $name  = $names{$type};
+        my $fname = File::Spec->catfile( $self->{basedir}, $names{$type} );
+        $self->create_file( $fname, $self->ignores_guts() );
+        $self->progress( "Created $fname" );
+    };
+
+    if ( ref $type eq 'ARRAY' ) {
+        foreach my $single_type ( @{$type} ) {
+            $create_file->($single_type);
+        }
+    } elsif ( ! ref $type ) {
+        $create_file->($type);
+    }
 
     return; # Not a file that goes in the MANIFEST
 }
