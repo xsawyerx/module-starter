@@ -1,5 +1,4 @@
 package Module::Starter::BuilderSet;
-# vi:et:sw=4 ts=4
 
 use strict;
 use warnings;
@@ -12,11 +11,11 @@ Module::Starter::BuilderSet - determine builder metadata
 
 =head1 VERSION
 
-Version 1.52
+Version 1.54
 
 =cut
 
-our $VERSION = '1.52';
+our $VERSION = '1.54';
 
 =head1 SYNOPSIS
 
@@ -274,5 +273,6 @@ employers of the various contributors to the code.
 
 =cut
 
-
 1;
+
+# vi:et:sw=4 ts=4

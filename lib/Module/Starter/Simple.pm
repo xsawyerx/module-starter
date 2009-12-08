@@ -1,5 +1,4 @@
 package Module::Starter::Simple;
-# vi:et:sw=4 ts=4
 
 use strict;
 use warnings;
@@ -16,11 +15,11 @@ Module::Starter::Simple - a simple, comprehensive Module::Starter plugin
 
 =head1 VERSION
 
-Version 1.52
+Version 1.54
 
 =cut
 
-our $VERSION = '1.52';
+our $VERSION = '1.54';
 
 =head1 SYNOPSIS
 
@@ -1307,4 +1306,7 @@ $license
 HERE
     return $content;
 }
+
 1;
+
+# vi:et:sw=4 ts=4

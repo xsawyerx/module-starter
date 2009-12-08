@@ -1,5 +1,4 @@
 package Module::Starter::Plugin::Template;
-# vi:et:sw=4 ts=4
 
 use warnings;
 use strict;
@@ -11,11 +10,11 @@ Module::Starter::Plugin::Template - module starter with templates
 
 =head1 VERSION
 
-Version 1.52
+Version 1.54
 
 =cut
 
-our $VERSION = '1.52';
+our $VERSION = '1.54';
 
 =head1 SYNOPSIS
 
@@ -250,5 +249,7 @@ This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
 
 =cut
+
+# vi:et:sw=4 ts=4
 
 1;

@@ -1,6 +1,6 @@
 Revision history for Perl extension Module::Starter
 
-NEXT
+1.54    Tue Dec  8 09:11:00 CST 2009
 
         [ENHANCEMENTS]
         Added more exclusions.  Thanks to Olivier Mengué.
@@ -18,6 +18,7 @@ NEXT
         (Patch provided by Olivier Mengué, thank you!)
 
         * [RT #39397] Add option to create .gitignore (Sawyer X)
+
 
 1.52    Mon Jul 27 01:25:03 CDT 2009
         * Support for more licenses.  Thanks to Shlomi Fish.

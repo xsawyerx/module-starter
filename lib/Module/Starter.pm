@@ -1,5 +1,4 @@
 package Module::Starter;
-# vi:et:sw=4 ts=4
 
 use warnings;
 use strict;
@@ -11,11 +10,11 @@ Module::Starter - a simple starter kit for any module
 
 =head1 VERSION
 
-version 1.52
+version 1.54
 
 =cut
 
-our $VERSION = '1.52';
+our $VERSION = '1.54';
 
 =head1 SYNOPSIS
 
@@ -168,3 +167,5 @@ under the same terms as Perl itself.
 =cut
 
 1;
+
+# vi:et:sw=4 ts=4

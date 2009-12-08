@@ -9,7 +9,7 @@ Module::Starter::App - the code behind the command line program
 use warnings;
 use strict;
 
-our $VERSION = '1.52';
+our $VERSION = '1.54';
 
 use Getopt::Long;
 use Pod::Usage;
