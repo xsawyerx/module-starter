@@ -11,12 +11,27 @@ use strict;
 
 our $VERSION = '1.54';
 
+use Path::Class;
 use Getopt::Long;
 use Pod::Usage;
 use Carp qw( croak );
 
+sub _config_file {
+    my $class     = shift;
+    my $configdir = $ENV{'MODULE_STARTER_DIR'} || '';
+
+    if ( !$configdir && $ENV{'HOME'} ) {
+        $configdir = dir( $ENV{'HOME'}, '.module-starter' );
+    }
+
+    return file( $configdir, 'config' );
+}
+
+
 sub _config_read {
-    my $filename = shift;
+    my $class = shift;
+
+    my $filename = $class->_config_file;
 
     return unless -e $filename;
 
@@ -29,36 +44,23 @@ sub _config_read {
         next if /\A\s*\Z/sm;
         if (/\A(\w+):\s*(.+)\Z/sm) { $config{$1} = $2; }
     }
-    return %config;
-}
-
-=head2 run
-
-  Module::Starter::App->run;
-
-This is equivalent to runnint F<module-starter>.  Its behavior is still subject
-to change.
-
-=cut
-
-sub run {
-
-    my $configdir = $ENV{MODULE_STARTER_DIR} || '';
-    if ( !$configdir && $ENV{HOME} ) {
-        $configdir = "$ENV{HOME}/.module-starter";
-    }
-
-    my %config    = _config_read( "$configdir/config" );
 
     # The options that accept multiple arguments must be set to an
     # arrayref
-
     $config{plugins} = [ split /(?:\s*,\s*|\s+)/, $config{plugins} ] if $config{plugins};
     $config{builder} = [ split /(?:\s*,\s*|\s+)/, $config{builder} ] if $config{builder};
 
     foreach my $key ( qw( plugins modules builder ) ){
         $config{$key} = [] unless exists $config{$key};
     }
+
+    return %config;
+}
+
+sub _process_command_line {
+    my ( $self, %config ) = @_;
+
+    $config{'argv'} = [ @ARGV ];
 
     pod2usage(2) unless @ARGV;
 
@@ -84,26 +86,50 @@ sub run {
             exit 1;
         },
         help         => sub { pod2usage(1); },
-  ) or pod2usage(2);
+    ) or pod2usage(2);
 
-  if (@ARGV) {
-      pod2usage(
-          -msg =>  "Unparseable arguments received: " . join(',', @ARGV),
-          -exitval => 2,
-      );
-  }
+    if (@ARGV) {
+        pod2usage(
+            -msg =>  "Unparseable arguments received: " . join(',', @ARGV),
+            -exitval => 2,
+        );
+    }
 
-  $config{class} ||= 'Module::Starter';
+    $config{class} ||= 'Module::Starter';
 
-  $config{builder} = ['ExtUtils::MakeMaker'] unless @{$config{builder}};
+    $config{builder} = ['ExtUtils::MakeMaker'] unless @{$config{builder}};
 
-  eval "require $config{class};";
-  croak "invalid starter class $config{class}: $@" if $@;
-  $config{class}->import(@{$config{plugins}});
+    return %config;
+}
 
-  $config{class}->create_distro( %config );
+=head2 run
 
-  print "Created starter directories and files\n";
+  Module::Starter::App->run;
+
+This is equivalent to running F<module-starter>. Its behavior is still subject
+to change.
+
+=cut
+
+sub run {
+    my $class  = shift;
+    my %config = $class->_config_read;
+
+    %config = $class->_process_command_line(%config);
+
+    eval "require $config{class};";
+    croak "Could not load starter class $config{class}: $@" if $@;
+    $config{class}->import( @{ $config{'plugins'} } );
+
+    my $starter = $config{class}->new( %config );
+    $starter->postprocess_config;
+    $starter->pre_create_distro;
+    $starter->create_distro;
+    $starter->post_create_distro;
+    $starter->pre_exit;
+
+    print "Created starter directories and files\n";
+    return 1;
 }
 
 1;

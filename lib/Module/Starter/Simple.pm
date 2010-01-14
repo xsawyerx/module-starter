@@ -36,6 +36,42 @@ the directories with the required files.
 
 =head1 CLASS METHODS
 
+=head2 C<< new(%args) >>
+
+This method is called to construct and initialize a new Module::Starter object.
+It is never called by the end user, only internally by C<create_distro>, which
+creates ephemeral Module::Starter objects.  It's documented only to call it to
+the attention of subclass authors.
+
+=cut
+
+sub new {
+    my $class = shift;
+    return bless { @_ } => $class;
+}
+
+=head1 OBJECT METHODS
+
+All the methods documented below are object methods, meant to be called
+internally by the ephemperal objects created during the execution of the class
+method C<create_distro> above.
+
+=head2 postprocess_config
+
+A hook to do any work after the configuration is initially processed.
+
+=cut
+
+sub postprocess_config { 1 };
+
+=head2 pre_create_distro
+
+A hook to do any work right before the distro is created.
+
+=cut
+
+sub pre_create_distro { 1 };
+
 =head2 C<< create_distro(%args) >>
 
 This method works as advertised in L<Module::Starter>.
@@ -43,10 +79,11 @@ This method works as advertised in L<Module::Starter>.
 =cut
 
 sub create_distro {
-    my $class = shift;
+    my $either = shift;
 
-    my $self = $class->new( @_ );
+    ( ref $either ) or $either = $either->new( @_ );
 
+    my $self    = $either;
     my $modules = $self->{modules} || [];
     my @modules = map { split /,/ } @{$modules};
     croak "No modules specified.\n" unless @modules;
@@ -86,25 +123,23 @@ sub create_distro {
     return;
 }
 
-=head2 C<< new(%args) >>
+=head2 post_create_distro
 
-This method is called to construct and initialize a new Module::Starter object.
-It is never called by the end user, only internally by C<create_distro>, which
-creates ephemeral Module::Starter objects.  It's documented only to call it to
-the attention of subclass authors.
+A hook to do any work after creating the distribution.
 
 =cut
 
-sub new {
-    my $class = shift;
-    return bless { @_ } => $class;
+sub post_create_distro { 1 };
+
+=head2 pre_exit
+
+A hook to do any work right before exit time.
+
+=cut
+
+sub pre_exit {
+     print "Created starter directories and files\n";
 }
-
-=head1 OBJECT METHODS
-
-All the methods documented below are object methods, meant to be called
-internally by the ephemperal objects created during the execution of the class
-method C<create_distro> above.
 
 =head2 create_basedir
 
