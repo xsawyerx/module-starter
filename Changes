@@ -8,7 +8,11 @@ Revision history for Perl extension Module::Starter
         [ENHANCEMENTS]
         Added hooks for distribution building in App. Thanks to Brian D. Foy.
 
+        * [RT #53539] Refactoring, adding hooks, described above.
+        (Patch provided by brian d. foy)
+
         * [RT #27304] Minimal version of perl (5.006)
+        (Patch provided by Alexandr Ciornii)
 
 1.54    Tue Dec  8 09:11:00 CST 2009
 
