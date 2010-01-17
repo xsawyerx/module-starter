@@ -111,6 +111,8 @@ sub import {
 
 =head1 AUTHORS
 
+Sawyer X, C<< <xsawyerx at cpan.org> >>
+
 Andy Lester, C<< <petdance at cpan.org> >>
 
 Ricardo Signes, C<< <rjbs at cpan.org> >>
