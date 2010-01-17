@@ -1162,13 +1162,15 @@ be notified of progress on your bug as I make changes.
 
 =head1 AUTHOR
 
+Sawyer X, C<< <xsawyerx@cpan.org> >>
+
 Andy Lester, C<< <andy@petdance.com> >>
 
 C.J. Adams-Collier, C<< <cjac@colliertech.org> >>
 
 =head1 Copyright & License
 
-Copyright 2005-2007 Andy Lester and C.J. Adams-Collier, All Rights Reserved.
+Copyright 2005-2009 Andy Lester and C.J. Adams-Collier, All Rights Reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
