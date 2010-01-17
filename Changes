@@ -1,5 +1,15 @@
 Revision history for Perl extension Module::Starter
 
+1.55
+
+        Special thanks goes to Andy Lester, who has been, still is and
+            will remain an inspiration to many programmers, myself included.
+
+        [ENHANCEMENTS]
+        Added hooks for distribution building in App. Thanks to Brian D. Foy.
+
+        * [RT #27304] Minimal version of perl (5.006)
+
 1.54    Tue Dec  8 09:11:00 CST 2009
 
         This release could not have happened without Sawyer X.
