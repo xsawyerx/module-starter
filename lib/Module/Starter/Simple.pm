@@ -1,5 +1,6 @@
 package Module::Starter::Simple;
 
+use 5.006;
 use strict;
 use warnings;
 
@@ -406,7 +407,7 @@ sub _module_to_pm_file {
 sub _reference_links {
   return (
       { nickname => 'RT',
-        title    => 'CPAN\'s request tracker',
+        title    => 'CPAN\'s request tracker (report bugs here)',
         link     => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=%s',
       },
       { nickname => 'AnnoCPAN',
@@ -494,6 +495,7 @@ sub Makefile_PL_guts {
     (my $author = "$self->{author} <$self->{email}>") =~ s/'/\'/g;
 
     return <<"HERE";
+use 5.006;
 use strict;
 use warnings;
 use ExtUtils::MakeMaker;
@@ -595,6 +597,7 @@ sub Build_PL_guts {
     (my $author = "$self->{author} <$self->{email}>") =~ s/'/\'/g;
 
     return <<"HERE";
+use 5.006;
 use strict;
 use warnings;
 use Module::Build;
@@ -606,6 +609,9 @@ my \$builder = Module::Build->new(
     dist_version_from   => '$main_pm_file',
     build_requires => {
         'Test::More' => 0,
+    },
+    requires => {
+        'perl' => 5.006,
     },
     add_to_cleanup      => [ '$self->{distro}-*' ],
     create_makefile_pl => 'traditional',
@@ -869,6 +875,7 @@ HERE
     $t_files{'boilerplate.t'} = <<"HERE";
 #!perl -T
 
+use 5.006;
 use strict;
 use warnings;
 use Test::More tests => $boilerplate_tests;
@@ -1178,8 +1185,9 @@ sub _module_header {
     my $content = <<"HERE";
 package $module;
 
-use warnings;
+use 5.006;
 use strict;
+use warnings;
 
 \=head1 NAME
 

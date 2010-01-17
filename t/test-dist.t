@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 471;
+use Test::More tests => 472;
 
 use Module::Starter;
 use File::Spec;
@@ -369,7 +369,7 @@ sub parse_module_start {
 
     # TEST:$cnt++;
     $self->parse(
-        qr/\Apackage \Q$perl_name\E;\n\nuse warnings;\nuse strict;\n\n/ms,
+        qr/\Apackage \Q$perl_name\E;\n\nuse 5.006;\nuse strict;\nuse warnings;\n\n/ms,
         'start',
     );
 
@@ -628,7 +628,7 @@ package main;
         );
 
         # TEST
-        $build_pl->parse(qr{\Ause strict;\nuse warnings;\nuse Module::Build;\n\n}ms,
+        $build_pl->parse(qr{\Ause 5.006;\nuse strict;\nuse warnings;\nuse Module::Build;\n\n}ms,
             "Build.PL - Standard stuff at the beginning"
         );
 
@@ -655,6 +655,12 @@ package main;
         # TEST
         $build_pl->parse(
             qr/\A\s*build_requires => \{\n *\Q'Test::More' => 0\E,\n\s*\},\n/ms,
+            "Build.PL - Build Requires",
+        );
+
+        # TEST
+        $build_pl->parse(
+            qr/\A\s*requires => \{\n *\Q'perl' => 5.006\E,\n\s*\},\n/ms,
             "Build.PL - Build Requires",
         );
 
@@ -1028,7 +1034,7 @@ EOF
         );
 
         # TEST
-        $makefile_pl->parse(qr{\Ause strict;\nuse warnings;\nuse ExtUtils::MakeMaker;\n\n}ms,
+        $makefile_pl->parse(qr{\Ause 5.006;\nuse strict;\nuse warnings;\nuse ExtUtils::MakeMaker;\n\n}ms,
             "Makefile.PL - Standard stuff at the beginning"
         );
 
@@ -1229,7 +1235,7 @@ EOF
         );
 
         # TEST
-        $makefile_pl->parse(qr{\Ause strict;\nuse warnings;\nuse ExtUtils::MakeMaker;\n\n}ms,
+        $makefile_pl->parse(qr{\Ause 5.006;\nuse strict;\nuse warnings;\nuse ExtUtils::MakeMaker;\n\n}ms,
             "Makefile.PL - Standard stuff at the beginning"
         );
 
@@ -1430,7 +1436,7 @@ EOF
         );
 
         # TEST
-        $makefile_pl->parse(qr{\Ause strict;\nuse warnings;\nuse ExtUtils::MakeMaker;\n\n}ms,
+        $makefile_pl->parse(qr{\Ause 5.006;\nuse strict;\nuse warnings;\nuse ExtUtils::MakeMaker;\n\n}ms,
             "Makefile.PL - Standard stuff at the beginning"
         );
 
