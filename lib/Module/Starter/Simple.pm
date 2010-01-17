@@ -986,6 +986,32 @@ sub MANIFEST_guts {
     return join( "\n", @files, '' );
 }
 
+=head2 get_builders( )
+
+This methods gets the correct builder(s).
+
+It is called by C<create_build>, and returns an arrayref with the builders.
+
+=cut
+
+sub get_builders {
+    my $self = shift;
+
+    # pass one: pull the builders out of $self->{builder}
+    my @tmp =
+        ref $self->{'builder'} eq 'ARRAY' ? @{ $self->{'builder'} }
+                                          : $self->{'builder'};
+
+    my @builders;
+    my $COMMA = q{,};
+    # pass two: expand comma-delimited builder lists
+    foreach my $builder (@tmp) {
+        push( @builders, split( $COMMA, $builder ) );
+    }
+
+    return \@builders;
+}
+
 =head2 create_build( )
 
 This method creates the build file(s) and puts together some build
@@ -1000,17 +1026,8 @@ Module::Install
 sub create_build {
     my $self = shift;
 
-    # pass one: pull the builders out of $self->{builder}
-    my @tmp =
-    ref $self->{builder} eq 'ARRAY' ? @{$self->{builder}} : $self->{builder};
-
-    my @builders;
-    my $COMMA = q{,};
-    # pass two: expand comma-delimited builder lists
-    foreach my $builder (@tmp) {
-        push( @builders, split($COMMA, $builder) );
-    }
-
+    # get the builders
+    my @builders    = @{ $self->get_builders };
     my $builder_set = Module::Starter::BuilderSet->new();
 
     # Remove mutually exclusive and unsupported builders

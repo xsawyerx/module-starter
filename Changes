@@ -14,6 +14,8 @@ Revision history for Perl extension Module::Starter
         * [RT #27304] Minimal version of perl (5.006)
         (Patch provided by Alexandr Ciornii)
 
+        * Some more refactoring in Simple::create_builder()
+
 1.54    Tue Dec  8 09:11:00 CST 2009
 
         This release could not have happened without Sawyer X.
