@@ -128,7 +128,6 @@ sub run {
     $starter->post_create_distro;
     $starter->pre_exit;
 
-    print "Created starter directories and files\n";
     return 1;
 }
 
