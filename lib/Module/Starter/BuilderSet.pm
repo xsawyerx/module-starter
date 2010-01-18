@@ -33,6 +33,10 @@ our $VERSION = '1.54';
     my @builder_dependencies = $builder_set->deps_for_builder($default_builder);
     my @compatible_builders = $builder_set->check_compatibility(@builder_list);
 
+    my $ms_simple    = Module::Starter::Simple->new();
+    my $build_method = $builder_set->manifest_method($builder);
+    $ms_simple->$build_method();
+
 =head1 DESCRIPTION
 
 Module::Starter::BuilderSet is a collection of utility methods used to
@@ -54,42 +58,45 @@ sub new {
       {
        'Module::Build' =>
        {
-        file         => "Build.PL",
-        build_method => "create_Build_PL",
-        build_deps   => [],
-        instructions => [ 'perl Build.PL',
-                          './Build',
-                          './Build test',
-                          './Build install',
-                        ],
+        file           => "Build.PL",
+        build_method   => "create_Build_PL",
+        build_deps     => [],
+        build_manifest => 'create_MB_MANIFEST',
+        instructions   => [ 'perl Build.PL',
+                            './Build',
+                            './Build test',
+                            './Build install',
+                          ],
        },
        'Module::Install' =>
        {
-        file         => "Makefile.PL",
-        build_method => "create_MI_Makefile_PL",
-        build_deps   => [],
-        instructions => [ 'perl Makefile.PL',
-                          'make',
-                          'make test',
-                          'make install',
-                        ],
+        file           => "Makefile.PL",
+        build_method   => "create_MI_Makefile_PL",
+        build_deps     => [],
+        build_manifest => 'create_MI_MANIFEST',
+        instructions   => [ 'perl Makefile.PL',
+                            'make',
+                            'make test',
+                            'make install',
+                          ],
        },
        'ExtUtils::MakeMaker' =>
        {
-        file         => "Makefile.PL",
-        build_method => "create_Makefile_PL",
-        build_deps   => [ { command => 'make',
-                            aliases => [ 'make', 'gmake' ],
-                          },
-                          { command => 'chmod',
-                            aliases => [ 'chmod' ],
-                          },
-                        ],
-        instructions => [ 'perl Makefile.PL',
-                          'make',
-                          'make test',
-                          'make install',
-                        ],
+        file           => "Makefile.PL",
+        build_method   => "create_Makefile_PL",
+        build_manifest => 'create_EUMM_MANIFEST',
+        build_deps     => [ { command => 'make',
+                              aliases => [ 'make', 'gmake' ],
+                            },
+                            { command => 'chmod',
+                              aliases => [ 'chmod' ],
+                            },
+                          ],
+        instructions   => [ 'perl Makefile.PL',
+                            'make',
+                            'make test',
+                            'make install',
+                          ],
        }
       };
 
@@ -186,6 +193,19 @@ sub deps_for_builder {
     my $builder = shift;
 
     return @{ $self->_builder($builder)->{build_deps} };
+}
+
+=head2 C<< manifest_method($builder) >>
+
+This method returns the command to run to create the manifest according to the
+builder asked.
+
+=cut
+
+sub manifest_method {
+    my ( $self, $builder ) = @_;
+
+    return $self->_builder($builder)->{'build_manifest'};
 }
 
 =head2 C<< check_compatibility(@builders) >>
