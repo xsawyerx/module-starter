@@ -4,6 +4,7 @@ use 5.006;
 use strict;
 use warnings;
 
+use Cwd 'cwd';
 use ExtUtils::Command qw( rm_rf mkpath touch );
 use File::Spec ();
 use Carp qw( carp confess croak );
@@ -118,8 +119,10 @@ sub create_distro {
 
     push @files, $self->create_Changes;
     push @files, $self->create_README( $build_results{instructions} );
-    push @files, 'MANIFEST';
-    $self->create_MANIFEST( grep { $_ ne 't/boilerplate.t' } @files );
+
+    $self->create_MANIFEST( $build_results{'manifest_method'} );
+    # TODO: put files to ignore in a more standard form?
+    # XXX: no need to return the files created
 
     return;
 }
@@ -953,37 +956,91 @@ sub _create_t {
     return "t/$filename";
 }
 
-=head2 create_MANIFEST( @files )
+=head2 create_MB_MANIFEST
+
+This methods creates a MANIFEST file using Module::Build's methods.
+
+=cut
+
+sub create_MB_MANIFEST {
+    my $self     = shift;
+    my $orig_dir = cwd();
+
+    # create the MANIFEST in the correct path
+    chdir $self->{'basedir'} || die "Can't reach basedir: $!\n";
+
+    my $name = $self->{'main_module'};
+    $name || die q{Couldn't find valid name for distribution};
+
+    require Module::Build;
+    my $mb = Module::Build->new( module_name => $name, verbose => 0 )
+                          ->dispatch('manifest');
+
+    # return to our original path, wherever it was
+    chdir $orig_dir || die "Can't return to original dir: $!\n";
+}
+
+=head2 create_MI_MANIFEST
+
+This method creates a MANIFEST file using Module::Install's methods.
+
+Currently runs ExtUtils::MakeMaker's methods.
+
+=cut
+
+sub create_MI_MANIFEST {
+    my $self = shift;
+    $self->create_EUMM_MANIFEST;
+}
+
+=head2 create_EUMM_MANIFEST
+
+This method creates a MANIFEST file using ExtUtils::MakeMaker's methods.
+
+=cut
+
+sub create_EUMM_MANIFEST {
+    my $self     = shift;
+    my $orig_dir = cwd();
+
+    # create the MANIFEST in the correct path
+    chdir $self->{'basedir'} || die "Can't reach basedir: $!\n";
+
+    require ExtUtils::Manifest;
+    ExtUtils::Manifest->import('mkmanifest');
+    $ExtUtils::Manifest::Quiet = 0;
+
+    mkmanifest();
+
+    # return to our original path, wherever it was
+    chdir $orig_dir || die "Can't return to original dir: $!\n";
+}
+
+=head2 create_MANIFEST( $method )
 
 This method creates the distribution's MANIFEST file.  It must be run last,
 because all the other create_* functions have been returning the functions they
 create.
 
+It receives a method to run in order to create the MANIFEST file. That way it
+can create a MANIFEST file according to the builder used.
+
 =cut
 
 sub create_MANIFEST {
-    my $self = shift;
-    my @files = @_;
-
+    my ( $self, $manifest_method ) = @_;
     my $fname = File::Spec->catfile( $self->{basedir}, 'MANIFEST' );
-    $self->create_file( $fname, $self->MANIFEST_guts(@files) );
+
+    $self->$manifest_method();
+    $self->filter_lines_in_file(
+        $fname,
+        qr/^t\/boilerplate\.t$/,
+        qr/^ignore\.txt$/,
+    );
+
     $self->progress( "Created $fname" );
 
     return 'MANIFEST';
-}
-
-=head2 MANIFEST_guts( @files )
-
-This method is called by C<create_MANIFEST>, and returns content for the
-MANIFEST file.
-
-=cut
-
-sub MANIFEST_guts {
-    my $self = shift;
-    my @files = sort @_;
-
-    return join( "\n", @files, '' );
 }
 
 =head2 get_builders( )
@@ -1038,6 +1095,7 @@ sub create_build {
 
     my @build_instructions;
     my @files;
+    my $manifest_method;
 
     foreach my $builder ( @builders ) {
         if ( !@build_instructions ) {
@@ -1056,12 +1114,15 @@ sub create_build {
         push( @build_instructions, join("\n", map { "\t$_" } @commands) );
 
         my $build_method = $builder_set->method_for_builder($builder);
-        $self->$build_method($self->{main_module})
+        $self->$build_method($self->{main_module});
+
+        $manifest_method = $builder_set->manifest_method($builder);
     }
 
     return(
-        files        => [ @files ],
-        instructions => join( "\n\n", @build_instructions ),
+        files           => [ @files ],
+        instructions    => join( "\n\n", @build_instructions ),
+        manifest_method => $manifest_method,
     );
 }
 
@@ -1168,6 +1229,39 @@ sub progress {
     print @_, "\n" if $self->verbose;
 
     return;
+}
+
+=head2 filter_lines_in_file( $filename, @compiled_regexes )
+
+C<filter_lines_in_file> goes over a file and removes lines with the received
+regexes.
+
+For example, removing t/boilerplate.t in the MANIFEST.
+
+=cut
+
+sub filter_lines_in_file {
+    my ( $self, $file, @regexes ) = @_;
+    my @read_lines;
+    open my $fh, '<', $file or die "Can't open file $file: $!\n";
+    @read_lines = <$fh>;
+    close $fh or die "Can't close file $file: $!\n";
+
+    chomp @read_lines;
+
+    open $fh, '>', $file or die "Can't open file $file: $!\n";
+    foreach my $line (@read_lines) {
+        my $found;
+
+        foreach my $regex (@regexes) {
+            if ( $line =~ $regex ) {
+                $found++;
+            }
+        }
+
+        $found or print {$fh} "$line\n";
+    }
+    close $fh or die "Can't close file $file: $!\n";
 }
 
 =head1 BUGS

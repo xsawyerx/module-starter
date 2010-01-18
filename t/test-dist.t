@@ -686,13 +686,13 @@ package main;
         );
 
         # TEST
-        $manifest->consume(<<'EOF', 'MANIFEST - Contents');
+        $manifest->consume(<<"EOF", 'MANIFEST - Contents');
 Build.PL
 Changes
-MANIFEST
-README
 lib/MyModule/Test.pm
 lib/MyModule/Test/App.pm
+MANIFEST\t\t\tThis list of files
+README
 t/00-load.t
 t/manifest.t
 t/pod-coverage.t
@@ -1082,15 +1082,15 @@ EOF
             }
         );
 
-        my $contents = <<'EOF';
+        my $contents = <<"EOF";
 Changes
-MANIFEST
-Makefile.PL
-README
 lib/Book/Park/Mansfield.pm
 lib/Book/Park/Mansfield/Base.pm
 lib/Book/Park/Mansfield/FannyPrice.pm
 lib/JAUSTEN/Utils.pm
+Makefile.PL
+MANIFEST\t\t\tThis list of files
+README
 t/00-load.t
 t/manifest.t
 t/pod-coverage.t
@@ -1283,15 +1283,15 @@ EOF
             }
         );
 
-        my $contents = <<'EOF';
+        my $contents = <<"EOF";
 Changes
-MANIFEST
-Makefile.PL
-README
 lib/Book/Park/Mansfield.pm
 lib/Book/Park/Mansfield/Base.pm
 lib/Book/Park/Mansfield/FannyPrice.pm
 lib/JAUSTEN/Utils.pm
+Makefile.PL
+MANIFEST\t\t\tThis list of files
+README
 t/00-load.t
 t/manifest.t
 t/pod-coverage.t
@@ -1484,15 +1484,15 @@ EOF
             }
         );
 
-        my $contents = <<'EOF';
+        my $contents = <<"EOF";
 Changes
-MANIFEST
-Makefile.PL
-README
 lib/Book/Park/Mansfield.pm
 lib/Book/Park/Mansfield/Base.pm
 lib/Book/Park/Mansfield/FannyPrice.pm
 lib/JAUSTEN/Utils.pm
+Makefile.PL
+MANIFEST\t\t\tThis list of files
+README
 t/00-load.t
 t/manifest.t
 t/pod-coverage.t
