@@ -1283,6 +1283,8 @@ C.J. Adams-Collier, C<< <cjac@colliertech.org> >>
 
 Copyright 2005-2009 Andy Lester and C.J. Adams-Collier, All Rights Reserved.
 
+Copyright 2010 Sawyer X, All Rights Reserved.
+
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
 
