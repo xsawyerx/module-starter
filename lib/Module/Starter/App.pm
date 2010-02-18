@@ -66,11 +66,11 @@ sub _process_command_line {
 
     GetOptions(
         'class=s'    => \$config{class},
-        'plugin=s'   => $config{plugins},
+        'plugin=s@'  => \$config{plugins},
         'dir=s'      => \$config{dir},
         'distro=s'   => \$config{distro},
-        'module=s'   => $config{modules},
-        'builder=s'  => $config{builder},
+        'module=s@'  => \$config{modules},
+        'builder=s@' => \$config{builder},
         eumm         => sub { push @{$config{builder}}, 'ExtUtils::MakeMaker' },
         mb           => sub { push @{$config{builder}}, 'Module::Build' },
         mi           => sub { push @{$config{builder}}, 'Module::Install' },
