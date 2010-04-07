@@ -97,7 +97,7 @@ sub _process_command_line {
 
     $config{class} ||= 'Module::Starter';
 
-    $config{builder} = ['ExtUtils::MakeMaker'] unless @{$config{builder}};
+    $config{builder} = ['ExtUtils::MakeMaker'] unless $config{builder};
 
     return %config;
 }
