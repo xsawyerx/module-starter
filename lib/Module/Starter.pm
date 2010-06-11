@@ -10,11 +10,11 @@ Module::Starter - a simple starter kit for any module
 
 =head1 VERSION
 
-version 1.54
+version 1.54_01
 
 =cut
 
-our $VERSION = '1.54';
+our $VERSION = '1.54_01';
 
 =head1 SYNOPSIS
 
