@@ -979,21 +979,8 @@ This methods creates a MANIFEST file using Module::Build's methods.
 =cut
 
 sub create_MB_MANIFEST {
-    my $self     = shift;
-    my $orig_dir = cwd();
-
-    # create the MANIFEST in the correct path
-    chdir $self->{'basedir'} || die "Can't reach basedir: $!\n";
-
-    my $name = $self->{'main_module'};
-    $name || die q{Couldn't find valid name for distribution};
-
-    require Module::Build;
-    my $mb = Module::Build->new( module_name => $name, verbose => 0 )
-                          ->dispatch('manifest');
-
-    # return to our original path, wherever it was
-    chdir $orig_dir || die "Can't return to original dir: $!\n";
+    my $self = shift;
+    $self->create_EUMM_MANIFEST;
 }
 
 =head2 create_MI_MANIFEST
@@ -1023,10 +1010,8 @@ sub create_EUMM_MANIFEST {
     chdir $self->{'basedir'} || die "Can't reach basedir: $!\n";
 
     require ExtUtils::Manifest;
-    ExtUtils::Manifest->import('mkmanifest');
     $ExtUtils::Manifest::Quiet = 0;
-
-    mkmanifest();
+    ExtUtils::Manifest::mkmanifest();
 
     # return to our original path, wherever it was
     chdir $orig_dir || die "Can't return to original dir: $!\n";
