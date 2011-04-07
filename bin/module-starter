@@ -39,7 +39,7 @@ Options:
     --help           Show this message
 
 Available Licenses:
-    perl, bsd, gpl, lgpl, mit
+    perl, bsd, gpl, lgpl, mit, apache
 
 Example:
 

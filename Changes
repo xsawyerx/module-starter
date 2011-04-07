@@ -1,14 +1,19 @@
 Revision history for Perl extension Module::Starter
 
-1.55    Thu Apr  7 17:01:11 IDT 2011
+1.56    Thu Apr  7 17:01:11 IDT 2011
+
+        * No functional changes, productionizing.
+
+1.55_01 Fri Jun 11 16:56:00 IDT 2010
 
         Special thanks goes to Andy Lester, who has been, still is and
             will remain an inspiration to many programmers, myself included.
 
         [ENHANCEMENTS]
         Added hooks for distribution building in App. Thanks to Brian D. Foy.
-        MANIFEST is now created via the proper builder
-        Kept create_MANIFEST to act as hook
+        MANIFEST is now created via the proper builder.
+        Kept create_MANIFEST to act as hook.
+        Added Apache license by pfig.
 
         * [RT #53539] Refactoring, adding hooks, described above.
         (Patch provided by brian d. foy)

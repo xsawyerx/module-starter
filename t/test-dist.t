@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 472;
+use Test::More tests => 545;
 
 use Module::Starter;
 use File::Spec;
@@ -351,6 +351,22 @@ You should have received a copy of the GNU Lesser General Public
 License along with this program; if not, write to the Free
 Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
 02111-1307 USA.
+EOF
+        ],
+        'apache' =>
+        [
+            split(/\n\n+/, <<"EOF")
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    L<http://www.apache.org/licenses/LICENSE-2.0>
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 EOF
         ],
     };
@@ -1806,6 +1822,207 @@ EOF
     my $files_list;
     if (!$ENV{'DONT_DEL_LGPL'})
     {
+        rmtree ($module_base_dir, {result => \$files_list});
+    }
+}
+
+{
+    my $module_base_dir =
+        File::Spec->catdir("t", "data", "apache-Book-Park-Mansfield")
+        ;
+
+    Module::Starter->create_distro(
+        distro  => 'Book-Park-Mansfield',
+        modules => [
+            'Book::Park::Mansfield',
+            'Book::Park::Mansfield::Base',
+            'Book::Park::Mansfield::FannyPrice',
+            'JAUSTEN::Utils',
+        ],
+        dir     => $module_base_dir,
+        builder => 'ExtUtils::MakeMaker',
+        license => 'apache',
+        author  => 'Jane Austen',
+        email   => 'jane.austen@writers.tld',
+        verbose => 0,
+        force   => 0,
+    );
+
+    {
+        my $readme = TestParseFile->new(
+            {
+                fn => File::Spec->catfile($module_base_dir, "README"),
+            }
+        );
+
+        # TEST
+        $readme->parse(qr{\ABook-Park-Mansfield\n\n}ms,
+            'Starts with the package name',
+        );
+
+        # TEST
+        $readme->parse(qr{\AThe README is used to introduce the module and provide instructions.*?\n\n}ms,
+            'README used to introduce',
+        );
+
+        # TEST
+        $readme->parse(
+            qr{\AA README file is required for CPAN modules since CPAN extracts the.*?\n\n\n}ms,
+            'A README file is required',
+        );
+
+        # TEST
+        $readme->parse(qr{\A\n*INSTALLATION\n\nTo install this module, run the following commands:\n\n\s+\Qperl Makefile.PL\E\n\s+\Qmake\E\n\s+\Qmake test\E\n\s+\Qmake install\E\n\n},
+            'INSTALLATION section',
+        );
+
+        # TEST
+        $readme->parse(qr{\ASUPPORT AND DOCUMENTATION\n\nAfter installing.*?^\s+perldoc Book::Park::Mansfield\n\n}ms,
+            'Support and docs 1'
+        );
+
+        # TEST
+        $readme->parse(qr{\AYou can also look for information at:\n\n\s+RT[^\n]+\n\s+\Qhttp://rt.cpan.org/NoAuth/Bugs.html?Dist=Book-Park-Mansfield\E\n\n}ms,
+            'README - RT'
+        );
+    }
+
+    {
+        my $makefile_pl = TestParseFile->new(
+            {
+                fn => File::Spec->catfile($module_base_dir, "Makefile.PL"),
+            }
+        );
+
+        # TEST
+        $makefile_pl->parse(qr{\Ause 5.006;\nuse strict;\nuse warnings;\nuse ExtUtils::MakeMaker;\n\n}ms,
+            "Makefile.PL - Standard stuff at the beginning"
+        );
+
+        # TEST
+        $makefile_pl->parse(qr{\A.*NAME *=> *'Book::Park::Mansfield',\n}ms,
+            "Makefile.PL - NAME",
+        );
+
+        # TEST
+        $makefile_pl->parse(qr{\A\s*AUTHOR *=> *\Qq{Jane Austen <jane.austen\E\@\Qwriters.tld>},\E\n}ms,
+            "Makefile.PL - AUTHOR",
+        );
+
+        # TEST
+        $makefile_pl->parse(qr{\A\s*VERSION_FROM *=> *\Q'lib/Book/Park/Mansfield.pm',\E\n}ms,
+            "Makefile.PL - VERSION_FROM",
+        );
+
+        # TEST
+        $makefile_pl->parse(qr{\A\s*ABSTRACT_FROM *=> *\Q'lib/Book/Park/Mansfield.pm',\E\n}ms,
+            "Makefile.PL - ABSTRACT_FROM",
+        );
+
+        # TEST
+        $makefile_pl->parse(qr{\A\s*\(\$ExtUtils::MakeMaker::VERSION \>= \d+\.\d+\n\s*\? \(\s*'LICENSE'\s*=>\s*'apache'\s*\)\n\s*:\s*\(\s*\)\)\s*,\n}ms,
+            "Makefile.PL - LICENSE",
+        );
+
+        # TEST
+        $makefile_pl->parse(qr{\A\s*PL_FILES *=> *\{\},\n}ms,
+            "Makefile.PL - PL_FILES",
+        );
+
+        # TEST
+        $makefile_pl->parse(qr{\A\s*PREREQ_PM *=> *\{\n\s*'Test::More' *=> *0,\n\s*\},\n}ms,
+            "Makefile.PL - PREREQ_PM",
+        );
+
+    }
+
+    {
+        my $manifest = TestParseFile->new(
+            {
+                fn => File::Spec->catfile($module_base_dir, 'MANIFEST'),
+            }
+        );
+
+        my $contents = <<"EOF";
+Changes
+lib/Book/Park/Mansfield.pm
+lib/Book/Park/Mansfield/Base.pm
+lib/Book/Park/Mansfield/FannyPrice.pm
+lib/JAUSTEN/Utils.pm
+Makefile.PL
+MANIFEST\t\t\tThis list of files
+README
+t/00-load.t
+t/manifest.t
+t/pod-coverage.t
+t/pod.t
+EOF
+
+        # TEST
+        $manifest->consume(
+            $contents,
+            "MANIFEST for Makefile.PL'ed Module",
+        );
+
+        # TEST
+        $manifest->is_end("MANIFEST - that's all folks!");
+    }
+
+    {
+        my $mod1 = TestParseModuleFile->new(
+            {
+                fn => File::Spec->catfile(
+                    $module_base_dir, qw(lib Book Park Mansfield.pm),
+                ),
+                perl_name   => 'Book::Park::Mansfield',
+                dist_name   => 'Book-Park-Mansfield',
+                author_name => 'Jane Austen',
+                license => 'apache',
+            }
+        );
+
+        # TEST*$parse_module_start_num_tests
+        $mod1->parse_module_start();
+
+    }
+
+    {
+        my $jausten_mod = TestParseModuleFile->new(
+            {
+                fn => File::Spec->catfile(
+                    $module_base_dir, qw(lib JAUSTEN Utils.pm),
+                ),
+                perl_name   => 'JAUSTEN::Utils',
+                dist_name   => 'Book-Park-Mansfield',
+                author_name => 'Jane Austen',
+                license => 'apache',
+            }
+        );
+
+        # TEST*$parse_module_start_num_tests
+        $jausten_mod->parse_module_start();
+    }
+
+    {
+        my $mod2 = TestParseModuleFile->new(
+            {
+                fn => File::Spec->catfile(
+                    $module_base_dir, qw(lib Book Park Mansfield Base.pm),
+                ),
+                perl_name   => 'Book::Park::Mansfield::Base',
+                dist_name   => 'Book-Park-Mansfield',
+                author_name => 'Jane Austen',
+                license => 'apache',
+            }
+        );
+
+        # TEST*$parse_module_start_num_tests
+        $mod2->parse_module_start();
+
+    }
+
+    my $files_list;
+    if (!$ENV{'DONT_DEL_APACHE'}) {
         rmtree ($module_base_dir, {result => \$files_list});
     }
 }
