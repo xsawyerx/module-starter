@@ -17,11 +17,11 @@ Module::Starter::Simple - a simple, comprehensive Module::Starter plugin
 
 =head1 VERSION
 
-Version 1.54
+Version 1.55
 
 =cut
 
-our $VERSION = '1.54';
+our $VERSION = '1.55';
 
 =head1 SYNOPSIS
 
