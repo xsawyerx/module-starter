@@ -1,5 +1,10 @@
 Revision history for Perl extension Module::Starter
 
+1.57    Tue Apr 12 11:07:01 IDT 2011
+
+        * No functional changes.
+        * Removing English from unnecessary tests that confuse a tester.
+
 1.56    Thu Apr  7 17:01:11 IDT 2011
 
         * No functional changes, productionizing.
