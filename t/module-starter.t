@@ -25,8 +25,6 @@ use warnings;
 use Test::More;
 plan skip_all => "these tests must be completely rewritten";
 
-use English '-no_match_vars';
-
 use File::Spec;
 use File::Temp qw/ tempdir /;
 use File::Find;
@@ -196,7 +194,7 @@ sub build_module_starter {
   # Now to try to build the Starter module...
   chdir( catfile($temp_dir,$starter_dir) );
 
-  (my($path, $perl)) = $EXECUTABLE_NAME =~ /^(.+)(perl.*)$/i;
+  (my($path, $perl)) = $^X =~ /^(.+)(perl.*)$/i;
 
   $perl = catfile($path,$perl);
 
