@@ -16,6 +16,7 @@ WriteMakefile(
         'Test::Harness'         => 0.21,
         'ExtUtils::Command'     => 0,
         'File::Spec'            => 0,
+        'Path::Class'           => 0,
         'Getopt::Long'          => 0,
         'Pod::Usage'            => 1.21,
     },
