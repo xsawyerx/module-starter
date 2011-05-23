@@ -55,7 +55,7 @@ sub new {
 =head1 OBJECT METHODS
 
 All the methods documented below are object methods, meant to be called
-internally by the ephemperal objects created during the execution of the class
+internally by the ephemeral objects created during the execution of the class
 method C<create_distro> above.
 
 =head2 postprocess_config
