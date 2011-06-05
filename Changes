@@ -20,7 +20,7 @@ Revision history for Perl extension Module::Starter
             will remain an inspiration to many programmers, myself included.
 
         [ENHANCEMENTS]
-        Added hooks for distribution building in App. Thanks to Brian D. Foy.
+        Added hooks for distribution building in App. Thanks to brian d foy.
         MANIFEST is now created via the proper builder.
         Kept create_MANIFEST to act as hook.
         Added Apache license by pfig.
