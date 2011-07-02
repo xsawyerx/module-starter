@@ -1,6 +1,6 @@
 Revision history for Perl extension Module::Starter
 
-1.58
+1.58    Sat Jul  2 15:58:46 2011
 
         * Added prereq on Path::Class (RT #68360).
         * Doc fixes by Nicholas Bamber and Salvatore Bonaccorso (RT #68385).
