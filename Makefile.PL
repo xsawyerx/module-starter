@@ -24,7 +24,7 @@ WriteMakefile(
         (META_ADD => {
             resources => {
                 homepage   => 'http://code.google.com/p/module-starter/',
-                repository => 'http://module-starter.googlecode.com/svn/trunk/',
+                repository => 'https://github.com/xsawyerx/module-starter',
                 bugtracker => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=Module-Starter',
             },
         })
