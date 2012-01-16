@@ -45,12 +45,9 @@ sub _config_read {
         if (/\A(\w+):\s*(.+)\Z/sm) { $config{$1} = $2; }
     }
 
-    # The options that accept multiple arguments must be set to an
-    # arrayref
-    $config{plugins} = [ split /(?:\s*,\s*|\s+)/, $config{plugins} ] if $config{plugins};
-    $config{builder} = [ split /(?:\s*,\s*|\s+)/, $config{builder} ] if $config{builder};
-
-    foreach my $key ( qw( plugins modules builder ) ){
+    # The options that accept multiple arguments must be set to an arrayref
+    foreach my $key (qw( builder ignores_type modules plugins )) {
+        $config{$key} = [ split /(?:\s*,\s*|\s+)/, $config{$key} ] if $config{$key};
         $config{$key} = [] unless exists $config{$key};
     }
 
