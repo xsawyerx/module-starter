@@ -23,8 +23,8 @@ WriteMakefile(
     (! eval { ExtUtils::MakeMaker->VERSION(6.46) } ? () :
         (META_ADD => {
             resources => {
-                homepage   => 'http://code.google.com/p/module-starter/',
-                repository => 'https://github.com/xsawyerx/module-starter',
+                homepage   => 'https://github.com/xsawyerx/module-starter',
+                repository => 'https://github.com/xsawyerx/module-starter.git',
                 bugtracker => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=Module-Starter',
             },
         })

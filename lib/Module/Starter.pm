@@ -129,9 +129,9 @@ You can also look for information at:
 
 =over 4
 
-=item * Source code at Google Code
+=item * Source code at GitHub
 
-L<http://code.google.com/p/module-starter/>
+L<https://github.com/xsawyerx/module-starter>
 
 =item * AnnoCPAN: Annotated CPAN documentation
 
