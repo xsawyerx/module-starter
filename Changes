@@ -1,5 +1,39 @@
 Revision history for Perl extension Module::Starter
 
+1.58_02
+        -- All changes in this release are by Brendan Byrd (SineSwiper).
+           Thank you! :)
+
+        Licenses:
+        * Add GPL3 licenses (fixes RT #72321).
+        * Add all other supported licenses, including Software::License
+          support (fixes RT #68634).
+
+        New Params:
+        * Make ignores_type an arrayref (closes Pull Request #8).
+        * Add new --ignores parameter (also repeatable).
+        * Add new --minperl parameter (Minimum Perl version).
+
+        File Creation:
+        * Fix MANIFEST.SKIP to skip creation of MANIFEST.
+        * Make all warnings FATAL in created .t/.pm files.
+        * Add config/build requires to Makefile/Build.PL.
+        * Bulk up Module::Install Makefile.PL.
+        * Fix ignores_guts to use different contents for MANIFEST.SKIP and
+          other ignore files.
+
+        test-dist.t Revamp:
+        * Complete refactor of test-dist.t to make it more standardized.
+        * Create new TestParseFile::parse_file_start method that handles
+          parsing of all current created file types (outside of .pm files).
+        * Use subtest for better organization.
+        * Add verification that existing files are there and no new surprise
+          files are not there.
+        * Add new mega-loop to "test all variations of everything" (uses 1%
+          sample size to keep test speed fast for average users).
+
+        * Use .gitignore and MANIFEST.SKIP.
+
 1.58_01
 
         * Fix repository URL by Shlomi Fish (GH #7).
