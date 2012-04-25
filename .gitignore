@@ -15,5 +15,9 @@ inc/
 .last_cover_stats
 nytprof.out
 pod2htm*.tmp
+pm_to_blib
 module-starter-*
 module-starter-*.tar.gz
+t/data/MyModule-Test/*
+t/data/Book-Park-Mansfield/*
+t/data/loop/*
