@@ -97,7 +97,7 @@ sub create_distro {
     croak "Must specify an email address\n" unless $self->{email};
     ($self->{email_obfuscated} = $self->{email}) =~ s/@/ at /;
 
-    $self->{license}      ||= 'perl';
+    $self->{license}      ||= 'artistic2';
     $self->{minperl}      ||= 5.006;
     $self->{ignores_type} ||= ['generic'];
     $self->{manifest_skip} = !! grep { /manifest/ } @{ $self->{ignores_type} };
