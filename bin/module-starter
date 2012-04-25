@@ -30,8 +30,12 @@ Options:
 
     --author=name    Author's name (required)
     --email=email    Author's email (required)
+
+    --ignores=type   Ignore type files to include (repeatable)
     --license=type   License under which the module will be distributed
                      (default is the same license as perl)
+     --minperl=ver    Minimum Perl version required (optional;
+                      default is 5.006)
 
     --verbose        Print progress messages while working
     --force          Delete pre-existing files if needed
@@ -39,8 +43,14 @@ Options:
     --help           Show this message
 
 Available Licenses:
-    perl, bsd, gpl, lgpl, mit, apache
-
+    perl, artistic, artistic2, mit, mozilla, mozilla2, bsd, freebsd, cc0,
+     gpl, lgpl, gpl3, lgpl3, agpl3, apache, qpl
+     
+Available Ignore Types:
+    cvs, git, manifest, generic
+     (NOTE: If manifest is included, the MANIFEST file will be skipped
+     and only a MANIFEST.SKIP file will be included.)
+     
 Example:
 
     module-starter --module=Foo::Bar,Foo::Bat \

@@ -98,7 +98,11 @@ sub create_distro {
     ($self->{email_obfuscated} = $self->{email}) =~ s/@/ at /;
 
     $self->{license}      ||= 'perl';
-    $self->{ignores_type} ||= 'generic';
+    $self->{minperl}      ||= 5.006;
+    $self->{ignores_type} ||= ['generic'];
+    $self->{manifest_skip} = !! grep { /manifest/ } @{ $self->{ignores_type} };
+    
+    $self->{license_record} = $self->_license_record();
 
     $self->{main_module} = $modules[0];
     if ( not $self->{distro} ) {
@@ -120,7 +124,7 @@ sub create_distro {
     push @files, $self->create_Changes;
     push @files, $self->create_README( $build_results{instructions} );
 
-    $self->create_MANIFEST( $build_results{'manifest_method'} );
+    $self->create_MANIFEST( $build_results{'manifest_method'} ) unless ( $self->{manifest_skip} );
     # TODO: put files to ignore in a more standard form?
     # XXX: no need to return the files created
 
@@ -213,24 +217,92 @@ method eventually.)
 
 =cut
 
-sub _get_licenses_mapping {
-    my $self = shift;
-
-    return
-    [
-    {
+our $LICENSES = {
+    perl => {
         license => 'perl',
-        blurb => <<'EOT',
+        slname  => 'Perl_5',
+        url     => 'http://dev.perl.org/licenses/',
+        blurb   => <<'EOT',
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
 by the Free Software Foundation; or the Artistic License.
 
-See http://dev.perl.org/licenses/ for more information.
+See L<http://dev.perl.org/licenses/> for more information.
 EOT
     },
-    {
+    artistic => {
+        license => 'artistic',
+        slname  => 'Artistic_1_0',
+        url     => 'http://www.perlfoundation.org/artistic_license_1_0',
+        blurb   => <<'EOT',
+This program is free software; you can redistribute it and/or modify it
+under the terms of the the Artistic License (1.0). You may obtain a
+copy of the full license at:
+
+L<http://www.perlfoundation.org/artistic_license_1_0>
+
+Aggregation of this Package with a commercial distribution is always
+permitted provided that the use of this Package is embedded; that is,
+when no overt attempt is made to make this Package's interfaces visible
+to the end user of the commercial distribution. Such use shall not be
+construed as a distribution of this Package.
+
+The name of the Copyright Holder may not be used to endorse or promote
+products derived from this software without specific prior written
+permission.
+
+THIS PACKAGE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED
+WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF
+MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+EOT
+    },
+    artistic2 => {
+        license => 'artistic2',
+        slname  => 'Artistic_2_0',
+        url     => 'http://www.perlfoundation.org/artistic_license_2_0',
+        blurb   => <<'EOT',
+This program is free software; you can redistribute it and/or modify it
+under the terms of the the Artistic License (2.0). You may obtain a
+copy of the full license at:
+
+L<http://www.perlfoundation.org/artistic_license_2_0>
+
+Any use, modification, and distribution of the Standard or Modified
+Versions is governed by this Artistic License. By using, modifying or
+distributing the Package, you accept this license. Do not use, modify,
+or distribute the Package, if you do not accept this license.
+
+If your Modified Version has been derived from a Modified Version made
+by someone other than you, you are nevertheless required to ensure that
+your Modified Version complies with the requirements of this license.
+
+This license does not grant you the right to use any trademark, service
+mark, tradename, or logo of the Copyright Holder.
+
+This license includes the non-exclusive, worldwide, free-of-charge
+patent license to make, have made, use, offer to sell, sell, import and
+otherwise transfer the Package with respect to any patent claims
+licensable by the Copyright Holder that are necessarily infringed by the
+Package. If you institute patent litigation (including a cross-claim or
+counterclaim) against any party alleging that the Package constitutes
+direct or contributory patent infringement, then this Artistic License
+to you shall terminate on the date that such litigation is filed.
+
+Disclaimer of Warranty: THE PACKAGE IS PROVIDED BY THE COPYRIGHT HOLDER
+AND CONTRIBUTORS "AS IS' AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES.
+THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+PURPOSE, OR NON-INFRINGEMENT ARE DISCLAIMED TO THE EXTENT PERMITTED BY
+YOUR LOCAL LAW. UNLESS REQUIRED BY LAW, NO COPYRIGHT HOLDER OR
+CONTRIBUTOR WILL BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, OR
+CONSEQUENTIAL DAMAGES ARISING IN ANY WAY OUT OF THE USE OF THE PACKAGE,
+EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+EOT
+    },
+    mit => {
         license => 'mit',
-        blurb => <<'EOT',
+        slname  => 'MIT',
+        url     => 'http://www.opensource.org/licenses/mit-license.php',
+        blurb   => <<'EOT',
 This program is distributed under the MIT (X11) License:
 L<http://www.opensource.org/licenses/mit-license.php>
 
@@ -256,11 +328,39 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 EOT
     },
-    {
+    mozilla => {
+        license => 'mozilla',
+        slname  => 'Mozilla_1_1',
+        url     => 'http://www.mozilla.org/MPL/1.1/',
+        blurb   => <<'EOT',
+The contents of this file are subject to the Mozilla Public License
+Version 1.1 (the "License"); you may not use this file except in
+compliance with the License. You may obtain a copy of the License at
+L<http://www.mozilla.org/MPL/>
+
+Software distributed under the License is distributed on an "AS IS"
+basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+License for the specific language governing rights and limitations
+under the License.
+EOT
+    },
+    mozilla2 => {
+        license => 'mozilla2',
+        slname  => 'Mozilla_2_0',
+        url     => 'http://www.mozilla.org/MPL/2.0/',
+        blurb   => <<'EOT',
+This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this
+file, You can obtain one at L<http://mozilla.org/MPL/2.0/>.
+EOT
+    },
+    bsd => {
         license => 'bsd',
-        blurb => <<"EOT",
+        slname  => 'BSD',
+        url     => 'http://www.opensource.org/licenses/BSD-3-Clause',
+        blurb   => <<"EOT",
 This program is distributed under the (Revised) BSD License:
-L<http://www.opensource.org/licenses/bsd-license.php>
+L<http://www.opensource.org/licenses/BSD-3-Clause>
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
@@ -273,7 +373,7 @@ notice, this list of conditions and the following disclaimer.
 notice, this list of conditions and the following disclaimer in the
 documentation and/or other materials provided with the distribution.
 
-* Neither the name of @{[$self->{author}]}'s Organization
+* Neither the name of ___AUTHOR___'s Organization
 nor the names of its contributors may be used to endorse or promote
 products derived from this software without specific prior written
 permission.
@@ -291,9 +391,75 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 EOT
     },
-    {
+    freebsd => {
+        license => 'freebsd',
+        slname  => 'FreeBSD',
+        url     => 'http://www.opensource.org/licenses/BSD-2-Clause',
+        blurb   => <<"EOT",
+This program is distributed under the (Simplified) BSD License:
+L<http://www.opensource.org/licenses/BSD-2-Clause>
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+* Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+EOT
+    },
+    cc0 => {
+        license => 'cc0',
+        slname  => 'CC0',
+        url     => 'http://creativecommons.org/publicdomain/zero/1.0/',
+        blurb   => <<'EOT',
+This program is distributed under the CC0 1.0 Universal License:
+L<http://creativecommons.org/publicdomain/zero/1.0/>
+
+The person who associated a work with this deed has dedicated the work
+to the public domain by waiving all of his or her rights to the work
+worldwide under copyright law, including all related and neighboring
+rights, to the extent allowed by law.
+
+You can copy, modify, distribute and perform the work, even for
+commercial purposes, all without asking permission. See Other
+Information below.
+
+Other Information:
+
+* In no way are the patent or trademark rights of any person affected
+by CC0, nor are the rights that other persons may have in the work or
+in how the work is used, such as publicity or privacy rights. 
+
+* Unless expressly stated otherwise, the person who associated a work
+with this deed makes no warranties about the work, and disclaims
+liability for all uses of the work, to the fullest extent permitted
+by applicable law. 
+
+* When using or citing the work, you should not imply endorsement by
+the author or the affirmer.
+EOT
+    },
+    gpl => {
         license => 'gpl',
-        blurb => <<'EOT',
+        slname  => 'GPL_2',
+        url     => 'http://www.gnu.org/licenses/gpl-2.0.html',
+        blurb   => <<'EOT',
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; version 2 dated June, 1991 or at your option
@@ -309,9 +475,11 @@ if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 EOT
     },
-    {
+    lgpl => {
         license => 'lgpl',
-        blurb => <<'EOT',
+        slname  => 'LGPL_2',
+        url     => 'http://www.gnu.org/licenses/lgpl-2.1.html',
+        blurb   => <<'EOT',
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
 License as published by the Free Software Foundation; either
@@ -328,9 +496,70 @@ Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
 02111-1307 USA.
 EOT
     },
-    {
-        license => 'apache',
+    gpl3 => {
+        license => 'gpl3',
+        slname  => 'GPL_3',
+        url     => 'http://www.gnu.org/licenses/gpl-3.0.html',
+        blurb   => <<'EOT',
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see L<http://www.gnu.org/licenses/>.
+EOT
+    },
+    lgpl3 => {
+        license => 'lgpl3',
+        slname  => 'LGPL_3',
+        url     => 'http://www.gnu.org/licenses/lgpl-3.0.html',
+        blurb   => <<'EOT',
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this program.  If not, see
+L<http://www.gnu.org/licenses/>.
+EOT
+    },
+    agpl3 => {
+        license => 'agpl3',
+        slname  => 'AGPL_2',
+        url     => 'http://www.gnu.org/licenses/agpl-3.0.html',
         blurb => <<'EOT',
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU Affero General Public
+License as published by the Free Software Foundation; either
+version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public
+License along with this program.  If not, see
+L<http://www.gnu.org/licenses/>.
+EOT
+    },
+    apache => {
+        license => 'apache',
+        slname  => 'Apache_2_0',
+        url     => 'http://www.apache.org/licenses/LICENSE-2.0',
+        blurb   => <<'EOT',
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -344,35 +573,36 @@ See the License for the specific language governing permissions and
 limitations under the License.
 EOT
     },
-    ];
-}
+    qpl => {
+        license => 'qpl',
+        slname  => 'QPL_1_0',
+        url     => 'http://www.opensource.org/licenses/QPL-1.0',
+        blurb   => <<'EOT',
+This program is distributed under the Q Public License (QPL-1.0):
+L<http://www.opensource.org/licenses/QPL-1.0>
 
-sub _license_record {
-    my $self = shift;
+The Software and this license document are provided AS IS with NO
+WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE.
+EOT
+    },
+    
+    
+};
 
-    foreach my $record (@{$self->_get_licenses_mapping()}) {
-        if ($record->{license} eq $self->{license}) {
-            return $record;
-        }
-    }
-
-    return;
-}
+sub _license_record { $LICENSES->{ shift->{license} }; }
 
 sub _license_blurb {
     my $self = shift;
 
-    my $record = $self->_license_record();
-
-    my $license_blurb;
-    if (defined($record)) {
-        $license_blurb = $record->{blurb};
-    }
-    else {
-        $license_blurb = <<"EOT";
+    my $record = $self->{license_record};
+    my $license_blurb = defined($record) ?
+        $record->{blurb} :
+        <<"EOT";
 This program is released under the following license: $self->{license}
 EOT
-    }
+
+    $license_blurb =~ s/___AUTHOR___/$self->{author}/ge;
     chomp $license_blurb;
     return $license_blurb;
 }
@@ -512,27 +742,35 @@ sub Makefile_PL_guts {
     my $main_pm_file = shift;
 
     (my $author = "$self->{author} <$self->{email}>") =~ s/'/\'/g;
+    
+    my $slname = $self->{license_record} ? $self->{license_record}->{slname} : $self->{license};
 
     return <<"HERE";
-use 5.006;
+use $self->{minperl};
 use strict;
-use warnings;
+use warnings FATAL => 'all';
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
-    NAME                => '$main_module',
-    AUTHOR              => q{$author},
-    VERSION_FROM        => '$main_pm_file',
-    ABSTRACT_FROM       => '$main_pm_file',
-    (\$ExtUtils::MakeMaker::VERSION >= 6.3002
-      ? ('LICENSE'=> '$self->{license}')
-      : ()),
-    PL_FILES            => {},
-    PREREQ_PM => {
+    NAME             => '$main_module',
+    AUTHOR           => q{$author},
+    VERSION_FROM     => '$main_pm_file',
+    ABSTRACT_FROM    => '$main_pm_file',
+    LICENSE          => '$slname',
+    PL_FILES         => {},
+    MIN_PERL_VERSION => $self->{minperl},
+    CONFIGURE_REQUIRES => {
+        'ExtUtils::MakeMaker' => 0,
+    },
+    BUILD_REQUIRES => {
         'Test::More' => 0,
     },
-    dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
-    clean               => { FILES => '$self->{distro}-*' },
+    PREREQ_PM => {
+        #'ABC'              => 1.6,
+        #'Foo::Bar::Module' => 5.0401,
+    },
+    dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
+    clean => { FILES => '$self->{distro}-*' },
 );
 HERE
 
@@ -553,8 +791,13 @@ sub MI_Makefile_PL_guts {
 
     my $author = "$self->{author} <$self->{email}>";
     $author =~ s/'/\'/g;
+    
+    my $license_url = $self->{license_record} ? $self->{license_record}->{url} : '';
 
     return <<"HERE";
+use $self->{minperl};
+use strict;
+use warnings FATAL => 'all';
 use inc::Module::Install;
 
 name     '$self->{distro}';
@@ -562,12 +805,34 @@ all_from '$main_pm_file';
 author   q{$author};
 license  '$self->{license}';
 
-build_requires 'Test::More';
+perl_version $self->{minperl};
 
+tests_recursive('t');
+
+resources (
+   #homepage   => 'http://yourwebsitehere.com',
+   #IRC        => 'irc://irc.perl.org/#$self->{distro}',
+   license    => '$license_url',
+   #repository => 'git://github.com/$self->{author}/$self->{distro}.git',
+   bugtracker => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=$self->{distro}',
+);
+
+configure_requires (
+   'Module::Install' => 0,
+);
+
+build_requires (
+   'Test::More' => 0,
+);
+
+requires (
+   #'ABC'              => 1.6,
+   #'Foo::Bar::Module' => 5.0401,
+);
+
+install_as_cpan;
 auto_install;
-
 WriteAll;
-
 HERE
 
 }
@@ -615,24 +880,31 @@ sub Build_PL_guts {
 
     (my $author = "$self->{author} <$self->{email}>") =~ s/'/\'/g;
 
+    my $slname = $self->{license_record} ? $self->{license_record}->{slname} : $self->{license};
+    
     return <<"HERE";
-use 5.006;
+use $self->{minperl};
 use strict;
-use warnings;
+use warnings FATAL => 'all';
 use Module::Build;
 
 my \$builder = Module::Build->new(
     module_name         => '$main_module',
-    license             => '$self->{license}',
+    license             => '$slname',
     dist_author         => q{$author},
     dist_version_from   => '$main_pm_file',
+    release_status      => 'stable',
+    configure_requires => {
+        'Module::Build' => 0,
+    },
     build_requires => {
         'Test::More' => 0,
     },
     requires => {
-        'perl' => 5.006,
+        #'ABC'              => 1.6,
+        #'Foo::Bar::Module' => 5.0401,
     },
-    add_to_cleanup      => [ '$self->{distro}-*' ],
+    add_to_cleanup     => [ '$self->{distro}-*' ],
     create_makefile_pl => 'traditional',
 );
 
@@ -815,14 +1087,17 @@ sub t_guts {
     my @modules = @_;
 
     my %t_files;
-
-    $t_files{'pod.t'} = <<'HERE';
+    my $minperl = $self->{minperl};
+    my $header = <<"EOH";
 #!perl -T
-
+use $minperl;
 use strict;
-use warnings;
+use warnings FATAL => 'all';
 use Test::More;
 
+EOH
+    
+    $t_files{'pod.t'} = $header.<<'HERE';
 # Ensure a recent version of Test::Pod
 my $min_tp = 1.22;
 eval "use Test::Pod $min_tp";
@@ -831,27 +1106,19 @@ plan skip_all => "Test::Pod $min_tp required for testing POD" if $@;
 all_pod_files_ok();
 HERE
 
-    $t_files{'manifest.t'} = <<'HERE';
-#!perl -T
-
-use strict;
-use warnings;
-use Test::More;
-
+    $t_files{'manifest.t'} = $header.<<'HERE';
 unless ( $ENV{RELEASE_TESTING} ) {
     plan( skip_all => "Author tests not required for installation" );
 }
 
-eval "use Test::CheckManifest 0.9";
-plan skip_all => "Test::CheckManifest 0.9 required" if $@;
+my $min_tcm = 0.9;
+eval "use Test::CheckManifest $min_tcm";
+plan skip_all => "Test::CheckManifest $min_tcm required" if $@;
+
 ok_manifest();
 HERE
 
-    $t_files{'pod-coverage.t'} = <<'HERE';
-use strict;
-use warnings;
-use Test::More;
-
+    $t_files{'pod-coverage.t'} = $header.<<'HERE';
 # Ensure a recent version of Test::Pod::Coverage
 my $min_tpc = 1.08;
 eval "use Test::Pod::Coverage $min_tpc";
@@ -874,10 +1141,8 @@ HERE
         "\n", map { qq{    use_ok( '$_' ) || print "Bail out!\\n";} } @modules
     );
 
-    $t_files{'00-load.t'} = <<"HERE";
-#!perl -T
-
-use Test::More tests => $nmodules;
+    $t_files{'00-load.t'} = $header.<<"HERE";
+plan tests => $nmodules;
 
 BEGIN {
 $use_lines
@@ -891,13 +1156,8 @@ HERE
       "  module_boilerplate_ok('".$self->_module_to_pm_file($_)."');\n" for @modules;
 
     my $boilerplate_tests = @modules + 2 + $[;
-    $t_files{'boilerplate.t'} = <<"HERE";
-#!perl -T
-
-use 5.006;
-use strict;
-use warnings;
-use Test::More tests => $boilerplate_tests;
+    $t_files{'boilerplate.t'} = $header.<<"HERE";
+plan tests => $boilerplate_tests;
 
 sub not_in_file_ok {
     my (\$filename, \%regex) = \@_;
@@ -1130,7 +1390,7 @@ sub create_build {
 
 =head2 create_ignores()
 
-This creates an ignore.txt file for use as MANIFEST.SKIP, .cvsignore,
+This creates a text file for use as MANIFEST.SKIP, .cvsignore,
 .gitignore, or whatever you use.
 
 =cut
@@ -1139,9 +1399,9 @@ sub create_ignores {
     my $self  = shift;
     my $type  = $self->{ignores_type};
     my %names = (
+        generic  => 'ignore.txt',
         cvs      => '.cvsignore',
         git      => '.gitignore',
-        generic  => 'ignore.txt',
         manifest => 'MANIFEST.SKIP',
     );
 
@@ -1149,7 +1409,7 @@ sub create_ignores {
         my $type  = shift;
         my $name  = $names{$type};
         my $fname = File::Spec->catfile( $self->{basedir}, $names{$type} );
-        $self->create_file( $fname, $self->ignores_guts() );
+        $self->create_file( $fname, $self->ignores_guts($type) );
         $self->progress( "Created $fname" );
     };
 
@@ -1167,27 +1427,72 @@ sub create_ignores {
 =head2 ignores_guts()
 
 Called by C<create_ignores>, this method returns the contents of the
-ignore.txt file.
+ignore file.
 
 =cut
 
 sub ignores_guts {
-    my $self = shift;
+    my ($self, $type) = @_;
 
-    return <<"HERE";
-blib*
+    my $ms = $self->{manifest_skip} ? "MANIFEST\nMANIFEST.bak\n" : '';
+    my $guts = {
+        generic => $ms.<<"EOF",
 Makefile
 Makefile.old
 Build
 Build.bat
-_build*
-pm_to_blib*
-*.tar.gz
+META.*
+MYMETA.*
+.build/
+_build/
+cover_db/
+blib/
+inc/
 .lwpcookies
-cover_db
+.last_cover_stats
+nytprof.out
 pod2htm*.tmp
 $self->{distro}-*
-HERE
+$self->{distro}-*.tar.gz
+EOF
+        # make this more restrictive, since MANIFEST tends to be less noticable
+        # (also, manifest supports REs.)
+        manifest => <<'EOF',
+# Top-level filter (only include the following...)
+^(?!(?:script|examples|lib|inc|t|xt|maint)/|(?:(?:Makefile|Build)\.PL|README|MANIFEST|Changes|META\.(?:yml|json))$)
+
+# Avoid version control files.
+\bRCS\b
+\bCVS\b
+,v$
+\B\.svn\b
+\b_darcs\b
+# (.git only in top-level, hence it's blocked above)
+
+# Avoid temp and backup files.
+~$
+\.tmp$
+\.old$
+\.bak$
+\..*?\.sw[po]$
+\#$
+\b\.#
+
+# avoid OS X finder files
+\.DS_Store$
+
+# ditto for Windows
+\bdesktop\.ini$
+\b[Tt]humbs\.db$
+
+# Avoid patch remnants
+\.orig$
+\.rej$
+EOF
+    };
+    $guts->{cvs} = $guts->{git} = $guts->{generic};
+    
+    return $guts->{$type};
 }
 
 =head1 HELPER METHODS
@@ -1301,9 +1606,9 @@ sub _module_header {
     my $content = <<"HERE";
 package $module;
 
-use 5.006;
+use $self->{minperl};
 use strict;
-use warnings;
+use warnings FATAL => 'all';
 
 \=head1 NAME
 
