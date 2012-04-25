@@ -45,12 +45,9 @@ sub _config_read {
         if (/\A(\w+):\s*(.+)\Z/sm) { $config{$1} = $2; }
     }
 
-    # The options that accept multiple arguments must be set to an
-    # arrayref
-    $config{plugins} = [ split /(?:\s*,\s*|\s+)/, $config{plugins} ] if $config{plugins};
-    $config{builder} = [ split /(?:\s*,\s*|\s+)/, $config{builder} ] if $config{builder};
-
-    foreach my $key ( qw( plugins modules builder ) ){
+    # The options that accept multiple arguments must be set to an arrayref
+    foreach my $key (qw( builder ignores_type modules plugins )) {
+        $config{$key} = [ split /(?:\s*,\s*|\s+)/, $config{$key} ] if $config{$key};
         $config{$key} = [] unless exists $config{$key};
     }
 
@@ -71,6 +68,7 @@ sub _process_command_line {
         'distro=s'   => \$config{distro},
         'module=s@'  => \$config{modules},
         'builder=s@' => \$config{builder},
+        'ignores=s@' => \$config{ignores_type},
         eumm         => sub { push @{$config{builder}}, 'ExtUtils::MakeMaker' },
         mb           => sub { push @{$config{builder}}, 'Module::Build' },
         mi           => sub { push @{$config{builder}}, 'Module::Install' },
@@ -78,6 +76,7 @@ sub _process_command_line {
         'author=s'   => \$config{author},
         'email=s'    => \$config{email},
         'license=s'  => \$config{license},
+        'minperl=s'  => \$config{minperl},
         force        => \$config{force},
         verbose      => \$config{verbose},
         version      => sub {
