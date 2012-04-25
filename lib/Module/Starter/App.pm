@@ -17,7 +17,7 @@ use Pod::Usage;
 use Carp qw( croak );
 
 sub _config_file {
-    my $class     = shift;
+    my $self      = shift;
     my $configdir = $ENV{'MODULE_STARTER_DIR'} || '';
 
     if ( !$configdir && $ENV{'HOME'} ) {
@@ -29,12 +29,11 @@ sub _config_file {
 
 
 sub _config_read {
-    my $class = shift;
+    my $self = shift;
 
-    my $filename = $class->_config_file;
-
+    my $filename = $self->_config_file;
     return unless -e $filename;
-
+    
     open( my $config_file, '<', $filename )
         or die "couldn't open config file $filename: $!\n";
 
@@ -44,10 +43,16 @@ sub _config_read {
         next if /\A\s*\Z/sm;
         if (/\A(\w+):\s*(.+)\Z/sm) { $config{$1} = $2; }
     }
+    
+    return $self->_config_multi_process(%config);
+}
+
+sub _config_multi_process {
+    my ( $self, %config ) = @_;
 
     # The options that accept multiple arguments must be set to an arrayref
     foreach my $key (qw( builder ignores_type modules plugins )) {
-        $config{$key} = [ split /(?:\s*,\s*|\s+)/, $config{$key} ] if $config{$key};
+        $config{$key} = [ split /(?:\s*,\s*|\s+)/, (ref $config{$key} ? join(',', @{$config{$key}}) : $config{$key}) ] if $config{$key};
         $config{$key} = [] unless exists $config{$key};
     }
 
@@ -111,10 +116,11 @@ to change.
 =cut
 
 sub run {
-    my $class  = shift;
-    my %config = $class->_config_read;
+    my $self   = shift;
+    my %config = $self->_config_read;
 
-    %config = $class->_process_command_line(%config);
+    %config = $self->_process_command_line(%config);
+    %config = $self->_config_multi_process(%config);
 
     eval "require $config{class};";
     croak "Could not load starter class $config{class}: $@" if $@;

@@ -34,8 +34,8 @@ Options:
     --ignores=type   Ignore type files to include (repeatable)
     --license=type   License under which the module will be distributed
                      (default is the same license as perl)
-     --minperl=ver    Minimum Perl version required (optional;
-                      default is 5.006)
+    --minperl=ver    Minimum Perl version required (optional;
+                     default is 5.006)
 
     --verbose        Print progress messages while working
     --force          Delete pre-existing files if needed
@@ -43,13 +43,15 @@ Options:
     --help           Show this message
 
 Available Licenses:
+
     perl, artistic, artistic2, mit, mozilla, mozilla2, bsd, freebsd, cc0,
-     gpl, lgpl, gpl3, lgpl3, agpl3, apache, qpl
+    gpl, lgpl, gpl3, lgpl3, agpl3, apache, qpl
      
 Available Ignore Types:
+
     cvs, git, manifest, generic
-     (NOTE: If manifest is included, the MANIFEST file will be skipped
-     and only a MANIFEST.SKIP file will be included.)
+    (NOTE: If manifest is included, the MANIFEST file will be skipped
+    and only a MANIFEST.SKIP file will be included.)
      
 Example:
 
