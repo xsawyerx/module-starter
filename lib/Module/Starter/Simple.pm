@@ -1452,6 +1452,7 @@ inc/
 .last_cover_stats
 nytprof.out
 pod2htm*.tmp
+pm_to_blib
 $self->{distro}-*
 $self->{distro}-*.tar.gz
 EOF
