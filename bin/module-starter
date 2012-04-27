@@ -23,17 +23,18 @@ Options:
     --distro=name    Distribution name (optional)
     --dir=dirname    Directory name to create new module in (optional)
 
-    --builder=module Build with 'ExtUtils::MakeMaker' or 'Module::Build'
+    --builder=module Builder format (repeatable)
     --eumm           Same as --builder=ExtUtils::MakeMaker
     --mb             Same as --builder=Module::Build
-    --mi             Same as --builder=Module::Install
+    --mi             Same as --builder=Module::Install (default)
+    --dzil           Same as --builder=Dist::Zilla
 
     --author=name    Author's name (required)
     --email=email    Author's email (required)
 
     --ignores=type   Ignore type files to include (repeatable)
     --license=type   License under which the module will be distributed
-                     (default is the same license as perl)
+                     (default is Artistic_2_0, as of v1.59)
     --minperl=ver    Minimum Perl version required (optional;
                      default is 5.006)
 
@@ -43,9 +44,8 @@ Options:
     --help           Show this message
 
 Available Licenses:
-
-    perl, artistic, artistic2, mit, mozilla, mozilla2, bsd, freebsd, cc0,
-    gpl, lgpl, gpl3, lgpl3, agpl3, apache, qpl
+    Any Software::License::[keyword]
+    Some lowercase monikers are provided for translation to the S:L class.
      
 Available Ignore Types:
 
@@ -72,6 +72,11 @@ will be used as the distribution name.
 
 Multiple --builder options may be supplied to produce the files for multiple
 builders.
+
+Yes, this supports Dist::Zilla.  This might seem self-defeating, but sometimes
+you just need something to generate a good set of dist.ini options on "easy
+mode".  If this builder format is selected, many of the typical files will be
+excluded unless you explicitly ask for them.
 
 =head1 CONFIGURATION
 

@@ -99,383 +99,60 @@ sub is_end {
     return $verdict;
 }
 
-# This is merely a copy of $LICENSES from Module::Starter::Simple.
+# This is merely a copy of the license code from Module::Starter::Simple.
 # We could just use $Module::Starter::Simple::LICENSES, but really
 # it's bad form to use variables from the actual modules for the
 # purposes of testing.
 
 our $LICENSES = {
-    perl => {
-        license => 'perl',
-        slname  => 'Perl_5',
-        url     => 'http://dev.perl.org/licenses/',
-        blurb   => <<'EOT',
-This program is free software; you can redistribute it and/or modify it
-under the terms of either: the GNU General Public License as published
-by the Free Software Foundation; or the Artistic License.
-
-See L<http://dev.perl.org/licenses/> for more information.
-EOT
-    },
-    artistic => {
-        license => 'artistic',
-        slname  => 'Artistic_1_0',
-        url     => 'http://www.perlfoundation.org/artistic_license_1_0',
-        blurb   => <<'EOT',
-This program is free software; you can redistribute it and/or modify it
-under the terms of the the Artistic License (1.0). You may obtain a
-copy of the full license at:
-
-L<http://www.perlfoundation.org/artistic_license_1_0>
-
-Aggregation of this Package with a commercial distribution is always
-permitted provided that the use of this Package is embedded; that is,
-when no overt attempt is made to make this Package's interfaces visible
-to the end user of the commercial distribution. Such use shall not be
-construed as a distribution of this Package.
-
-The name of the Copyright Holder may not be used to endorse or promote
-products derived from this software without specific prior written
-permission.
-
-THIS PACKAGE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED
-WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF
-MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
-EOT
-    },
-    artistic2 => {
-        license => 'artistic2',
-        slname  => 'Artistic_2_0',
-        url     => 'http://www.perlfoundation.org/artistic_license_2_0',
-        blurb   => <<'EOT',
-This program is free software; you can redistribute it and/or modify it
-under the terms of the the Artistic License (2.0). You may obtain a
-copy of the full license at:
-
-L<http://www.perlfoundation.org/artistic_license_2_0>
-
-Any use, modification, and distribution of the Standard or Modified
-Versions is governed by this Artistic License. By using, modifying or
-distributing the Package, you accept this license. Do not use, modify,
-or distribute the Package, if you do not accept this license.
-
-If your Modified Version has been derived from a Modified Version made
-by someone other than you, you are nevertheless required to ensure that
-your Modified Version complies with the requirements of this license.
-
-This license does not grant you the right to use any trademark, service
-mark, tradename, or logo of the Copyright Holder.
-
-This license includes the non-exclusive, worldwide, free-of-charge
-patent license to make, have made, use, offer to sell, sell, import and
-otherwise transfer the Package with respect to any patent claims
-licensable by the Copyright Holder that are necessarily infringed by the
-Package. If you institute patent litigation (including a cross-claim or
-counterclaim) against any party alleging that the Package constitutes
-direct or contributory patent infringement, then this Artistic License
-to you shall terminate on the date that such litigation is filed.
-
-Disclaimer of Warranty: THE PACKAGE IS PROVIDED BY THE COPYRIGHT HOLDER
-AND CONTRIBUTORS "AS IS' AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES.
-THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
-PURPOSE, OR NON-INFRINGEMENT ARE DISCLAIMED TO THE EXTENT PERMITTED BY
-YOUR LOCAL LAW. UNLESS REQUIRED BY LAW, NO COPYRIGHT HOLDER OR
-CONTRIBUTOR WILL BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, OR
-CONSEQUENTIAL DAMAGES ARISING IN ANY WAY OUT OF THE USE OF THE PACKAGE,
-EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-EOT
-    },
-    mit => {
-        license => 'mit',
-        slname  => 'MIT',
-        url     => 'http://www.opensource.org/licenses/mit-license.php',
-        blurb   => <<'EOT',
-This program is distributed under the MIT (X11) License:
-L<http://www.opensource.org/licenses/mit-license.php>
-
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following
-conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-EOT
-    },
-    mozilla => {
-        license => 'mozilla',
-        slname  => 'Mozilla_1_1',
-        url     => 'http://www.mozilla.org/MPL/1.1/',
-        blurb   => <<'EOT',
-The contents of this file are subject to the Mozilla Public License
-Version 1.1 (the "License"); you may not use this file except in
-compliance with the License. You may obtain a copy of the License at
-L<http://www.mozilla.org/MPL/>
-
-Software distributed under the License is distributed on an "AS IS"
-basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
-License for the specific language governing rights and limitations
-under the License.
-EOT
-    },
-    mozilla2 => {
-        license => 'mozilla2',
-        slname  => 'Mozilla_2_0',
-        url     => 'http://www.mozilla.org/MPL/2.0/',
-        blurb   => <<'EOT',
-This Source Code Form is subject to the terms of the Mozilla Public
-License, v. 2.0. If a copy of the MPL was not distributed with this
-file, You can obtain one at L<http://mozilla.org/MPL/2.0/>.
-EOT
-    },
-    bsd => {
-        license => 'bsd',
-        slname  => 'BSD',
-        url     => 'http://www.opensource.org/licenses/BSD-3-Clause',
-        blurb   => <<"EOT",
-This program is distributed under the (Revised) BSD License:
-L<http://www.opensource.org/licenses/BSD-3-Clause>
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions
-are met:
-
-* Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-
-* Redistributions in binary form must reproduce the above copyright
-notice, this list of conditions and the following disclaimer in the
-documentation and/or other materials provided with the distribution.
-
-* Neither the name of ___AUTHOR___'s Organization
-nor the names of its contributors may be used to endorse or promote
-products derived from this software without specific prior written
-permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-EOT
-    },
-    freebsd => {
-        license => 'freebsd',
-        slname  => 'FreeBSD',
-        url     => 'http://www.opensource.org/licenses/BSD-2-Clause',
-        blurb   => <<"EOT",
-This program is distributed under the (Simplified) BSD License:
-L<http://www.opensource.org/licenses/BSD-2-Clause>
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions
-are met:
-
-* Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-
-* Redistributions in binary form must reproduce the above copyright
-notice, this list of conditions and the following disclaimer in the
-documentation and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-EOT
-    },
-    cc0 => {
-        license => 'cc0',
-        slname  => 'CC0',
-        url     => 'http://creativecommons.org/publicdomain/zero/1.0/',
-        blurb   => <<'EOT',
-This program is distributed under the CC0 1.0 Universal License:
-L<http://creativecommons.org/publicdomain/zero/1.0/>
-
-The person who associated a work with this deed has dedicated the work
-to the public domain by waiving all of his or her rights to the work
-worldwide under copyright law, including all related and neighboring
-rights, to the extent allowed by law.
-
-You can copy, modify, distribute and perform the work, even for
-commercial purposes, all without asking permission. See Other
-Information below.
-
-Other Information:
-
-* In no way are the patent or trademark rights of any person affected
-by CC0, nor are the rights that other persons may have in the work or
-in how the work is used, such as publicity or privacy rights. 
-
-* Unless expressly stated otherwise, the person who associated a work
-with this deed makes no warranties about the work, and disclaims
-liability for all uses of the work, to the fullest extent permitted
-by applicable law. 
-
-* When using or citing the work, you should not imply endorsement by
-the author or the affirmer.
-EOT
-    },
-    gpl => {
-        license => 'gpl',
-        slname  => 'GPL_2',
-        url     => 'http://www.gnu.org/licenses/gpl-2.0.html',
-        blurb   => <<'EOT',
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; version 2 dated June, 1991 or at your option
-any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-A copy of the GNU General Public License is available in the source tree;
-if not, write to the Free Software Foundation, Inc.,
-59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-EOT
-    },
-    lgpl => {
-        license => 'lgpl',
-        slname  => 'LGPL_2',
-        url     => 'http://www.gnu.org/licenses/lgpl-2.1.html',
-        blurb   => <<'EOT',
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-02111-1307 USA.
-EOT
-    },
-    gpl3 => {
-        license => 'gpl3',
-        slname  => 'GPL_3',
-        url     => 'http://www.gnu.org/licenses/gpl-3.0.html',
-        blurb   => <<'EOT',
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see L<http://www.gnu.org/licenses/>.
-EOT
-    },
-    lgpl3 => {
-        license => 'lgpl3',
-        slname  => 'LGPL_3',
-        url     => 'http://www.gnu.org/licenses/lgpl-3.0.html',
-        blurb   => <<'EOT',
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 3 of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this program.  If not, see
-L<http://www.gnu.org/licenses/>.
-EOT
-    },
-    agpl3 => {
-        license => 'agpl3',
-        slname  => 'AGPL_2',
-        url     => 'http://www.gnu.org/licenses/agpl-3.0.html',
-        blurb => <<'EOT',
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU Affero General Public
-License as published by the Free Software Foundation; either
-version 3 of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public
-License along with this program.  If not, see
-L<http://www.gnu.org/licenses/>.
-EOT
-    },
-    apache => {
-        license => 'apache',
-        slname  => 'Apache_2_0',
-        url     => 'http://www.apache.org/licenses/LICENSE-2.0',
-        blurb   => <<'EOT',
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    L<http://www.apache.org/licenses/LICENSE-2.0>
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-EOT
-    },
-    qpl => {
-        license => 'qpl',
-        slname  => 'QPL_1_0',
-        url     => 'http://www.opensource.org/licenses/QPL-1.0',
-        blurb   => <<'EOT',
-This program is distributed under the Q Public License (QPL-1.0):
-L<http://www.opensource.org/licenses/QPL-1.0>
-
-The Software and this license document are provided AS IS with NO
-WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY
-AND FITNESS FOR A PARTICULAR PURPOSE.
-EOT
-    },
-    
-    
+    Perl_5       => qr/^perl[v_]?5?$/,
+    Artistic_1_0 => qr/^artistic[v_]?1\D?0?$/,
+    Artistic_2_0 => qr/^artistic[v_]?2?\D?0?$/,
+    MIT          => qr/^mit$/,
+    Mozilla_1_1  => qr/^mozillav?1\D?1?$/,
+    Mozilla_2_0  => qr/^mozillav?2?\D?0?$/,
+    BSD          => qr/^bsd.*3(?:.*clause)/,
+    FreeBSD      => qr/^(?:free)?bsd.*2?(?:.*clause)?/,
+    CC0          => qr/^cc0$/,
+    GPL_1        => qr/^gplv?1\D?0?$/,
+    GPL_2        => qr/^gplv?2\D?0?$/,
+    GPL_3        => qr/^gplv?3?\D?0?$/,
+    LGPL_2       => qr/^lgplv?2\D?1?$/,
+    LGPL_3       => qr/^lgplv?3?\D?0?$/,
+    AGPL_3       => qr/^agplv?3?\D?0?$/,
+    Apache_1_1   => qr/^apache[v_]?1\D?1?$/,
+    Apache_2_0   => qr/^apache[v_]?2?\D?0?$/,
+    QPL_1_0      => qr/^qplv?1?\D?0?$/,
+    DWTFYWWI     => qr/^(?:dwtfywwi|wtfpl)v?1\D?0?$/,
+    WTFPL_2      => qr/^(?:dwtfywwi|wtfpl)v?2\D?0?$/,
+    PD           => qr/^(?:pd|public|public.*domain|unrestricted)$/,
+    Beerware     => qr/^beer(?:ware)?[vr]?(?:42)?$/,
+    PostgreSQL   => qr/^(?:pq|postgresql)$/,
+    None         => qr/^(?:none$|restrict)/,
 };
+
+sub _license_record {
+    my $self = shift;
+    my $license = $self->{license};
+    my $slname;
+    
+    # All of these monikers are lowercase, and since any S::L name is
+    # going to have uppercase, it will win out.  This extra code will even
+    # detect this and not bother with the translation.
+    if (lc $license eq $license) {
+        foreach my $sl (sort keys %$LICENSES) {
+            if ($license =~ $LICENSES->{$sl}) { $slname = $sl; last; }
+        }
+        die "No such license moniker translation for '$license'" unless ($slname);
+    }
+    else { $slname = $license; }
+    
+    # Perl will die of natural causes in case of missing modules
+    eval "require Software::License::$slname;";  # require hates string class names; must use eval string instead of block
+    return "Software::License::$slname"->new({
+        holder => $self->{author}
+    });
+}
 
 =head2 $file_parser->parse_paras(\@paras, $message)
 
@@ -539,18 +216,24 @@ sub parse_file_start {
         Carp::confess( "Wrong method for testing $basefn; use TestParseModuleFile" );
     }
     
-    my $distro  = $self->{distro};
     my $mainmod = $self->{modules}[0];
     my $minperl = $self->{minperl} || 5.006;
     
-    my $slname      = $LICENSES->{ $self->{license} }->{slname};
-    my $license_url = $LICENSES->{ $self->{license} }->{url};
+    my $has_eumm = (grep { /ExtUtils::MakeMaker/ } @{ $self->{builder} })[0];
+    my $has_mb   = (grep { /Module::Build/       } @{ $self->{builder} })[0];
+    my $has_mi   = (grep { /Module::Install/     } @{ $self->{builder} })[0];
+    my $has_dzil = (grep { /Dist::Zilla/         } @{ $self->{builder} })[0];
     
-    (my $authoremail = "$self->{author} <$self->{email}>") =~ s/'/\'/g;
+    $self->{license_record} = $self->_license_record;
+    (my $slname = ref $self->{license_record}) =~ s/Software::License:://;
+    my $license_url = $self->{license_record}->url || $self->{license_record}->meta2_name || $slname;
+    my $license_blurb = $self->{license_record}->notice();
+    
+    (my $author = "$self->{author} <$self->{email}>") =~ s/'/\'/g;
     (my $libmod = "lib/$mainmod".'.pm') =~ s|::|/|g;
     
-    my $install_pl = $self->{builder} eq 'Module::Build' ? 'Build.PL' : 'Makefile.PL';
     my $manifest_skip = $self->{ignores_type} && !! grep { /manifest/ } @{ $self->{ignores_type} };
+    $manifest_skip ||= $has_dzil;
    
     if ($basefn =~ /\.pm/) {
         return $self->parse_module_start() if (ref $self eq 'TestParseModuleFile');
@@ -558,43 +241,26 @@ sub parse_file_start {
     }
     
     my $msw_re  = qr{use \Q$minperl;\E\n\Quse strict;\E\n\Quse warnings FATAL => 'all';\E\n};
-    my $mswb_re = $self->{builder} eq 'Module::Install' ? qr{\A$msw_re\Quse inc::$self->{builder};\E\n\n} : qr{\A$msw_re\Quse $self->{builder};\E\n\n};
     my $mswt_re = qr{\A\Q#!perl -T\E\n$msw_re\Quse Test::More;\E\n\n};
+
+    my @resources_txt = split /\n/, <<"EOT";
+#homepage   => 'http://yourwebsitehere.com',
+#IRC        => 'irc://irc.perl.org/#$self->{distro}',
+license     => '$license_url',
+repository  => {
+   url  => 'git://github.com/$self->{author}/$self->{distro}.git',
+   web  => 'http://github.com/$self->{author}/$self->{distro}',
+   type => 'git',
+},
+bugtracker  => {
+   web    => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=$self->{distro}',
+   mailto => 'bug-$self->{distro}\@rt.cpan.org',
+},
+EOT
     
-    if ($basefn eq 'README') {
-        plan tests => 6;
-        $self->parse(qr{\A\Q$distro\E\n\n}ms,
-            "Starts with the package name",
-        );
-
-        $self->parse(qr{\AThe README is used to introduce the module and provide instructions.*?\n\n}ms,
-            "README used to introduce",
-        );
-
-        $self->parse(
-            qr{\AA README file is required for CPAN modules since CPAN extracts the.*?\n\n\n}ms,
-            "A README file is required",
-        );
-
-        my $install_instr = $self->{builder} eq 'Module::Build' ?
-            qr{\Qperl Build.PL\E\n\s+\Q./Build\E\n\s+\Q./Build test\E\n\s+\Q./Build install\E} :
-            qr{\Qperl Makefile.PL\E\n\s+\Qmake\E\n\s+\Qmake test\E\n\s+\Qmake install\E};
-
-        $self->parse(qr{\A\n*INSTALLATION\n\nTo install this module, run the following commands:\n\n\s+$install_instr\n\n},
-            "INSTALLATION section",
-        );
-
-        $self->parse(qr{\ASUPPORT AND DOCUMENTATION\n\nAfter installing.*?^\s+perldoc \Q$mainmod\E\n\n}ms,
-            "Support and docs 1"
-        );
-
-        $self->parse(qr{\AYou can also look for information at:\n\n\s+RT[^\n]+\n\s+\Qhttp://rt.cpan.org/NoAuth/Bugs.html?Dist=$distro\E\n\n}ms,
-            "RT"
-        );
-    }
-    elsif ($basefn eq 'Build.PL' && $self->{builder} eq 'Module::Build') {
-        plan tests => 11;
-        $self->parse($mswb_re,
+    if ($basefn eq 'Build.PL' && $has_mb) {
+        plan tests => 12;
+        $self->parse(qr{\A$msw_re\Quse Module::Build;\E\n\n},
             "Min/Strict/Warning/Builder"
         );
 
@@ -606,7 +272,7 @@ sub parse_file_start {
             "license",
         );
 
-        $self->parse(qr{\A\s*dist_author *=> *\Qq{$authoremail},\E\n}ms,
+        $self->parse(qr{\A\s*dist_author *=> *\Qq{$author},\E\n}ms,
             "dist_author",
         );
 
@@ -619,7 +285,7 @@ sub parse_file_start {
         );
 
         $self->parse(
-            qr/\A\s*configure_requires => \{\n *\Q'$self->{builder}' => 0\E,\n\s*\},\n/ms,
+            qr/\A\s*configure_requires => \{\n *\Q'$has_mb' => 0\E,\n\s*\},\n/ms,
             "Configure Requires",
         );
 
@@ -633,8 +299,12 @@ sub parse_file_start {
             "Requires",
         );
 
+        $self->consume("    resources => {\n        ".
+                                    join("\n        ", @resources_txt)."\n".
+                       "    },\n", 'resources');
+
         $self->parse(
-            qr/\A\s*add_to_cleanup *=> \Q[ '$distro-*' ],\E\n/ms,
+            qr/\A\s*add_to_cleanup *=> \Q[ '$self->{distro}-*' ],\E\n/ms,
             "add_to_cleanup",
         );
 
@@ -643,9 +313,9 @@ sub parse_file_start {
             "create_makefile_pl",
         );
     }
-    elsif ($basefn eq 'Makefile.PL' && $self->{builder} eq 'ExtUtils::MakeMaker') {
-        plan tests => 11;
-        $self->parse($mswb_re,
+    elsif ($basefn eq 'Makefile.PL' && $has_eumm) {
+        plan tests => 12;
+        $self->parse(qr{\A$msw_re\Quse ExtUtils::MakeMaker;\E\n\n},
             "Min/Strict/Warning/Builder"
         );
 
@@ -653,7 +323,7 @@ sub parse_file_start {
             "NAME",
         );
 
-        $self->parse(qr{\A\s*AUTHOR *=> *\Qq{$authoremail},\E\n}ms,
+        $self->parse(qr{\A\s*AUTHOR *=> *\Qq{$author},\E\n}ms,
             "AUTHOR",
         );
 
@@ -678,7 +348,7 @@ sub parse_file_start {
         );
         
         $self->parse(
-            qr/\A\s*CONFIGURE_REQUIRES => \{\n *\Q'$self->{builder}' => 0\E,\n\s*\},\n/ms,
+            qr/\A\s*CONFIGURE_REQUIRES => \{\n *\Q'$has_eumm' => 0\E,\n\s*\},\n/ms,
             "CONFIGURE_REQUIRES",
         );
 
@@ -691,14 +361,21 @@ sub parse_file_start {
             qr/\A\s*PREREQ_PM => \{\n *\Q#'ABC'\E *\Q=> 1.6,\E\n *\Q#'Foo::Bar::Module' => 5.0401,\E\n\s*\},\n/ms,
             "PREREQ_PM",
         );
+            
+        $self->consume("    META_ADD => {\n".
+                       "        resources => {\n            ".
+                                        join("\n            ", @resources_txt)."\n".
+                       "        },\n".
+                       "    },\n", 'resources');
+
     }
-    elsif ($basefn eq 'Makefile.PL' && $self->{builder} eq 'Module::Install') {
+    elsif ($basefn eq 'Makefile.PL' && $has_mi) {
         plan tests => 13;
-        $self->parse($mswb_re,
+        $self->parse(qr{\A$msw_re\Quse inc::Module::Install;\E\n\n},
             "Min/Strict/Warning/Builder"
         );
 
-        $self->parse(qr{\Aname\s+\Q'$distro';\E\n}ms,
+        $self->parse(qr{\Aname\s+\Q'$self->{distro}';\E\n}ms,
             "name",
         );
 
@@ -706,11 +383,11 @@ sub parse_file_start {
             "all_from",
         );
 
-        $self->parse(qr{\Aauthor\s+\Qq{$authoremail};\E\n}ms,
+        $self->parse(qr{\Aauthor\s+\Qq{$author};\E\n}ms,
             "author",
         );
 
-        $self->parse(qr{\Alicense\s+\Q'$self->{license}';\E\n\n}ms,
+        $self->parse(qr{\Alicense\s+\Q'$slname';\E\n\n}ms,
             "license",
         );
 
@@ -722,19 +399,12 @@ sub parse_file_start {
             "tests_recursive",
         );
         
-        $self->consume(<<"EOT", 'resources');
-resources (
-   #homepage   => 'http://yourwebsitehere.com',
-   #IRC        => 'irc://irc.perl.org/#$distro',
-   license    => '$license_url',
-   #repository => 'git://github.com/$self->{author}/$distro.git',
-   bugtracker => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=$distro',
-);
-
-EOT
+        $self->consume("resources (\n   ".
+                             join("\n   ", @resources_txt)."\n".
+                       ");\n\n", 'resources');
         
         $self->parse(
-            qr/\A\s*configure_requires \(\n *\Q'$self->{builder}' => 0\E,\n\s*\);\n/ms,
+            qr/\A\s*configure_requires \(\n *\Q'$has_mi' => 0\E,\n\s*\);\n/ms,
             "configure_requires",
         );
 
@@ -757,11 +427,62 @@ EOF
 
         $self->is_end();
     }
+    elsif ($basefn eq 'dist.ini' && $has_dzil) {
+        plan tests => 2;
+
+        my $license_holder = $self->{license_record}->holder();
+        my $license_year   = $self->{license_record}->year();
+
+        $self->consume(<<"EOF");
+name    = $self->{distro}
+author  = $author
+license = $self->{license}
+copyright_holder = $license_holder
+copyright_year   = $license_year
+
+version = 0.01
+
+[\@Basic]
+[InstallGuide]
+[ReadmeAnyFromPod / HtmlInRoot]
+[MetaJSON]
+
+[MetaResources]
+;homepage         = http://yourwebsitehere.com
+;IRC              = irc://irc.perl.org/#$self->{distro}
+license           = $license_url
+repository.url    = git://github.com/$self->{author}/$self->{distro}.git
+repository.web    = http://github.com/$self->{author}/$self->{distro}
+repository.type   = git
+bugtracker.web    = http://rt.cpan.org/NoAuth/Bugs.html?Dist=$self->{distro}
+bugtracker.mailto = bug-$self->{distro}\@rt.cpan.org
+
+[PodWeaver]
+
+[KwaliteeTests]
+[NoTabsTests]
+[EOLTests]
+[Signature]
+
+[CheckChangeLog]
+
+[\@Git]
+
+[AutoPrereqs]
+;skip = ^Foo|Bar$
+
+[Prereq / TestRequires]
+Dist::Zilla = 0
+Test::More  = 0
+EOF
+
+        $self->is_end();
+    }
     elsif ($basefn eq 'Changes') {
         plan tests => 2;
 
         $self->consume(<<"EOF");
-Revision history for $distro
+Revision history for $self->{distro}
 
 0.01    Date/time
         First version, released on an unsuspecting world.
@@ -772,11 +493,13 @@ EOF
     }
     elsif ($basefn eq 'MANIFEST' && !$manifest_skip) {
         plan tests => 2;
+        
         $self->consume(join("\n", 
-            ('Build.PL') x!! ($self->{builder} eq 'Module::Build'),
+            ('Build.PL') x!! $has_mb,
             'Changes',
             ( map { my $f = $_; $f =~ s|::|/|g; "lib/$f.pm"; } @{$self->{modules}} ),
-            ('Makefile.PL') x!! ($self->{builder} ne 'Module::Build'),
+            'LICENSE',
+            ('Makefile.PL') x!! ($has_eumm || $has_mi),
             "MANIFEST\t\t\tThis list of files",
             qw(
                 README
@@ -847,10 +570,46 @@ inc/
 nytprof.out
 pod2htm*.tmp
 pm_to_blib
-$distro-*
-$distro-*.tar.gz
+$self->{distro}-*
+$self->{distro}-*.tar.gz
 EOF
+        $self->is_end();
+    }
+    elsif ($basefn eq 'README') {
+        plan tests => 6;
+        $self->parse(qr{\A\Q$self->{distro}\E\n\n}ms,
+            "Starts with the package name",
+        );
 
+        $self->parse(qr{\AThe README is used to introduce the module and provide instructions.*?\n\n}ms,
+            "README used to introduce",
+        );
+
+        $self->parse(
+            qr{\AA README file is required for CPAN modules since CPAN extracts the.*?\n\n\n}ms,
+            "A README file is required",
+        );
+
+        ### XXX: This could be anything for multiple builders... ###
+        # my $install_instr = $self->{builder} eq 'Module::Build' ?
+            # qr{\Qperl Build.PL\E\n\s+\Q./Build\E\n\s+\Q./Build test\E\n\s+\Q./Build install\E} :
+            # qr{\Qperl Makefile.PL\E\n\s+\Qmake\E\n\s+\Qmake test\E\n\s+\Qmake install\E};
+
+        $self->parse(qr{\A\n*INSTALLATION\n\nTo install this module, run the following commands:\n\n\s+.+?\n\n}s,
+            "INSTALLATION section",
+        );
+
+        $self->parse(qr{\ASUPPORT AND DOCUMENTATION\n\nAfter installing.*?^\s+perldoc \Q$mainmod\E\n\n}ms,
+            "Support and docs 1"
+        );
+
+        $self->parse(qr{\AYou can also look for information at:\n\n\s+RT[^\n]+\n\s+\Qhttp://rt.cpan.org/NoAuth/Bugs.html?Dist=$self->{distro}\E\n\n}ms,
+            "RT"
+        );
+    }
+    elsif ($basefn eq 'LICENSE') {
+        plan tests => 2;
+        $self->consume( $self->{license_record}->license() );
         $self->is_end();
     }
     elsif ($basefn eq '00-load.t') {
@@ -1185,17 +944,10 @@ sub parse_module_start {
         "acknowledgements",
     );
 
-    my $license_blurb = $LICENSES->{ $self->{license} }->{blurb};
-    $license_blurb =~ s/___AUTHOR___/$author_name/ge;
     $self->parse_paras(
         [
             "=head1 LICENSE AND COPYRIGHT",
-            { re =>
-                  q/Copyright \d+ /
-                . quotemeta($author_name)
-                . q/\./
-            },
-            split(/\n\n+/, $license_blurb ),
+            split(/\n\n+/, $self->_license_record->notice() ),
         ],
         "copyright",
     );
@@ -1230,17 +982,26 @@ sub run_settest {
     my ($base_dir, $distro_var) = @_;
     my $module_base_dir = File::Spec->catdir(qw(t data), ref $base_dir ? @$base_dir : $base_dir);
     $distro_var->{dir} = $module_base_dir;
-
+    
     subtest 'Set ==> '.$distro_var->{modules}[0] => sub {
         Module::Starter->create_distro( %$distro_var );
         
         $distro_var->{__srand} = $random_seed;
 
+        my $has_eumm = (grep { /ExtUtils::MakeMaker/ } @{ $distro_var->{builder} })[0];
+        my $has_mb   = (grep { /Module::Build/       } @{ $distro_var->{builder} })[0];
+        my $has_mi   = (grep { /Module::Install/     } @{ $distro_var->{builder} })[0];
+        my $has_dzil = (grep { /Dist::Zilla/         } @{ $distro_var->{builder} })[0];
+        
         my $manifest_skip = $distro_var->{ignores_type} && !! grep { /manifest/ } @{ $distro_var->{ignores_type} };
+        
         my @exist_files = (
-            qw(README Changes),
-            $manifest_skip ? 'MANIFEST.SKIP' : 'MANIFEST',
-            $distro_var->{builder} eq 'Module::Build' ? 'Build.PL' : 'Makefile.PL',
+            (qw(README LICENSE)) x! $has_dzil,
+            'Changes',
+            ($manifest_skip ? 'MANIFEST.SKIP' : $has_dzil ? () : 'MANIFEST'),
+            ('Build.PL')    x!! $has_mb,
+            ('Makefile.PL') x!! ($has_eumm || $has_mi),
+            ('dist.ini')    x!! $has_dzil,
             [qw(t 00-load.t)],
             [qw(t boilerplate.t)],
             [qw(t manifest.t)],
@@ -1271,7 +1032,8 @@ sub run_settest {
         # File existence tests
         foreach my $arrfile (@exist_files) {
             my $file = ref $arrfile ? File::Spec->catfile(@$arrfile) : $arrfile;
-            ok(-f File::Spec->catfile($module_base_dir, $file), "Exists: $file");
+            ok(-f File::Spec->catfile($module_base_dir, $file), "Exists: $file")
+               or diag explain $distro_var;
         }
 
         # Standard file tests
@@ -1332,8 +1094,8 @@ my $DONT_DEL = $ENV{'DONT_DEL_TEST_DIST'};
 run_settest('MyModule-Test', {
     distro  => 'MyModule-Test',
     modules => ['MyModule::Test', 'MyModule::Test::App'],
-    builder => 'Module::Build',
-    license => 'artistic2',
+    builder => ['Module::Install'],
+    license => 'artistic',
     author  => 'Baruch Spinoza',
     email   => 'spinoza@philosophers.tld',
     verbose => 0,
@@ -1348,54 +1110,72 @@ run_settest('Book-Park-Mansfield', {
         'Book::Park::Mansfield::FannyPrice',
         'JAUSTEN::Utils',
     ],
-    builder => 'Module::Build',
-    license => 'artistic2',
+    builder => ['Module::Install'],
+    license => 'artistic',
     author  => 'Jane Austen',
     email   => 'jane.austen@writers.tld',
     verbose => 0,
     force   => $DONT_DEL,
 });
 
-# Test all variations of everything
+### Test all variations of everything ###
 
-# To make sure that we capture any new licenses, we can grab
-# $Module::Starter::Simple::LICENSES and check the keys.
-# Thus, any desyncs between here and there will fail tests.
-my @licenses = keys %$Module::Starter::Simple::LICENSES;
+# Figure out which S::L are already installed and put them on the list
+note "Loading ExtUtils::Installed...";
+use ExtUtils::Installed;
+my $eui = ExtUtils::Installed->new();
+my @licenses = grep { !/^Custom$/ } grep { s/^.+Software\WLicense\W(\w+).pm$/$1/; } $eui->files('Software::License', 'prog');
+push(@licenses, grep { s/^Software::License:://; } ( $eui->modules() ));
 
-foreach my $builder (qw(ExtUtils::MakeMaker Module::Build Module::Install)) {
-subtest "builder = $builder" => sub {
-    undef $@;
-    eval "require $builder";  # require hates string class names; must use eval string instead of block
-    plan ($@ ? 
-        (skip_all => $builder.' not installed') : 
-        (tests => scalar @licenses)
-    );
+note "TTL_TESTS = ".(my $TTL_TESTS = (15-4) * @licenses * 5 * 16 * 2);
 
-    foreach my $license (@licenses) {
+# See which builders we have available
+my %EVAL_BUILDER;
+foreach my $builder (qw(ExtUtils::MakeMaker Module::Build Module::Install Dist::Zilla)) {
+    $EVAL_BUILDER{$builder} = eval "require $builder; 1;"  # require hates string class names; must use eval string instead of block
+}
+
+foreach my $bt (1..15) {
+next if ($bt & 1+4);  # EUMM+MI wouldn't mesh too well...
+my $builder = [
+    ('ExtUtils::MakeMaker') x!! ($bt & 1),
+    ('Module::Build')       x!! ($bt & 2),
+    ('Module::Install')     x!! ($bt & 4),
+    ('Dist::Zilla')         x!! ($bt & 8),
+];
+subtest "builder = ".join(' ', @$builder) => sub {
+    foreach my $bdr (@$builder) { plan skip_all => $builder.' not installed' unless ($EVAL_BUILDER{$bdr}); }
+    plan tests => scalar @licenses;
+
+    foreach my $license (sort @licenses) {
     subtest "license = $license" => sub {
         plan tests => 5;
 
         foreach my $minperl (5.006, 5.008001, v5.10.0, 'v5.10.1', $^V) {
-        subtest "minperl = $minperl" => sub {
+        subtest "minperl = ".(ref \$minperl eq 'VSTRING' ? sprintf('v%vd', $minperl) : $minperl) => sub {
             plan ($minperl > $^V ? 
                 (skip_all => $minperl.' is actually newer than Perl version ($^V)') : 
                 (tests => 16)
             );
-
+            
             foreach my $it (0..15) {
-            subtest "ignores_type = ".substr(unpack("B8", pack("C", $it)), 4) => sub {
-
-                # Only run through 1% of these tests, since there's so many combinations
+            my $ignores_type = [
+                ('generic')  x!! ($it & 1),
+                ('cvs')      x!! ($it & 2),
+                ('git')      x!! ($it & 4),
+                ('manifest') x!! ($it & 8),
+            ];
+            subtest "ignores_type = ".join(' ', @$ignores_type) => sub {
+                # Only run through a small sample of these tests, since there's so many combinations
                 # (But, always do both force tests.)
-                plan ((rand() > .01) ? 
-                    (skip_all => 'Only testing a 1% sample') : 
+                plan ((rand() > 5/$TTL_TESTS*100) ?  # try to keep it at around 5-10 tests total
+                    (skip_all => sprintf('Only testing a %.4f%% sample', 5/$TTL_TESTS*100)) : 
                     (tests => 2)
                 );
 
                 # This stuff should always be the same for both force tests.
                 # Force tests should always been last (innermost) in the loop as well.
-                my $distro = join('-', rstr_array);
+                my $self->{distro} = join('-', rstr_array);
                 my $author = rstr.' '.rstr;
                 my $email  = join('.', rstr_array).'@'.join('.', rstr_array).'.tld';
 
@@ -1414,8 +1194,8 @@ subtest "builder = $builder" => sub {
                 subtest "force = $force" => sub {
                     $ENV{'DONT_DEL_TEST_DIST'} = !$force || $DONT_DEL;
                     
-                    run_settest(['loop', $distro], {  # store these in its own directory
-                        distro  => $distro,
+                    run_settest(['loop', $self->{distro}], {  # store these in its own directory
+                        distro  => $self->{distro},
                         modules => \@modules,
                         builder => $builder,
                         license => $license,
@@ -1424,12 +1204,7 @@ subtest "builder = $builder" => sub {
                         minperl => $minperl,
                         verbose => 0,
                         force   => $force,
-                        ignores_type => [
-                            ('generic')  x!! ($it | 8),
-                            ('cvs')      x!! ($it | 4),
-                            ('git')      x!! ($it | 2),
-                            ('manifest') x!! ($it | 1),
-                        ],
+                        ignores_type => $ignores_type,
                     });
                     
                 }; }
