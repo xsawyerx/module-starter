@@ -72,7 +72,10 @@ sub new {
        {
         file           => "Makefile.PL",
         build_method   => "create_MI_Makefile_PL",
-        build_deps     => [],
+        build_deps     => [ { command => 'make',
+                              aliases => [ 'make', 'gmake', 'dmake' ],
+                            },
+                          ],
         build_manifest => 'create_MI_MANIFEST',
         instructions   => [ 'perl Makefile.PL',
                             'make',
@@ -86,7 +89,7 @@ sub new {
         build_method   => "create_Makefile_PL",
         build_manifest => 'create_EUMM_MANIFEST',
         build_deps     => [ { command => 'make',
-                              aliases => [ 'make', 'gmake' ],
+                              aliases => [ 'make', 'gmake', 'dmake' ],
                             },
                             { command => 'chmod',
                               aliases => [ 'chmod' ],
@@ -97,7 +100,18 @@ sub new {
                             'make test',
                             'make install',
                           ],
-       }
+       },
+       'Dist::Zilla' =>
+       {
+        file           => "dist.ini",
+        build_method   => "create_dist_ini",
+        build_manifest => '',
+        build_deps     => [],
+        instructions   => [ 'dzil build',
+                            'dzil test',
+                            'dzil install',
+                          ],
+       },
       };
 
     return bless $self, $class;
@@ -267,7 +281,7 @@ This method returns the module name of the default builder.
 sub default_builder {
     my $self = shift;
 
-    return 'ExtUtils::MakeMaker';
+    return 'Module::Install';
 }
 
 =head1 BUGS

@@ -5,15 +5,10 @@
 use strict;
 use warnings;
 
-use Test::More tests => 17;
+use Test::More;
 
-eval "require Module::Starter::BuilderSet";
-
-ok(!$@, 'require Module::Starter::BuilderSet');
-
-my $bset = new Module::Starter::BuilderSet;
-
-isa_ok($bset, 'Module::Starter::BuilderSet');
+require_ok 'Module::Starter::BuilderSet';
+my $bset = new_ok 'Module::Starter::BuilderSet';
 
 can_ok($bset, qw( default_builder
                   supported_builders
@@ -25,19 +20,26 @@ can_ok($bset, qw( default_builder
                 )
       );
 
-ok( ( grep { $bset->default_builder() eq $_ } $bset->supported_builders() ),
+my @supported = $bset->supported_builders();
+#plan tests => (15 + @supported*2);
+# "Plan (1..XX) must be at the beginning or end of the TAP output"
+# Fine, we'll stuff it on the end...
+      
+ok( scalar grep { $bset->default_builder() eq $_ } @supported,
     'default builder is in the list of supported builders'
   );
 
-ok( ( !grep { !$bset->file_for_builder($_) } $bset->supported_builders() ),
+is_deeply( [ grep { $bset->file_for_builder($_) } @supported ],
+    \@supported,
     'all supported builders claim to generate a file'
   );
 
-ok( (!grep {!$bset->instructions_for_builder($_)} $bset->supported_builders()),
+is_deeply( [ grep { $bset->instructions_for_builder($_) } @supported ],
+    \@supported,
     'all supported builders provide build instructions'
   );
 
-foreach my $builder ( $bset->supported_builders() ){
+foreach my $builder (@supported) {
   foreach my $dep ($bset->deps_for_builder($builder)){
 
     ok( exists $dep->{command} && $dep->{command} ne '',
@@ -52,13 +54,15 @@ foreach my $builder ( $bset->supported_builders() ){
   }
 }
 
-use Module::Starter::Simple;
-my $simple = bless {}, 'Module::Starter::Simple';
+use_ok 'Module::Starter::Simple';
+my $simple = new_ok 'Module::Starter::Simple';
 
 can_ok( $simple,
         map { $bset->method_for_builder($_) } $bset->supported_builders()
       );
 
+### check_compatibility tests ###
+      
 my @incompat =
   (
    'ExtUtils::MakeMaker',
@@ -68,6 +72,7 @@ my @incompat =
 my @compat =
   ( 'Module::Build',
     'Module::Install',
+    'Dist::Zilla',
   );
 
 my @nonexistent =
@@ -75,57 +80,37 @@ my @nonexistent =
     'CJAC::Flop',
   );
 
-ok( int( $bset->check_compatibility() ) == 1 &&
-    ( $bset->check_compatibility() )[0] eq $bset->default_builder(),
-    'check_compatibility() with no args returns default builder'
-  );
+sub cc_quiet {
+   local $SIG{__WARN__} = sub {};  # As the 'IGNORE' hook is not supported by __WARN__ , you can disable warnings using the empty subroutine
+   return $bset->check_compatibility(@_);
+}  
+  
+my @return = cc_quiet();
+is( int( @return ), 1,                    'check_compatibility() with no args returns 1 builder');
+is( $return[0], $bset->default_builder(), 'check_compatibility() with no args returns default builder');
 
-my @return;
+@return = cc_quiet(@nonexistent);
+is( int( @return ), 1,                    'check_compatibility() with unsupported builder returns 1 builder');
+is( $return[0], $bset->default_builder(), 'check_compatibility() with unsupported builder returns default builder');
 
-# Capture warnings printed to STDERR
-{
-    local *STDERR;
-    open STDERR, q{>}, File::Spec->devnull();
+   @return  = cc_quiet(@incompat);
+my @return2 = cc_quiet(reverse @incompat);
+isnt( int(@return), int(@incompat), 'check_compatibility() strips incompatible builder');
 
-    @return = $bset->check_compatibility(@nonexistent);
-}
-ok( int( @return ) == 1 &&
-    $return[0] eq $bset->default_builder(),
-    'check_compatibility() with unsupported builder returns default builder'
-  );
-
-my @return2;
-# Capture warnings printed to STDERR
-{
-    local *STDERR;
-    open STDERR, q{>}, File::Spec->devnull();
-
-    @return  = $bset->check_compatibility(@incompat);
-    @return2 = $bset->check_compatibility(reverse @incompat);
-}
-
-ok( int( @return ) != int( @incompat ),
-    'check_compatibility() strips incompatible builder'
-  );
-
-ok( $return[0] eq $incompat[0] && $return2[0] eq $incompat[-1],
+is_deeply( [ $return[0], $return2[0] ], [ $incompat[0], $incompat[-1] ],
     'check_compatibility() gives precidence to the first module passed'
-  );
+);
 
-is_deeply( [($bset->check_compatibility(@compat))],
+is_deeply( [(cc_quiet(@compat))],
            [@compat],
            "check_compatibility() returns all compatible builders"
          );
 
-# Capture warnings printed to STDERR
-{
-    local *STDERR;
-    open STDERR, q{>}, File::Spec->devnull();
-
-    @return = $bset->check_compatibility(@compat, @incompat, @nonexistent);
-}
-
+@return = cc_quiet(@compat, @incompat, @nonexistent);
 is_deeply( \@return, \@compat,
            "check_compatibility() returns only compatible builders ".
            "when given mixed set of compatible, incompatible and nonsense"
          );
+
+plan tests => (15 + @supported*2);
+done_testing;

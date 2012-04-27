@@ -8,29 +8,36 @@ WriteMakefile(
     NAME                => 'Module::Starter',
     AUTHOR              => 'Andy Lester <andy@petdance.com>',
     VERSION_FROM        => 'lib/Module/Starter.pm',
-    (eval { ExtUtils::MakeMaker->VERSION(6.21) } ? (LICENSE => 'perl') : ()),
+    LICENSE             => 'Artistic_2_0',
     ABSTRACT_FROM       => 'lib/Module/Starter.pm',
     EXE_FILES           => [ 'bin/module-starter' ],
     PREREQ_PM => {
-        'Test::More'            => 0,
-        'Test::Harness'         => 0.21,
-        'ExtUtils::Command'     => 0,
-        'File::Spec'            => 0,
-        'Path::Class'           => 0,
-        'Getopt::Long'          => 0,
-        'Pod::Usage'            => 1.21,
+        'Test::More'        => 0,
+        'Test::Harness'     => 0.21,
+        'ExtUtils::Command' => 0,
+        'File::Spec'        => 0,
+        'Path::Class'       => 0,
+        'Getopt::Long'      => 0,
+        'Pod::Usage'        => 1.21,
+        'Software::License' => 0.103,
     },
-    (! eval { ExtUtils::MakeMaker->VERSION(6.46) } ? () :
-        (META_ADD => {
-            resources => {
-                homepage   => 'https://github.com/xsawyerx/module-starter',
-                repository => 'https://github.com/xsawyerx/module-starter.git',
-                bugtracker => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=Module-Starter',
+    META_ADD => {
+        resources => {
+            homepage   => 'https://github.com/xsawyerx/module-starter',
+            IRC        => 'irc://irc.perl.org/#toolchain',
+            license    => 'http://www.opensource.org/licenses/artistic-license-2.0.php',
+            repository => {
+               url  => 'git://github.com/xsawyerx/module-starter.git',
+               web  => 'https://github.com/xsawyerx/module-starter',
+               type => 'git',
             },
-        })
-    ),
-    dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
-    clean               => { FILES => 'Module-Release-*' },
+            bugtracker => {
+               web    => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=Module-Starter',
+            },
+        },
+    },
+    dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
+    clean => { FILES => 'Module-Release-*' },
 );
 
 sub MY::postamble {

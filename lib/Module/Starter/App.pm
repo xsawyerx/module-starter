@@ -77,6 +77,7 @@ sub _process_command_line {
         eumm         => sub { push @{$config{builder}}, 'ExtUtils::MakeMaker' },
         mb           => sub { push @{$config{builder}}, 'Module::Build' },
         mi           => sub { push @{$config{builder}}, 'Module::Install' },
+        dzil         => sub { push @{$config{builder}}, 'Dist::Zilla' },
 
         'author=s'   => \$config{author},
         'email=s'    => \$config{email},
@@ -101,7 +102,7 @@ sub _process_command_line {
 
     $config{class} ||= 'Module::Starter';
 
-    $config{builder} = ['ExtUtils::MakeMaker'] unless $config{builder};
+    $config{builder} = [ Module::Starter::BuilderSet->default_builder() ] unless $config{builder};
 
     return %config;
 }

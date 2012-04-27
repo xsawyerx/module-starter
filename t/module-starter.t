@@ -24,6 +24,9 @@ use warnings;
 
 use Test::More;
 plan skip_all => "these tests must be completely rewritten";
+### TODO: The existing test-dist.t platform could be extracted into 
+### t/lib/Test::Module::Starter, so that run_settest could be
+### overloaded to run via CLI, or .config, or create_distro call.
 
 use File::Spec;
 use File::Temp qw/ tempdir /;
