@@ -1,5 +1,8 @@
 Revision history for Perl extension Module::Starter
 
+1.58_03 Fri May 11 16:24:44 2012
+        -- Trying to clean up test failures. More to come.
+
 1.58_02 Wed Apr 25 12:53:34 2012
         -- All changes in this release are by Brendan Byrd (SineSwiper).
            Thank you! :)
