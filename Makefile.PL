@@ -19,6 +19,7 @@ WriteMakefile(
         'Path::Class'           => 0,
         'Getopt::Long'          => 0,
         'Pod::Usage'            => 1.21,
+        'parent'                => 0,
     },
     (! eval { ExtUtils::MakeMaker->VERSION(6.46) } ? () :
         (META_ADD => {
