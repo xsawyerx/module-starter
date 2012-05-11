@@ -18,7 +18,7 @@ use File::Basename;
 sub new {
     my $class = shift;
     my $self  = shift;
-    $self //= {};
+    $self ||= {};
     $self->{_orig_vars} = { %$self };
 
     bless $self, $class;
