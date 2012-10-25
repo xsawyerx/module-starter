@@ -93,6 +93,14 @@ sub create_distro {
         croak "Invalid module name: $_" unless /\A[a-z_]\w*(?:::[\w]+)*\Z/i;
     }
 
+    if ( not $self->{author} ) {
+        ( $self->{author} ) = split /,/, ( getpwuid $> )[6];
+    }
+
+    if ( not $self->{email} and exists $ENV{EMAIL} ) {
+        $self->{email} = $ENV{EMAIL};
+    }
+
     croak "Must specify an author\n" unless $self->{author};
     croak "Must specify an email address\n" unless $self->{email};
     ($self->{email_obfuscated} = $self->{email}) =~ s/@/ at /;

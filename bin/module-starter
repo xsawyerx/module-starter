@@ -28,8 +28,8 @@ Options:
     --mb             Same as --builder=Module::Build
     --mi             Same as --builder=Module::Install
 
-    --author=name    Author's name (required)
-    --email=email    Author's email (required)
+    --author=name    Author's name (taken from getpwuid if not provided)
+    --email=email    Author's email (taken from EMAIL if not provided)
 
     --ignores=type   Ignore type files to include (repeatable)
     --license=type   License under which the module will be distributed
