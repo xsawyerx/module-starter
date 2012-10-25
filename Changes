@@ -1,5 +1,9 @@
 Revision history for Perl extension Module::Starter
 
+1.59    Thu Oct 25 19:54:05 2012
+        * Skip POD tests unless RELEASE_TESTING environment is on.
+          (Alberto Simoes)
+
 1.58_03 Fri May 11 16:24:44 2012
         -- Trying to clean up test failures. More to come.
 
