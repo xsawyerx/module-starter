@@ -10,11 +10,11 @@ Module::Starter::Plugin::Template - module starter with templates
 
 =head1 VERSION
 
-Version 1.59
+Version 1.60
 
 =cut
 
-our $VERSION = '1.59';
+our $VERSION = '1.60';
 
 =head1 SYNOPSIS
 
