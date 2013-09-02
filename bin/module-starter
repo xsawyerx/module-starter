@@ -1,4 +1,9 @@
-#!/usr/bin/perl -w
+#!/home/colin/perl5/perlbrew/perls/perl-5.16.3/bin/perl -w
+
+eval 'exec /home/colin/perl5/perlbrew/perls/perl-5.16.3/bin/perl -w -S $0 ${1+"$@"}'
+    if 0; # not running under some shell
+
+    use blib 'blib';
 
 =head1 NAME
 
@@ -22,6 +27,7 @@ Options:
     --module=module  Module name (required, repeatable)
     --distro=name    Distribution name (optional)
     --dir=dirname    Directory name to create new module in (optional)
+    --profile=name   Section name in config.ini from which config opts loaded (optional)
 
     --builder=module Build with 'ExtUtils::MakeMaker' or 'Module::Build'
     --eumm           Same as --builder=ExtUtils::MakeMaker
@@ -76,9 +82,35 @@ builders.
 =head1 CONFIGURATION
 
 module-starter will look for a configuration file before reading its command
-line parameters.  The default location is C<$HOME/.module-starter/config> but
-if the MODULE_STARTER_DIR environment variable is set, module-starter will look
-for C<config> in that directory.
+line parameters.  The default location is C<$HOME/.module-starter/config.ini>,
+or C<$HOME/.module-starter/config> but if the MODULE_STARTER_DIR environment
+variable is set, module-starter will look for C<config> in that directory.
+
+C<module-starter> supports two configuration formats. The newer format uses
+a C<config.ini> file which is a regular INI format file. The section names
+identify a particular profile, so you can store multiple settings and use
+the appropriate profile at run time. Settings defined before the first section
+header are considered the default values. For example:
+
+
+ author = Colin Keith
+ email  = ckeith@cpan.org
+
+ [Company]
+ email  = colin.keith@company.example.com
+
+ [PBP]
+ plugins: Module::Starter::PBP
+ template_dir: /home/colin/.module-starter/PBP
+
+
+I could now use the C<--profile> option C<--profile Company> to change the
+email address, or I could use C<--profile PBP> to use M::S::PBP.
+
+NOTE: Profiles only work if you have a file called C<config.ini>. They will
+not work with the old C<config> file. The old format, used by the
+C<.module-starter/config> file is described below.
+
 
 The configuration file is just a list of names and values, separated by colons.
 Values that take lists are just space separated.  A sample configuration file
