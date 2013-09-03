@@ -11,6 +11,7 @@ use strict;
 
 our $VERSION = '1.60';
 
+use Config::INI::Reader;
 use Path::Class;
 use Getopt::Long;
 use Pod::Usage;
@@ -24,7 +25,8 @@ sub _config_file {
         $configdir = dir( $ENV{'HOME'}, '.module-starter' );
     }
 
-    return file( $configdir, 'config' );
+    my $r = file($configdir, 'config.ini');
+    return -f $r ? $r : file( $configdir, 'config' );
 }
 
 
@@ -33,7 +35,13 @@ sub _config_read {
 
     my $filename = $self->_config_file;
     return unless -e $filename;
-    
+
+    if(substr($filename, -4) eq '.ini') {
+      my $config = Config::INI::Reader->read_file($filename);
+      $config->{__profilesupport} = 1;
+      return $self->_config_multi_process(%$config);
+    }
+
     open( my $config_file, '<', $filename )
         or die "couldn't open config file $filename: $!\n";
 
@@ -43,7 +51,7 @@ sub _config_read {
         next if /\A\s*\Z/sm;
         if (/\A(\w+):\s*(.+)\Z/sm) { $config{$1} = $2; }
     }
-    
+
     return $self->_config_multi_process(%config);
 }
 
@@ -60,13 +68,16 @@ sub _config_multi_process {
 }
 
 sub _process_command_line {
-    my ( $self, %config ) = @_;
+    my ( $self, %loadedConfig ) = @_;
+    my %config;
 
     $config{'argv'} = [ @ARGV ];
 
     pod2usage(2) unless @ARGV;
 
+    Getopt::Long::Configure('no_ignorecase_always');
     GetOptions(
+        'P|profile=s'=> \$config{profile},
         'class=s'    => \$config{class},
         'plugin=s@'  => \$config{plugins},
         'dir=s'      => \$config{dir},
@@ -91,6 +102,45 @@ sub _process_command_line {
         },
         help         => sub { pod2usage(1); },
     ) or pod2usage(2);
+
+    my %c;
+    if ( $loadedConfig{__profilesupport} ) {
+        delete $loadedConfig{__profilesupport};
+        my $profile = $config{profile};
+
+        if ( $profile && !exists( $loadedConfig{$profile} ) ) {
+            die pod2usage(
+                {
+                    -message =>
+                      "\n\nERROR: Profile $profile does not exist\n\n",
+                    -exitval => 2
+                }
+            );
+        }
+
+        %c = %{ $loadedConfig{_} };
+
+        if ($profile) {
+            for my $k ( keys( %{ $loadedConfig{$profile} } ) ) {
+                $c{$k} = $loadedConfig{$profile}->{$k};
+            }
+        }
+
+        for my $k ( keys(%config) ) {
+            if ( $config{$k} || !exists($c{$k})) {
+                $c{$k} = $config{$k};
+            }
+        }
+
+    } else {
+        %c = %loadedConfig;
+        for my $k (keys(%config)) {
+            if ( $config{$k} || !exists($c{$k})) {
+                $c{$k} = $config{$k};
+            }
+        }
+    }
+    %config = %c;
 
     if (@ARGV) {
         pod2usage(

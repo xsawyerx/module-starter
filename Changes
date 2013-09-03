@@ -1,5 +1,10 @@
 Revision history for Perl extension Module::Starter
 
+1.61    Mon Sep  2 05:52:27 2013
+        * Added support for configuration profiles. This requires
+        converting .module-starter/config to .module-starter/config.ini
+        (Colin Keith).
+
 1.60    Thu Oct 25 20:29:50 2012
         * Guess author from getpwuid if not provided (Hilko Bengen).
         * Guess email from $ENV{'EMAIL'} if not provided (Hilko Bengen).
