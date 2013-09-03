@@ -1,9 +1,4 @@
-#!/home/colin/perl5/perlbrew/perls/perl-5.16.3/bin/perl -w
-
-eval 'exec /home/colin/perl5/perlbrew/perls/perl-5.16.3/bin/perl -w -S $0 ${1+"$@"}'
-    if 0; # not running under some shell
-
-    use blib 'blib';
+#!/usr/bin/perl -w
 
 =head1 NAME
 
