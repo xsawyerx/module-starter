@@ -75,8 +75,9 @@ sub _process_command_line {
 
     pod2usage(2) unless @ARGV;
 
+    Getopt::Long::Configure('no_ignorecase_always');
     GetOptions(
-        'profile=s'  => \$config{profile},
+        'P|profile=s'=> \$config{profile},
         'class=s'    => \$config{class},
         'plugin=s@'  => \$config{plugins},
         'dir=s'      => \$config{dir},

@@ -99,8 +99,9 @@ header are considered the default values. For example:
  template_dir: /home/colin/.module-starter/PBP
 
 
-I could now use the C<--profile> option C<--profile Company> to change the
-email address, or I could use C<--profile PBP> to use M::S::PBP.
+I could now use the C<--profile> (or C<-P> (must be capital "P")) option
+C<--profile Company> to change the email address, or I could use
+C<-P PBP> to use Module::Starter::PBP and the template that it uses.
 
 NOTE: Profiles only work if you have a file called C<config.ini>. They will
 not work with the old C<config> file. The old format, used by the
