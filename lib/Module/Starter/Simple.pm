@@ -93,7 +93,7 @@ sub create_distro {
         croak "Invalid module name: $_" unless /\A[a-z_]\w*(?:::[\w]+)*\Z/i;
     }
 
-    if ( not $self->{author} ) {
+    if ( ( not $self->{author} ) && ( $^O ne 'MSWin32' ) ) {
         ( $self->{author} ) = split /,/, ( getpwuid $> )[6];
     }
 
