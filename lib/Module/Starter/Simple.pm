@@ -1464,7 +1464,7 @@ pm_to_blib
 $self->{distro}-*
 $self->{distro}-*.tar.gz
 EOF
-        # make this more restrictive, since MANIFEST tends to be less noticable
+        # make this more restrictive, since MANIFEST tends to be less noticeable
         # (also, manifest supports REs.)
         manifest => <<'EOF',
 # Top-level filter (only include the following...)
