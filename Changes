@@ -1,5 +1,9 @@
 Revision history for Perl extension Module::Starter
 
+1.61    Fri Dec  6 14:01:19 2013
+        * Stop getpwuid calls on Windows, instead prompt user for author.
+          (Martin McGrath)
+
 1.60    Thu Oct 25 20:29:50 2012
         * Guess author from getpwuid if not provided (Hilko Bengen).
         * Guess email from $ENV{'EMAIL'} if not provided (Hilko Bengen).
