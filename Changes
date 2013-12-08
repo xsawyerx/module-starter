@@ -1,5 +1,10 @@
 Revision history for Perl extension Module::Starter
 
+1.62    Sun Dec  8 11:49:21 2013
+        * Fix regexp in tests to stop failing on 5.8.x (Sawyer X).
+        * Fix FSF address in template block and tests (Brian Manning).
+        * Typo fixes (David Steinbrunner).
+
 1.61    Fri Dec  6 14:01:19 2013
         * Stop getpwuid calls on Windows, instead prompt user for author.
           (Martin McGrath)

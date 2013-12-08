@@ -9,7 +9,7 @@ Module::Starter::App - the code behind the command line program
 use warnings;
 use strict;
 
-our $VERSION = '1.61';
+our $VERSION = '1.62';
 
 use Path::Class;
 use Getopt::Long;
