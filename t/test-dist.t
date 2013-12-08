@@ -629,7 +629,7 @@ sub parse_file_start {
         );
 
         $self->parse(
-            qr/\A\s*requires => \{\n *\Q#'ABC'\E *\Q=> 1.6,\E\n *\Q#'Foo::Bar::Module' => 5.0401,\E\n\s*\},\n/ms,
+            qr/\A\s*requires => \{\n *#'ABC' *=> 1.6,\n *#'Foo::Bar::Module' => 5.0401,\n\s*\},\n/ms,
             "Requires",
         );
 
@@ -688,7 +688,7 @@ sub parse_file_start {
         );
 
         $self->parse(
-            qr/\A\s*PREREQ_PM => \{\n *\Q#'ABC'\E *\Q=> 1.6,\E\n *\Q#'Foo::Bar::Module' => 5.0401,\E\n\s*\},\n/ms,
+            qr/\A\s*PREREQ_PM => \{\n *#'ABC' *=> 1.6,\n *#'Foo::Bar::Module' => 5.0401,\n\s*\},\n/ms,
             "PREREQ_PM",
         );
     }
@@ -744,7 +744,7 @@ EOT
         );
 
         $self->parse(
-            qr/\A\s*requires \(\n *\Q#'ABC'\E *\Q=> 1.6,\E\n *\Q#'Foo::Bar::Module' => 5.0401,\E\n\s*\);\n/ms,
+            qr/\A\s*requires \(\n *#'ABC' *=> 1.6,\n *#'Foo::Bar::Module' => 5.0401,\n\s*\);\n/ms,
             "requires",
         );
 
