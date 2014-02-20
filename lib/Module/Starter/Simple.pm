@@ -822,6 +822,7 @@ resources (
    #IRC        => 'irc://irc.perl.org/#$self->{distro}',
    license    => '$license_url',
    #repository => 'git://github.com/$self->{author}/$self->{distro}.git',
+   #repository => 'https://bitbucket.org/$self->{author}/$self->{distro}',
    bugtracker => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=$self->{distro}',
 );
 
@@ -1410,6 +1411,7 @@ sub create_ignores {
         generic  => 'ignore.txt',
         cvs      => '.cvsignore',
         git      => '.gitignore',
+        hg       => '.hgignore',
         manifest => 'MANIFEST.SKIP',
     );
 
@@ -1476,7 +1478,7 @@ EOF
 ,v$
 \B\.svn\b
 \b_darcs\b
-# (.git only in top-level, hence it's blocked above)
+# (.git or .hg only in top-level, hence it's blocked above)
 
 # Avoid temp and backup files.
 ~$
@@ -1499,7 +1501,7 @@ EOF
 \.rej$
 EOF
     };
-    $guts->{cvs} = $guts->{git} = $guts->{generic};
+    $guts->{hg} = $guts->{cvs} = $guts->{git} = $guts->{generic};
     
     return $guts->{$type};
 }

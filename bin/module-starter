@@ -49,7 +49,7 @@ Available Licenses:
      
 Available Ignore Types:
 
-    cvs, git, manifest, generic
+    cvs, git, hg, manifest, generic
     (NOTE: If manifest is included, the MANIFEST file will be skipped
     and only a MANIFEST.SKIP file will be included.)
      
