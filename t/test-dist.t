@@ -233,7 +233,7 @@ EOT
     },
     mozilla2 => {
         license => 'mozilla2',
-        slname  => 'Mozilla_2_0',
+        slname  => 'open_source',
         url     => 'http://www.mozilla.org/MPL/2.0/',
         blurb   => <<'EOT',
 This Source Code Form is subject to the terms of the Mozilla Public
@@ -312,7 +312,7 @@ EOT
     },
     cc0 => {
         license => 'cc0',
-        slname  => 'CC0',
+        slname  => 'unrestricted',
         url     => 'http://creativecommons.org/publicdomain/zero/1.0/',
         blurb   => <<'EOT',
 This program is distributed under the CC0 1.0 Universal License:
