@@ -107,7 +107,7 @@ sub is_end {
 our $LICENSES = {
     perl => {
         license => 'perl',
-        slname  => 'Perl_5',
+        slname  => 'perl_5',
         url     => 'http://dev.perl.org/licenses/',
         blurb   => <<'EOT',
 This program is free software; you can redistribute it and/or modify it
@@ -119,7 +119,7 @@ EOT
     },
     artistic => {
         license => 'artistic',
-        slname  => 'Artistic_1_0',
+        slname  => 'artistic_1',
         url     => 'http://www.perlfoundation.org/artistic_license_1_0',
         blurb   => <<'EOT',
 This program is free software; you can redistribute it and/or modify it
@@ -145,7 +145,7 @@ EOT
     },
     artistic2 => {
         license => 'artistic2',
-        slname  => 'Artistic_2_0',
+        slname  => 'artistic_2',
         url     => 'http://www.perlfoundation.org/artistic_license_2_0',
         blurb   => <<'EOT',
 This program is free software; you can redistribute it and/or modify it
@@ -187,7 +187,7 @@ EOT
     },
     mit => {
         license => 'mit',
-        slname  => 'MIT',
+        slname  => 'mit',
         url     => 'http://www.opensource.org/licenses/mit-license.php',
         blurb   => <<'EOT',
 This program is distributed under the MIT (X11) License:
@@ -217,7 +217,7 @@ EOT
     },
     mozilla => {
         license => 'mozilla',
-        slname  => 'Mozilla_1_1',
+        slname  => 'mozilla_1_1',
         url     => 'http://www.mozilla.org/MPL/1.1/',
         blurb   => <<'EOT',
 The contents of this file are subject to the Mozilla Public License
@@ -243,7 +243,7 @@ EOT
     },
     bsd => {
         license => 'bsd',
-        slname  => 'BSD',
+        slname  => 'bsd',
         url     => 'http://www.opensource.org/licenses/BSD-3-Clause',
         blurb   => <<"EOT",
 This program is distributed under the (Revised) BSD License:
@@ -280,7 +280,7 @@ EOT
     },
     freebsd => {
         license => 'freebsd',
-        slname  => 'FreeBSD',
+        slname  => 'freebsd',
         url     => 'http://www.opensource.org/licenses/BSD-2-Clause',
         blurb   => <<"EOT",
 This program is distributed under the (Simplified) BSD License:
@@ -344,7 +344,7 @@ EOT
     },
     gpl => {
         license => 'gpl',
-        slname  => 'GPL_2',
+        slname  => 'gpl_2',
         url     => 'http://www.gnu.org/licenses/gpl-2.0.html',
         blurb   => <<'EOT',
 This program is free software; you can redistribute it and/or modify
@@ -364,7 +364,7 @@ EOT
     },
     lgpl => {
         license => 'lgpl',
-        slname  => 'LGPL_2',
+        slname  => 'lgpl_2_1',
         url     => 'http://www.gnu.org/licenses/lgpl-2.1.html',
         blurb   => <<'EOT',
 This program is free software; you can redistribute it and/or
@@ -385,7 +385,7 @@ EOT
     },
     gpl3 => {
         license => 'gpl3',
-        slname  => 'GPL_3',
+        slname  => 'gpl_3',
         url     => 'http://www.gnu.org/licenses/gpl-3.0.html',
         blurb   => <<'EOT',
 This program is free software: you can redistribute it and/or modify
@@ -404,7 +404,7 @@ EOT
     },
     lgpl3 => {
         license => 'lgpl3',
-        slname  => 'LGPL_3',
+        slname  => 'lgpl_3_0',
         url     => 'http://www.gnu.org/licenses/lgpl-3.0.html',
         blurb   => <<'EOT',
 This program is free software; you can redistribute it and/or
@@ -424,7 +424,7 @@ EOT
     },
     agpl3 => {
         license => 'agpl3',
-        slname  => 'AGPL_2',
+        slname  => 'agpl_3',
         url     => 'http://www.gnu.org/licenses/agpl-3.0.html',
         blurb => <<'EOT',
 This program is free software; you can redistribute it and/or
@@ -444,7 +444,7 @@ EOT
     },
     apache => {
         license => 'apache',
-        slname  => 'Apache_2_0',
+        slname  => 'apache_2_0',
         url     => 'http://www.apache.org/licenses/LICENSE-2.0',
         blurb   => <<'EOT',
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -462,7 +462,7 @@ EOT
     },
     qpl => {
         license => 'qpl',
-        slname  => 'QPL_1_0',
+        slname  => 'qpl_1_0',
         url     => 'http://www.opensource.org/licenses/QPL-1.0',
         blurb   => <<'EOT',
 This program is distributed under the Q Public License (QPL-1.0):
