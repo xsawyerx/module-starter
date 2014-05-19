@@ -728,6 +728,7 @@ resources (
    #IRC        => 'irc://irc.perl.org/#$distro',
    license    => '$license_url',
    #repository => 'git://github.com/$self->{author}/$distro.git',
+   #repository => 'https://bitbucket.org/$self->{author}/$self->{distro}',
    bugtracker => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=$distro',
 );
 
@@ -801,7 +802,7 @@ EOF
 ,v$
 \B\.svn\b
 \b_darcs\b
-# (.git only in top-level, hence it's blocked above)
+# (.git or .hg only in top-level, hence it's blocked above)
 
 # Avoid temp and backup files.
 ~$

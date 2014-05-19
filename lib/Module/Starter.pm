@@ -56,7 +56,7 @@ It takes a hash of params, as follows:
     license      => $license,  # type of license; defaults to 'perl'
     author       => $author,   # author's full name (taken from C<getpwuid> if not provided)
     email        => $email,    # author's email address (taken from C<EMAIL> if not provided)
-    ignores_type => $type,     # ignores file type ('generic', 'cvs', 'git', 'manifest' )
+    ignores_type => $type,     # ignores file type ('generic', 'cvs', 'git', 'hg', 'manifest' )
 
     verbose      => $verbose,  # bool: print progress messages; defaults to 0
     force        => $force     # bool: overwrite existing files; defaults to 0
@@ -67,6 +67,7 @@ These are the mappings:
     ignores_type => 'generic'  # default, creates 'ignore.txt'
     ignores_type => 'cvs'      # creates .cvsignore
     ignores_type => 'git'      # creates .gitignore
+    ignores_type => 'hg'       # creates .hgignore
     ignores_type => 'manifest' # creates MANIFEST.SKIP
 
 It is also possible to provide an array ref with multiple types wanted:
