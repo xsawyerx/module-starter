@@ -26,7 +26,7 @@ WriteMakefile(
             resources => {
                 homepage   => 'https://github.com/xsawyerx/module-starter',
                 repository => 'https://github.com/xsawyerx/module-starter.git',
-                bugtracker => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=Module-Starter',
+                bugtracker => 'https://github.com/xsawyerx/module-starter/issues',
             },
         })
     ),

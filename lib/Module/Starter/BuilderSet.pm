@@ -11,11 +11,11 @@ Module::Starter::BuilderSet - determine builder metadata
 
 =head1 VERSION
 
-Version 1.62
+Version 1.63
 
 =cut
 
-our $VERSION = '1.62';
+our $VERSION = '1.63';
 
 =head1 SYNOPSIS
 
@@ -272,10 +272,10 @@ sub default_builder {
 
 =head1 BUGS
 
-Please report any bugs or feature requests to
-C<bug-module-starter at rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org>.  I will be notified, and then you'll automatically
-be notified of progress on your bug as I make changes.
+Please report any bugs or feature requests to the bugtracker for this project
+on GitHub at: L<https://github.com/xsawyerx/module-starter/issues>. I will be
+notified, and then you'll automatically be notified of progress on your bug
+as I make changes.
 
 =head1 AUTHOR
 

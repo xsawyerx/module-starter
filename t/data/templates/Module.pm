@@ -54,12 +54,10 @@ C.J. Adams-Collier, C<< <cjac at colliertech.org> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-foo-bar at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Foo-Bar>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
-
-
-
+Please report any bugs or feature requests to the bugtracker for this project
+on GitHub at: L<https://github.com/xsawyerx/module-starter/issues>. I will be
+notified, and then you'll automatically be notified of progress on your bug
+as I make changes.
 
 =head1 SUPPORT
 
