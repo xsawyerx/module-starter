@@ -1107,6 +1107,10 @@ use Test::More;
 EOH
     
     $t_files{'pod.t'} = $header.<<'HERE';
+unless ( $ENV{RELEASE_TESTING} ) {
+    plan( skip_all => "Author tests not required for installation" );
+}
+
 # Ensure a recent version of Test::Pod
 my $min_tp = 1.22;
 eval "use Test::Pod $min_tp";
@@ -1128,6 +1132,10 @@ ok_manifest();
 HERE
 
     $t_files{'pod-coverage.t'} = $header.<<'HERE';
+unless ( $ENV{RELEASE_TESTING} ) {
+    plan( skip_all => "Author tests not required for installation" );
+}
+
 # Ensure a recent version of Test::Pod::Coverage
 my $min_tpc = 1.08;
 eval "use Test::Pod::Coverage $min_tpc";
