@@ -12,14 +12,15 @@ WriteMakefile(
     ABSTRACT_FROM       => 'lib/Module/Starter.pm',
     EXE_FILES           => [ 'bin/module-starter' ],
     PREREQ_PM => {
-        'Test::More'            => 0,
-        'Test::Harness'         => 0.21,
-        'ExtUtils::Command'     => 0,
-        'File::Spec'            => 0,
-        'Path::Class'           => 0,
-        'Getopt::Long'          => 0,
-        'Pod::Usage'            => 1.21,
-        'parent'                => 0,
+        'Test::More'                   => 0,
+        'Test::Harness'                => 0.21,
+        'ExtUtils::Command'            => 0,
+        'File::Spec'                   => 0,
+        'Path::Class'                  => 0,
+        'Getopt::Long'                 => 0,
+        'Pod::Usage'                   => 1.21,
+        'parent'                       => 0,
+        'Module::Install::AuthorTests' => 0,
     },
     (! eval { ExtUtils::MakeMaker->VERSION(6.46) } ? () :
         (META_ADD => {
