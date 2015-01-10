@@ -972,10 +972,15 @@ EOF
         $self->is_end();
     }
     elsif ($basefn eq 'pod.t') {
-        plan tests => 3;
+        plan tests => 4;
 
         $self->parse($mswt_re,
             "#!perl/Min/Strict/Warning/Test::More"
+        );
+
+        $self->consume(
+            "unless ( \$ENV{RELEASE_TESTING} ) {\n    plan( skip_all => \"Author tests not required for installation\" );\n}\n\n",
+            'test is release only'
         );
 
         my $minimal_test_pod = "1.22";
@@ -991,10 +996,15 @@ EOF
         $self->is_end();
     }
     elsif ($basefn eq 'pod-coverage.t') {
-        plan tests => 5;
+        plan tests => 6;
 
         $self->parse($mswt_re,
             "#!perl/Min/Strict/Warning/Test::More"
+        );
+
+        $self->consume(
+            "unless ( \$ENV{RELEASE_TESTING} ) {\n    plan( skip_all => \"Author tests not required for installation\" );\n}\n\n",
+            'test is release only'
         );
 
         my $l1 = q{eval "use Test::Pod::Coverage $min_tpc";};
