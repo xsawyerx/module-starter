@@ -557,7 +557,7 @@ sub parse_file_start {
         Carp::confess( "Wrong method for testing $basefn; use TestParseModuleFile" );
     }
     
-    my $msw_re  = qr{use \Q$minperl;\E\n\Quse strict;\E\n\Quse warnings FATAL => 'all';\E\n};
+    my $msw_re  = qr{use \Q$minperl;\E\n\Quse strict;\E\n\Quse warnings;\E\n};
     my $mswb_re = $self->{builder} eq 'Module::Install' ? qr{\A$msw_re\Quse inc::$self->{builder};\E\n\n} : qr{\A$msw_re\Quse $self->{builder};\E\n\n};
     my $mswt_re = qr{\A\Q#!perl -T\E\n$msw_re\Quse Test::More;\E\n\n};
     
@@ -1053,7 +1053,7 @@ sub parse_module_start {
     Test::More::plan tests => 19;
 
     $self->parse(
-        qr/\Apackage \Q$perl_name\E;\n\nuse $minperl;\nuse strict;\n\Quse warnings FATAL => 'all';\E\n\n/ms,
+        qr/\Apackage \Q$perl_name\E;\n\nuse $minperl;\nuse strict;\n\Quse warnings;\E\n\n/ms,
         'start',
     );
 

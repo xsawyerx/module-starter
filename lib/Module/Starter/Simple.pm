@@ -753,10 +753,12 @@ sub Makefile_PL_guts {
     
     my $slname = $self->{license_record} ? $self->{license_record}->{slname} : $self->{license};
 
+    my $warnings = sprintf 'warnings%s;', ($self->{fatalize} ? " FATAL => 'all" : '');
+
     return <<"HERE";
 use $self->{minperl};
 use strict;
-use warnings FATAL => 'all';
+use $warnings
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
@@ -802,10 +804,12 @@ sub MI_Makefile_PL_guts {
     
     my $license_url = $self->{license_record} ? $self->{license_record}->{url} : '';
 
+    my $warnings = sprintf 'warnings%s;', ($self->{fatalize} ? " FATAL => 'all" : '');
+
     return <<"HERE";
 use $self->{minperl};
 use strict;
-use warnings FATAL => 'all';
+use $warnings
 use inc::Module::Install;
 
 name     '$self->{distro}';
@@ -891,10 +895,12 @@ sub Build_PL_guts {
 
     my $slname = $self->{license_record} ? $self->{license_record}->{slname} : $self->{license};
     
+    my $warnings = sprintf 'warnings%s;', ($self->{fatalize} ? " FATAL => 'all" : '');
+
     return <<"HERE";
 use $self->{minperl};
 use strict;
-use warnings FATAL => 'all';
+use $warnings
 use Module::Build;
 
 my \$builder = Module::Build->new(
@@ -1097,11 +1103,13 @@ sub t_guts {
 
     my %t_files;
     my $minperl = $self->{minperl};
+    my $warnings = sprintf 'warnings%s;', ($self->{fatalize} ? " FATAL => 'all" : '');
+
     my $header = <<"EOH";
 #!perl -T
 use $minperl;
 use strict;
-use warnings FATAL => 'all';
+use $warnings
 use Test::More;
 
 EOH
@@ -1622,12 +1630,14 @@ sub _module_header {
     my $self = shift;
     my $module = shift;
     my $rtname = shift;
+    my $warnings = sprintf 'warnings%s;', ($self->{fatalize} ? " FATAL => 'all" : '');
+
     my $content = <<"HERE";
 package $module;
 
 use $self->{minperl};
 use strict;
-use warnings FATAL => 'all';
+use $warnings
 
 \=head1 NAME
 
