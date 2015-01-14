@@ -39,7 +39,6 @@ Options:
 
     --fatalize       Generate code that causes all warnings to be fatal with:
                      use warnings FATAL => 'all'
-                     This is not recommended if your module has dependencies
 
     --verbose        Print progress messages while working
     --force          Delete pre-existing files if needed
