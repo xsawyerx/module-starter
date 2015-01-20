@@ -1,6 +1,6 @@
 Revision history for Perl extension Module::Starter
 
-1.63	??? Jan 2015
+1.70	Tue Jan 20 20:56:31 2015
         * Change the url for issues from rt.cpan.org to GitHub (David Pottage)
         * Added a missing module to prerequisites (David Pottage)
         * Marked t/pod* test scripts as RELEASE_TESTING (David Pottage)
