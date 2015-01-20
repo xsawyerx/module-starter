@@ -82,6 +82,8 @@ sub _process_command_line {
         'email=s'    => \$config{email},
         'license=s'  => \$config{license},
         'minperl=s'  => \$config{minperl},
+        'fatalize'   => \$config{fatalize},
+
         force        => \$config{force},
         verbose      => \$config{verbose},
         version      => sub {

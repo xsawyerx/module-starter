@@ -4,6 +4,10 @@ Revision history for Perl extension Module::Starter
         * Change the url for issues from rt.cpan.org to GitHub (David Pottage)
         * Added a missing module to prerequisites (David Pottage)
         * Marked t/pod* test scripts as RELEASE_TESTING (David Pottage)
+        * Added a --fatalize option to generate code where warnings are fatal
+          This changes the default behaviour, as fatal warnings are now considered
+          unwise for any public module that many others depend on.
+          See: http://blogs.perl.org/users/peter_rabbitson/2014/01/fatal-warnings-are-a-ticking-time-bomb-via-chromatic.html
 
 1.62    Sun Dec  8 11:49:21 2013
         * Fix regexp in tests to stop failing on 5.8.x (Sawyer X).
