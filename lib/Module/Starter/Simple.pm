@@ -1074,9 +1074,11 @@ sub create_t {
     my $self = shift;
     my @modules = @_;
 
-    my %t_files = $self->t_guts(@modules);
+    my ($t_files, $xt_files) = $self->t_guts(@modules);
 
-    my @files = map { $self->_create_t($_, $t_files{$_}) } keys %t_files;
+    my @files;
+    push @files, map { $self->_create_t('t',  $_, $t_files->{$_}) } keys %$t_files;
+    push @files, map { $self->_create_t('xt', $_, $xt_files->{$_}) } keys %$xt_files;
 
     return @files;
 }
@@ -1096,6 +1098,7 @@ sub t_guts {
     my @modules = @_;
 
     my %t_files;
+    my %xt_files;
     my $minperl = $self->{minperl};
     my $header = <<"EOH";
 #!perl -T
@@ -1173,7 +1176,7 @@ HERE
       "  module_boilerplate_ok('".$self->_module_to_pm_file($_)."');\n" for @modules;
 
     my $boilerplate_tests = @modules + 2 + $[;
-    $t_files{'boilerplate.t'} = $header.<<"HERE";
+    $xt_files{'boilerplate.t'} = $header.<<"HERE";
 plan tests => $boilerplate_tests;
 
 sub not_in_file_ok {
@@ -1226,15 +1229,16 @@ $module_boilerplate_tests
 
 HERE
 
-    return %t_files;
+    return( \%t_files, \%xt_files );
 }
 
 sub _create_t {
     my $self = shift;
+    my $directory = shift;  # 't' or 'xt'
     my $filename = shift;
     my $content = shift;
 
-    my @dirparts = ( $self->{basedir}, 't' );
+    my @dirparts = ( $self->{basedir}, $directory );
     my $tdir = File::Spec->catdir( @dirparts );
     if ( not -d $tdir ) {
         local @ARGV = $tdir;
@@ -1246,7 +1250,7 @@ sub _create_t {
     $self->create_file( $fname, $content );
     $self->progress( "Created $fname" );
 
-    return "t/$filename";
+    return join('/', $directory, $filename );
 }
 
 =head2 create_MB_MANIFEST
@@ -1312,7 +1316,7 @@ sub create_MANIFEST {
     $self->$manifest_method();
     $self->filter_lines_in_file(
         $fname,
-        qr/^t\/boilerplate\.t$/,
+        qr/^xt\/boilerplate\.t$/,
         qr/^ignore\.txt$/,
     );
 
