@@ -1080,11 +1080,12 @@ sub create_t {
     my $self = shift;
     my @modules = @_;
 
-    my ($t_files, $xt_files) = $self->t_guts(@modules);
+    my %t_files  = $self->t_guts(@modules);
+    my %xt_files = $self->xt_guts(@modules);
 
     my @files;
-    push @files, map { $self->_create_t('t',  $_, $t_files->{$_}) } keys %$t_files;
-    push @files, map { $self->_create_t('xt', $_, $xt_files->{$_}) } keys %$xt_files;
+    push @files, map { $self->_create_t('t',  $_, $t_files{$_}) }  keys %t_files;
+    push @files, map { $self->_create_t('xt', $_, $xt_files{$_}) } keys %xt_files;
 
     return @files;
 }
@@ -1104,7 +1105,6 @@ sub t_guts {
     my @modules = @_;
 
     my %t_files;
-    my %xt_files;
     my $minperl = $self->{minperl};
     my $warnings = sprintf 'warnings%s;', ($self->{fatalize} ? " FATAL => 'all" : '');
 
@@ -1179,6 +1179,36 @@ $use_lines
 diag( "Testing $main_module \$${main_module}::VERSION, Perl \$], \$^X" );
 HERE
 
+    return %t_files;
+}
+
+=head2 xt_guts( @modules )
+
+This method is called by create_t, and returns a description of the author
+only *.t files to be created in the xt directory.
+
+The return value is a hash of test files to create.  Each key is a filename and
+each value is the contents of that file.
+
+=cut
+
+sub xt_guts {
+    my $self = shift;
+    my @modules = @_;
+
+    my %xt_files;
+    my $minperl = $self->{minperl};
+    my $warnings = sprintf 'warnings%s;', ($self->{fatalize} ? " FATAL => 'all" : '');
+
+    my $header = <<"EOH";
+#!perl -T
+use $minperl;
+use strict;
+use $warnings
+use Test::More;
+
+EOH
+
     my $module_boilerplate_tests;
     $module_boilerplate_tests .=
       "  module_boilerplate_ok('".$self->_module_to_pm_file($_)."');\n" for @modules;
@@ -1237,7 +1267,7 @@ $module_boilerplate_tests
 
 HERE
 
-    return( \%t_files, \%xt_files );
+    return %xt_files;
 }
 
 sub _create_t {
