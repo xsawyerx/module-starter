@@ -1253,7 +1253,7 @@ sub run_settest {
             $manifest_skip ? 'MANIFEST.SKIP' : 'MANIFEST',
             $distro_var->{builder} eq 'Module::Build' ? 'Build.PL' : 'Makefile.PL',
             [qw(t 00-load.t)],
-            [qw(xt boilerplate.t)],
+            [qw(t boilerplate.t)],
             [qw(t manifest.t)],
             [qw(t pod.t)],
             [qw(t pod-coverage.t)],
