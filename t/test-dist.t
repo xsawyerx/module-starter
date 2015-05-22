@@ -593,7 +593,7 @@ sub parse_file_start {
         );
     }
     elsif ($basefn eq 'Build.PL' && $self->{builder} eq 'Module::Build') {
-        plan tests => 11;
+        plan tests => 10;
         $self->parse($mswb_re,
             "Min/Strict/Warning/Builder"
         );
@@ -636,11 +636,6 @@ sub parse_file_start {
         $self->parse(
             qr/\A\s*add_to_cleanup *=> \Q[ '$distro-*' ],\E\n/ms,
             "add_to_cleanup",
-        );
-
-        $self->parse(
-            qr/\A\s*create_makefile_pl *=> \Q'traditional',\E\n/ms,
-            "create_makefile_pl",
         );
     }
     elsif ($basefn eq 'Makefile.PL' && $self->{builder} eq 'ExtUtils::MakeMaker') {
