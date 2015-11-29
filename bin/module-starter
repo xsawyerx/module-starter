@@ -29,7 +29,10 @@ Options:
     --mi             Same as --builder=Module::Install
 
     --author=name    Author's name (taken from getpwuid if not provided)
-    --email=email    Author's email (taken from EMAIL if not provided)
+                     and Email address ( taken from $ENV{EMAIL} if Author's name is not provided )
+                     Format: Author Name <author_email@domain.tld>
+                     This option can be supplied multiple times for projects 
+                     that have multiple authors.
 
     --ignores=type   Ignore type files to include (repeatable)
     --license=type   License under which the module will be distributed
@@ -60,6 +63,10 @@ Example:
 
     module-starter --module=Foo::Bar,Foo::Bat \
         --author="Andy Lester" --email=andy@petdance.com
+
+    module-starter --module=Foo::Bar,Foo::Bat \
+        --author="Andy Lester <andy@petdance.com> \
+        --author="Sawyer X <sawyerx@cpan.org>
 
 =head1 DESCRIPTION
 
@@ -96,6 +103,9 @@ configuration file entry. A sample configuration file might read:
 
 This format may become more elaborate in the future, but a file of this type
 should remain valid.
+
+Please note, as of right now the configuration file does *not* have support 
+for multiple authors.
 
 =cut
 
