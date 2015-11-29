@@ -92,16 +92,21 @@ sub create_distro {
 
     if ( ( not $self->{author} ) && ( $^O ne 'MSWin32' ) ) {
         ( $self->{author} ) = split /,/, ( getpwuid $> )[6];
+        $self->{author} = [ 
+            exists $ENV{EMAIL} 
+                ? "$self->{author} <$ENV{EMAIL}>" 
+                : $self->{author} 
+        ];
     }
 
-    if ( not $self->{email} and exists $ENV{EMAIL} ) {
-        $self->{email} = $ENV{EMAIL};
-    }
+    croak "Must specify one or more authors\n" 
+        unless $self->{author}
+        && ref($self->{author}) eq 'ARRAY'
+        && @{$self->{author}} > 0;
 
-    croak "Must specify an author\n" unless $self->{author};
-    croak "Must specify an email address\n" unless $self->{email};
-    ($self->{email_obfuscated} = $self->{email}) =~ s/@/ at /;
-
+    croak "author strings must be in the format: 'Author Name <author-email\@domain.tld>'"
+        if grep { $_ !~ m/^.*?\s*\<.*?\>\s*$/ } @{$self->{author}};
+    
     $self->{license}      ||= 'artistic2';
     $self->{minperl}      ||= '5.008003';
     $self->{ignores_type} ||= ['generic'];
@@ -263,7 +268,7 @@ sub _license_blurb {
     my $license_blurb = defined($record) ?
         $record->notice :
         <<"EOT";
-This software is Copyright (c) @{[ $self->_thisyear ]} by $self->{author}.
+This software is Copyright (c) @{[ $self->_thisyear ]} by @{[ join ',', @{ $self->{author} } ]}.
 
 This program is released under the following license:
 
@@ -404,7 +409,9 @@ sub Makefile_PL_guts {
     my $main_module = shift;
     my $main_pm_file = shift;
 
-    (my $author = "$self->{author} <$self->{email}>") =~ s/'/\'/g;
+    my $author = '[' . 
+       join(',', map { s/'/\'/g; "'$_'"; } @{ $self->{author} })
+       . ']';
     
     my $slname = $self->{license_record} ? $self->{license_record}->meta2_name : $self->{license};
 
@@ -420,7 +427,7 @@ use ExtUtils::MakeMaker;
 
 my %WriteMakefileArgs = (
     NAME             => '$main_module',
-    AUTHOR           => q{$author},
+    AUTHOR           => $author,
     VERSION_FROM     => '$main_pm_file',
     ABSTRACT_FROM    => '$main_pm_file',
     LICENSE          => '$slname',
@@ -499,10 +506,14 @@ sub MI_Makefile_PL_guts {
     my $main_module = shift;
     my $main_pm_file = shift;
 
-    my $author = "$self->{author} <$self->{email}>";
+    my $author = join ',', @{$self->{author}};
     $author =~ s/'/\'/g;
-    
+
     my $license_url = $self->{license_record} ? $self->{license_record}->url : '';
+
+    # if there is more than one author, select the first one as
+    # the repository owner
+    my ($repo_author) = (split /\s*\</, $self->{author}->[0])[0];
 
     my $warnings = sprintf 'warnings%s;', ($self->{fatalize} ? " FATAL => 'all'" : '');
 
@@ -525,8 +536,8 @@ resources (
    #homepage   => 'http://yourwebsitehere.com',
    #IRC        => 'irc://irc.perl.org/#$self->{distro}',
    license    => '$license_url',
-   #repository => 'git://github.com/$self->{author}/$self->{distro}.git',
-   #repository => 'https://bitbucket.org/$self->{author}/$self->{distro}',
+   #repository => 'git://github.com/$repo_author/$self->{distro}.git',
+   #repository => 'https://bitbucket.org/$repo_author/$self->{distro}',
    bugtracker => 'https://rt.cpan.org/NoAuth/Bugs.html?Dist=$self->{distro}',
 );
 
@@ -591,7 +602,9 @@ sub Build_PL_guts {
     my $main_module = shift;
     my $main_pm_file = shift;
 
-    (my $author = "$self->{author} <$self->{email}>") =~ s/'/\'/g;
+    my $author = '[' . 
+       join(',', map { s/'/\'/g; "'$_'"; } @{$self->{author}}) 
+       . ']';
 
     my $slname = $self->{license_record} ? $self->{license_record}->meta2_name : $self->{license};
     
@@ -607,7 +620,7 @@ Module::Build->VERSION('0.4004');
 my \$builder = Module::Build->new(
     module_name         => '$main_module',
     license             => '$slname',
-    dist_author         => q{$author},
+    dist_author         => $author,
     dist_version_from   => '$main_pm_file',
     release_status      => 'stable',
     configure_requires => {
@@ -747,7 +760,6 @@ sub _README_license {
     my $self = shift;
 
     my $license_blurb = $self->_license_blurb();
-
 return <<"HERE";
 LICENSE AND COPYRIGHT
 
@@ -1475,7 +1487,6 @@ sub _module_license {
     my $rtname = shift;
 
     my $license_blurb = $self->_license_blurb();
-
     my $content = qq[
 \=head1 LICENSE AND COPYRIGHT
 
@@ -1491,11 +1502,12 @@ sub module_guts {
     my $rtname = shift;
 
     # Sub-templates
-    my $header  = $self->_module_header($module, $rtname);
-    my $bugs    = $self->_module_bugs($module, $rtname);
-    my $support = $self->_module_support($module, $rtname);
-    my $license = $self->_module_license($module, $rtname);
-
+    my $header        = $self->_module_header($module, $rtname);
+    my $bugs          = $self->_module_bugs($module, $rtname);
+    my $support       = $self->_module_support($module, $rtname);
+    my $license       = $self->_module_license($module, $rtname);
+    my $author_string = join ',', @{$self->{author}};
+    
     my $content = <<"HERE";
 $header
 
@@ -1533,7 +1545,7 @@ sub function2 {
 
 \=head1 AUTHOR
 
-$self->{author}, C<< <$self->{email_obfuscated}> >>
+$author_string
 
 $bugs
 

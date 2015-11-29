@@ -79,7 +79,7 @@ sub _process_command_line {
         mb           => sub { push @{$config{builder}}, 'Module::Build' },
         mi           => sub { push @{$config{builder}}, 'Module::Install' },
 
-        'author=s'   => \$config{author},
+        'author=s@'  => \@{ $config{author} },
         'email=s'    => \$config{email},
         'github=s'   => \$config{github},
         'license=s'  => \$config{license},
