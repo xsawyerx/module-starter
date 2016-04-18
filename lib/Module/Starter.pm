@@ -53,7 +53,7 @@ It takes a hash of params, as follows:
                                       # or specify more than one builder in an
                                       # arrayref
 
-    license      => $license,  # type of license; defaults to 'perl'
+    license      => $license,  # type of license; defaults to 'artistic2'
     author       => $author,   # author's full name (taken from C<getpwuid> if not provided)
     email        => $email,    # author's email address (taken from C<EMAIL> if not provided)
     ignores_type => $type,     # ignores file type ('generic', 'cvs', 'git', 'hg', 'manifest' )
