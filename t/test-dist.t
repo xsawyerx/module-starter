@@ -1371,7 +1371,7 @@ my @licenses = keys %$Module::Starter::Simple::LICENSES;
 
 foreach my $builder (qw(ExtUtils::MakeMaker Module::Build Module::Install)) {
 subtest "builder = $builder" => sub {
-    $builder = $builder;
+    $builder = $builder; # 5.8 scoping issue (GH#57)
     undef $@;
     eval "require $builder";  # require hates string class names; must use eval string instead of block
     plan ($@ ? 
@@ -1381,7 +1381,7 @@ subtest "builder = $builder" => sub {
 
     foreach my $license (@licenses) {
     subtest "license = $license" => sub {
-        $license = $license;
+        $license = $license; # 5.8 scoping issue (GH#57)
         plan tests => 5;
 
         foreach my $minperl (5.006, 5.008001, v5.10.0, 'v5.10.1', $^V) {
