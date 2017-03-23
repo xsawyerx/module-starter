@@ -2,6 +2,8 @@ Revision history for Perl extension Module::Starter
 
         * GH#51: drop use of Module::Build::Compat in Build.PL (Karen
           Etheridge)
+        * GH#58: Typo and doc fixes (Tordek)
+        * GH#59: Quote versions in generated Makefile.PL/Build.PL (Grinnz)
 
 1.71    Fri Jan 30 13:28:31 2015
         * GH #47: create_t breaks plugins. (David Pottage)
