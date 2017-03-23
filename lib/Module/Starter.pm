@@ -141,15 +141,15 @@ L<http://annocpan.org/dist/Module-Starter>
 
 =item * CPAN Ratings
 
-L<http://cpanratings.perl.org/d/Module-Starter>
+L<http://cpanratings.perl.org/dist/Module-Starter>
 
-=item * RT: CPAN's request tracker
+=item * GitHub issue tracker
 
-L<https://github.com/xsawyerx/module-starter/issuesr>
+L<https://github.com/xsawyerx/module-starter/issues>
 
-=item * Search CPAN
+=item * Metacpan
 
-L<http://search.cpan.org/dist/Module-Starter>
+L<https://metacpan.org/release/Module-Starter>
 
 =back
 
