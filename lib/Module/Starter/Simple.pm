@@ -106,7 +106,7 @@ sub create_distro {
     ($self->{email_obfuscated} = $self->{email}) =~ s/@/ at /;
 
     $self->{license}      ||= 'artistic2';
-    $self->{minperl}      ||= 5.006;
+    $self->{minperl}      ||= '5.006';
     $self->{ignores_type} ||= ['generic'];
     $self->{manifest_skip} = !! grep { /manifest/ } @{ $self->{ignores_type} };
     
@@ -768,16 +768,16 @@ WriteMakefile(
     ABSTRACT_FROM    => '$main_pm_file',
     LICENSE          => '$slname',
     PL_FILES         => {},
-    MIN_PERL_VERSION => $self->{minperl},
+    MIN_PERL_VERSION => '$self->{minperl}',
     CONFIGURE_REQUIRES => {
-        'ExtUtils::MakeMaker' => 0,
+        'ExtUtils::MakeMaker' => '0',
     },
     BUILD_REQUIRES => {
-        'Test::More' => 0,
+        'Test::More' => '0',
     },
     PREREQ_PM => {
-        #'ABC'              => 1.6,
-        #'Foo::Bar::Module' => 5.0401,
+        #'ABC'              => '1.6',
+        #'Foo::Bar::Module' => '5.0401',
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => '$self->{distro}-*' },
@@ -817,7 +817,7 @@ all_from '$main_pm_file';
 author   q{$author};
 license  '$self->{license}';
 
-perl_version $self->{minperl};
+perl_version '$self->{minperl}';
 
 tests_recursive('t');
 
@@ -831,16 +831,16 @@ resources (
 );
 
 configure_requires (
-   'Module::Install' => 0,
+   'Module::Install' => '0',
 );
 
 build_requires (
-   'Test::More' => 0,
+   'Test::More' => '0',
 );
 
 requires (
-   #'ABC'              => 1.6,
-   #'Foo::Bar::Module' => 5.0401,
+   #'ABC'              => '1.6',
+   #'Foo::Bar::Module' => '5.0401',
 );
 
 install_as_cpan;
@@ -910,14 +910,14 @@ my \$builder = Module::Build->new(
     dist_version_from   => '$main_pm_file',
     release_status      => 'stable',
     configure_requires => {
-        'Module::Build' => 0,
+        'Module::Build' => '0',
     },
     build_requires => {
-        'Test::More' => 0,
+        'Test::More' => '0',
     },
     requires => {
-        #'ABC'              => 1.6,
-        #'Foo::Bar::Module' => 5.0401,
+        #'ABC'              => '1.6',
+        #'Foo::Bar::Module' => '5.0401',
     },
     add_to_cleanup     => [ '$self->{distro}-*' ],
 );

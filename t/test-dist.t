@@ -541,7 +541,7 @@ sub parse_file_start {
     
     my $distro  = $self->{distro};
     my $mainmod = $self->{modules}[0];
-    my $minperl = $self->{minperl} || 5.006;
+    my $minperl = $self->{minperl} || '5.006';
     
     my $slname      = $LICENSES->{ $self->{license} }->{slname};
     my $license_url = $LICENSES->{ $self->{license} }->{url};
@@ -619,17 +619,17 @@ sub parse_file_start {
         );
 
         $self->parse(
-            qr/\A\s*configure_requires => \{\n *\Q'$self->{builder}' => 0\E,\n\s*\},\n/ms,
+            qr/\A\s*configure_requires => \{\n *\Q'$self->{builder}' => '0'\E,\n\s*\},\n/ms,
             "Configure Requires",
         );
 
         $self->parse(
-            qr/\A\s*build_requires => \{\n *\Q'Test::More' => 0\E,\n\s*\},\n/ms,
+            qr/\A\s*build_requires => \{\n *\Q'Test::More' => '0'\E,\n\s*\},\n/ms,
             "Build Requires",
         );
 
         $self->parse(
-            qr/\A\s*requires => \{\n *#'ABC' *=> 1.6,\n *#'Foo::Bar::Module' => 5.0401,\n\s*\},\n/ms,
+            qr/\A\s*requires => \{\n *#'ABC' *=> '1.6',\n *#'Foo::Bar::Module' => '5.0401',\n\s*\},\n/ms,
             "Requires",
         );
 
@@ -668,22 +668,22 @@ sub parse_file_start {
             "PL_FILES",
         );
 
-        $self->parse(qr{\A\s*MIN_PERL_VERSION *=> *\Q$minperl,\E\n}ms,
+        $self->parse(qr{\A\s*MIN_PERL_VERSION *=> *\Q'$minperl',\E\n}ms,
             "MIN_PERL_VERSION",
         );
         
         $self->parse(
-            qr/\A\s*CONFIGURE_REQUIRES => \{\n *\Q'$self->{builder}' => 0\E,\n\s*\},\n/ms,
+            qr/\A\s*CONFIGURE_REQUIRES => \{\n *\Q'$self->{builder}' => '0'\E,\n\s*\},\n/ms,
             "CONFIGURE_REQUIRES",
         );
 
         $self->parse(
-            qr/\A\s*BUILD_REQUIRES => \{\n *\Q'Test::More' => 0\E,\n\s*\},\n/ms,
+            qr/\A\s*BUILD_REQUIRES => \{\n *\Q'Test::More' => '0'\E,\n\s*\},\n/ms,
             "BUILD_REQUIRES",
         );
 
         $self->parse(
-            qr/\A\s*PREREQ_PM => \{\n *#'ABC' *=> 1.6,\n *#'Foo::Bar::Module' => 5.0401,\n\s*\},\n/ms,
+            qr/\A\s*PREREQ_PM => \{\n *#'ABC' *=> '1.6',\n *#'Foo::Bar::Module' => '5.0401',\n\s*\},\n/ms,
             "PREREQ_PM",
         );
     }
@@ -709,7 +709,7 @@ sub parse_file_start {
             "license",
         );
 
-        $self->parse(qr{\Aperl_version\s+\Q$minperl;\E\n\n}ms,
+        $self->parse(qr{\Aperl_version\s+\Q'$minperl';\E\n\n}ms,
             "perl_version",
         );
 
@@ -730,17 +730,17 @@ resources (
 EOT
         
         $self->parse(
-            qr/\A\s*configure_requires \(\n *\Q'$self->{builder}' => 0\E,\n\s*\);\n/ms,
+            qr/\A\s*configure_requires \(\n *\Q'$self->{builder}' => '0'\E,\n\s*\);\n/ms,
             "configure_requires",
         );
 
         $self->parse(
-            qr/\A\s*build_requires \(\n *\Q'Test::More' => 0\E,\n\s*\);\n/ms,
+            qr/\A\s*build_requires \(\n *\Q'Test::More' => '0'\E,\n\s*\);\n/ms,
             "build_requires",
         );
 
         $self->parse(
-            qr/\A\s*requires \(\n *#'ABC' *=> 1.6,\n *#'Foo::Bar::Module' => 5.0401,\n\s*\);\n/ms,
+            qr/\A\s*requires \(\n *#'ABC' *=> '1.6',\n *#'Foo::Bar::Module' => '5.0401',\n\s*\);\n/ms,
             "requires",
         );
 
