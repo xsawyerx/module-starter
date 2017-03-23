@@ -753,7 +753,7 @@ sub Makefile_PL_guts {
     
     my $slname = $self->{license_record} ? $self->{license_record}->{slname} : $self->{license};
 
-    my $warnings = sprintf 'warnings%s;', ($self->{fatalize} ? " FATAL => 'all" : '');
+    my $warnings = sprintf 'warnings%s;', ($self->{fatalize} ? " FATAL => 'all'" : '');
 
     return <<"HERE";
 use $self->{minperl};
@@ -804,7 +804,7 @@ sub MI_Makefile_PL_guts {
     
     my $license_url = $self->{license_record} ? $self->{license_record}->{url} : '';
 
-    my $warnings = sprintf 'warnings%s;', ($self->{fatalize} ? " FATAL => 'all" : '');
+    my $warnings = sprintf 'warnings%s;', ($self->{fatalize} ? " FATAL => 'all'" : '');
 
     return <<"HERE";
 use $self->{minperl};
@@ -895,7 +895,7 @@ sub Build_PL_guts {
 
     my $slname = $self->{license_record} ? $self->{license_record}->{slname} : $self->{license};
     
-    my $warnings = sprintf 'warnings%s;', ($self->{fatalize} ? " FATAL => 'all" : '');
+    my $warnings = sprintf 'warnings%s;', ($self->{fatalize} ? " FATAL => 'all'" : '');
 
     return <<"HERE";
 use $self->{minperl};
@@ -1105,7 +1105,7 @@ sub t_guts {
 
     my %t_files;
     my $minperl = $self->{minperl};
-    my $warnings = sprintf 'warnings%s;', ($self->{fatalize} ? " FATAL => 'all" : '');
+    my $warnings = sprintf 'warnings%s;', ($self->{fatalize} ? " FATAL => 'all'" : '');
 
     my $header = <<"EOH";
 #!perl -T
@@ -1197,7 +1197,7 @@ sub xt_guts {
 
     my %xt_files;
     my $minperl = $self->{minperl};
-    my $warnings = sprintf 'warnings%s;', ($self->{fatalize} ? " FATAL => 'all" : '');
+    my $warnings = sprintf 'warnings%s;', ($self->{fatalize} ? " FATAL => 'all'" : '');
 
     my $header = <<"EOH";
 #!perl -T
@@ -1663,7 +1663,7 @@ sub _module_header {
     my $self = shift;
     my $module = shift;
     my $rtname = shift;
-    my $warnings = sprintf 'warnings%s;', ($self->{fatalize} ? " FATAL => 'all" : '');
+    my $warnings = sprintf 'warnings%s;', ($self->{fatalize} ? " FATAL => 'all'" : '');
 
     my $content = <<"HERE";
 package $module;
