@@ -9,6 +9,7 @@ use Module::Starter;
 use File::Spec;
 use File::Path;
 use Carp;
+use version;
 
 package TestParseFile;
 
@@ -1384,10 +1385,10 @@ subtest "builder = $builder" => sub {
         $license = $license; # 5.8 scoping issue (GH#57)
         plan tests => 5;
 
-        foreach my $minperl (5.006, 5.008001, v5.10.0, 'v5.10.1', $^V) {
+        foreach my $minperl (5.006, 5.008001, v5.10.0, 'v5.10.1', $]) {
         subtest "minperl = $minperl" => sub {
-            plan ($minperl > $^V ? 
-                (skip_all => $minperl.' is actually newer than Perl version ($^V)') : 
+            plan (version->parse($minperl) > version->parse($]) ? 
+                (skip_all => "$minperl is actually newer than Perl version ($])") : 
                 (tests => 16)
             );
 
