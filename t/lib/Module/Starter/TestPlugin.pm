@@ -321,7 +321,7 @@ the recommendations in the book "Perl Best Practices".
 
 =head1 INTERFACE 
 
-Thsi module simply acts as a plugin for Module::Starter. So it uses the same
+This module simply acts as a plugin for Module::Starter. So it uses the same
 command-line interface as that module.
 
 The template files it is to use are specified in your Module::Starter
