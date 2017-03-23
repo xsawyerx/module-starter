@@ -2,8 +2,11 @@ Revision history for Perl extension Module::Starter
 
         * GH#51: drop use of Module::Build::Compat in Build.PL (Karen
           Etheridge)
+        * GH#56: Fix generated syntax errors when using --fatalize (Dan Book)
+        * GH#57: Fix strange scoping issue in test on 5.8 (Dan Book)
         * GH#58: Typo and doc fixes (Tordek)
-        * GH#59: Quote versions in generated Makefile.PL/Build.PL (Grinnz)
+        * GH#59: Quote versions in generated Makefile.PL/Build.PL (Dan Book)
+        * GH#61: Fix version comparison in test (Dan Book)
 
 1.71    Fri Jan 30 13:28:31 2015
         * GH #47: create_t breaks plugins. (David Pottage)
