@@ -1079,12 +1079,9 @@ sub create_t {
     my $self = shift;
     my @modules = @_;
 
-    my %t_files  = $self->t_guts(@modules);
-    my %xt_files = $self->xt_guts(@modules);
+    my %t_files = $self->t_guts(@modules);
 
-    my @files;
-    push @files, map { $self->_create_t('t',  $_, $t_files{$_}) }  keys %t_files;
-    push @files, map { $self->_create_t('xt', $_, $xt_files{$_}) } keys %xt_files;
+    my @files = map { $self->_create_t($_, $t_files{$_}) } keys %t_files;
 
     return @files;
 }
@@ -1178,42 +1175,12 @@ $use_lines
 diag( "Testing $main_module \$${main_module}::VERSION, Perl \$], \$^X" );
 HERE
 
-    return %t_files;
-}
-
-=head2 xt_guts( @modules )
-
-This method is called by create_t, and returns a description of the author
-only *.t files to be created in the xt directory.
-
-The return value is a hash of test files to create.  Each key is a filename and
-each value is the contents of that file.
-
-=cut
-
-sub xt_guts {
-    my $self = shift;
-    my @modules = @_;
-
-    my %xt_files;
-    my $minperl = $self->{minperl};
-    my $warnings = sprintf 'warnings%s;', ($self->{fatalize} ? " FATAL => 'all" : '');
-
-    my $header = <<"EOH";
-#!perl -T
-use $minperl;
-use strict;
-use $warnings
-use Test::More;
-
-EOH
-
     my $module_boilerplate_tests;
     $module_boilerplate_tests .=
       "  module_boilerplate_ok('".$self->_module_to_pm_file($_)."');\n" for @modules;
 
     my $boilerplate_tests = @modules + 2 + $[;
-    $xt_files{'boilerplate.t'} = $header.<<"HERE";
+    $t_files{'boilerplate.t'} = $header.<<"HERE";
 plan tests => $boilerplate_tests;
 
 sub not_in_file_ok {
@@ -1266,16 +1233,15 @@ $module_boilerplate_tests
 
 HERE
 
-    return %xt_files;
+    return %t_files;
 }
 
 sub _create_t {
     my $self = shift;
-    my $directory = shift;  # 't' or 'xt'
     my $filename = shift;
     my $content = shift;
 
-    my @dirparts = ( $self->{basedir}, $directory );
+    my @dirparts = ( $self->{basedir}, 't' );
     my $tdir = File::Spec->catdir( @dirparts );
     if ( not -d $tdir ) {
         local @ARGV = $tdir;
@@ -1287,7 +1253,7 @@ sub _create_t {
     $self->create_file( $fname, $content );
     $self->progress( "Created $fname" );
 
-    return join('/', $directory, $filename );
+    return "t/$filename";
 }
 
 =head2 create_MB_MANIFEST
@@ -1353,7 +1319,7 @@ sub create_MANIFEST {
     $self->$manifest_method();
     $self->filter_lines_in_file(
         $fname,
-        qr/^xt\/boilerplate\.t$/,
+        qr/^t\/boilerplate\.t$/,
         qr/^ignore\.txt$/,
     );
 
