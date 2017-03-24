@@ -21,7 +21,6 @@ WriteMakefile(
         'Getopt::Long'                 => '0',
         'Pod::Usage'                   => '1.21',
         'parent'                       => '0',
-        'Module::Install::AuthorTests' => '0',
         'version'                      => '0',
     },
     (! eval { ExtUtils::MakeMaker->VERSION('6.46') } ? () :
