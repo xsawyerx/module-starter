@@ -11,7 +11,7 @@ use strict;
 
 our $VERSION = '1.71';
 
-use Path::Class;
+use File::Spec;
 use Getopt::Long;
 use Pod::Usage;
 use Carp qw( croak );
@@ -21,10 +21,10 @@ sub _config_file {
     my $configdir = $ENV{'MODULE_STARTER_DIR'} || '';
 
     if ( !$configdir && $ENV{'HOME'} ) {
-        $configdir = dir( $ENV{'HOME'}, '.module-starter' );
+        $configdir = File::Spec->catdir( $ENV{'HOME'}, '.module-starter' );
     }
 
-    return file( $configdir, 'config' );
+    return File::Spec->catfile( $configdir, 'config' );
 }
 
 
