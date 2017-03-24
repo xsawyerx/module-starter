@@ -7,6 +7,9 @@ Revision history for Perl extension Module::Starter
         * GH#58: Typo and doc fixes (Tordek)
         * GH#59: Quote versions in generated Makefile.PL/Build.PL (Dan Book)
         * GH#61: Fix version comparison in test (Dan Book)
+        * GH#63: Remove unneeded dependency Module::Install::AuthorTests (Dan
+          Book)
+        * GH#64: Replace usage of Path::Class with File::Spec (Dan Book)
 
 1.71    Fri Jan 30 13:28:31 2015
         * GH #47: create_t breaks plugins. (David Pottage)
