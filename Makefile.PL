@@ -24,8 +24,9 @@ WriteMakefile(
     },
     (! eval { ExtUtils::MakeMaker->VERSION('6.46') } ? () :
         (META_MERGE => {
-            'meta-spec' => { version => 2 },
-            resources   => {
+            dynamic_config => 0,
+            'meta-spec'    => { version => 2 },
+            resources      => {
                 homepage   => 'https://github.com/xsawyerx/module-starter',
                 repository => {
                     type => 'git',
@@ -33,7 +34,7 @@ WriteMakefile(
                     web  => 'https://github.com/xsawyerx/module-starter',
                 },
                 bugtracker => { web => 'https://github.com/xsawyerx/module-starter/issues' },
-                x_IRC => 'irc://irc.perl.org/#toolchain',
+                x_IRC      => 'irc://irc.perl.org/#toolchain',
             },
         })
     ),
