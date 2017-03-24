@@ -1,5 +1,6 @@
 Revision history for Perl extension Module::Starter
 
+1.71_01 Thu Mar 23 23:04:11 EDT 2017
         * GH#51: drop use of Module::Build::Compat in Build.PL (Karen
           Etheridge)
         * GH#56: Fix generated syntax errors when using --fatalize (Dan Book)
