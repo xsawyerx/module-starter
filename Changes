@@ -1,5 +1,8 @@
 Revision history for Perl extension Module::Starter
 
+1.72    Sat Mar 25 21:20:41 EDT 2017
+        * Stable release containing previous fixes
+
 1.71_01 Thu Mar 23 23:04:11 EDT 2017
         * GH#51: drop use of Module::Build::Compat in Build.PL (Karen
           Etheridge)
