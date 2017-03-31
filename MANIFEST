@@ -3,6 +3,7 @@ getting-started.html
 MANIFEST
 Makefile.PL
 README
+LICENSE
 
 bin/module-starter
 lib/Module/Starter.pm
