@@ -39,7 +39,7 @@ WriteMakefile(
         })
     ),
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
-    clean               => { FILES => 'Module-Release-*' },
+    clean               => { FILES => 'Module-Starter-*' },
 );
 
 sub MY::postamble {
