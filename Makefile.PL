@@ -20,7 +20,7 @@ WriteMakefile(
         'Getopt::Long'                 => '0',
         'Pod::Usage'                   => '1.21',
         'parent'                       => '0',
-        'version'                      => '0',
+        'version'                      => '0.77',
     },
     (! eval { ExtUtils::MakeMaker->VERSION('6.46') } ? () :
         (META_MERGE => {
