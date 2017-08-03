@@ -17,11 +17,11 @@ Module::Starter::Simple - a simple, comprehensive Module::Starter plugin
 
 =head1 VERSION
 
-Version 1.72
+Version 1.73
 
 =cut
 
-our $VERSION = '1.72';
+our $VERSION = '1.73';
 
 =head1 SYNOPSIS
 
@@ -113,7 +113,7 @@ sub create_distro {
     $self->{license_record} = $self->_license_record();
 
     $self->{main_module} = $modules[0];
-    if ( not $self->{distro} ) {
+    if ( not defined $self->{distro} or not length $self->{distro} ) {
         $self->{distro} = $self->{main_module};
         $self->{distro} =~ s/::/-/g;
     }

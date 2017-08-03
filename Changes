@@ -1,5 +1,9 @@
 Revision history for Perl extension Module::Starter
 
+1.73
+        * Fix case where a distro name of '0' would be replaced by the first
+          module name, confusing the tests
+
 1.72    Sat Mar 25 21:20:41 EDT 2017
         * Stable release containing previous fixes
 
