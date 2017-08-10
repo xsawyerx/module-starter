@@ -110,7 +110,7 @@ sub generated_files {
     }
   }
 
-  my $builder_set = new Module::Starter::BuilderSet;
+  my $builder_set = Module::Starter::BuilderSet->new;
   my @builders = $builder_set->check_compatibility($opts->{builder});
   foreach my $builder (@builders){
     my $build_file = $builder_set->file_for_builder($builder);
@@ -208,7 +208,7 @@ sub build_module_starter {
     $path_sep = ";";
   }
 
-  my $builder_set = new Module::Starter::BuilderSet;
+  my $builder_set = Module::Starter::BuilderSet->new;
 
   # Use only the supported builders which are not mutually exclusive
   my @builders;

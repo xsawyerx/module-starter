@@ -11,7 +11,7 @@ eval { require Module::Starter::BuilderSet };
 
 ok(!$@, 'require Module::Starter::BuilderSet');
 
-my $bset = new Module::Starter::BuilderSet;
+my $bset = Module::Starter::BuilderSet->new;
 
 isa_ok($bset, 'Module::Starter::BuilderSet');
 
