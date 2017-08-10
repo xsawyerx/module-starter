@@ -15,6 +15,7 @@ use File::Spec;
 use Getopt::Long;
 use Pod::Usage;
 use Carp qw( croak );
+use Module::Runtime qw( require_module );
 
 sub _config_file {
     my $self      = shift;
@@ -124,8 +125,7 @@ sub run {
     %config = $self->_process_command_line(%config);
     %config = $self->_config_multi_process(%config);
 
-    eval "require $config{class};";
-    croak "Could not load starter class $config{class}: $@" if $@;
+    require_module $config{class};
     $config{class}->import( @{ $config{'plugins'} } );
 
     my $starter = $config{class}->new( %config );

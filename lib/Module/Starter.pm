@@ -3,6 +3,7 @@ package Module::Starter;
 use warnings;
 use strict;
 use Carp qw( croak );
+use Module::Runtime qw( require_module );
 
 =head1 NAME
 
@@ -91,9 +92,7 @@ sub import {
     my $parent;
 
     while (my $child = shift @plugins) {
-        eval "require $child";
-
-        croak "couldn't load plugin $child: $@" if $@;
+        require_module $child;
 
         ## no critic
         no strict 'refs'; #Violates ProhibitNoStrict

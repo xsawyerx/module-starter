@@ -7,7 +7,7 @@ use warnings;
 
 use Test::More tests => 17;
 
-eval "require Module::Starter::BuilderSet";
+eval { require Module::Starter::BuilderSet };
 
 ok(!$@, 'require Module::Starter::BuilderSet');
 
