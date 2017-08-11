@@ -1,6 +1,6 @@
 Revision history for Perl extension Module::Starter
 
-1.73
+1.73    Fri Aug 11 01:46:00 EDT 2017
         * Fix case where a distro name of '0' would be replaced by the first
           module name, confusing the tests (Dan Book)
         * Use Module::Runtime instead of string eval (Dan Book)
