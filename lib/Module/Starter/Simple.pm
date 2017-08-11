@@ -1212,7 +1212,7 @@ EOH
     $module_boilerplate_tests .=
       "  module_boilerplate_ok('".$self->_module_to_pm_file($_)."');\n" for @modules;
 
-    my $boilerplate_tests = @modules + 2 + $[;
+    my $boilerplate_tests = @modules + 2;
     $xt_files{'boilerplate.t'} = $header.<<"HERE";
 plan tests => $boilerplate_tests;
 
@@ -1722,7 +1722,7 @@ You can find documentation for this module with the perldoc command.
 ];
     my @reference_links = _reference_links();
 
-    return unless @reference_links;
+    return undef unless @reference_links;
     $content .= qq[
 
 You can also look for information at:

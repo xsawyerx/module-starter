@@ -33,16 +33,16 @@ sub _config_read {
     my $self = shift;
 
     my $filename = $self->_config_file;
-    return unless -e $filename;
+    return () unless -e $filename;
     
     open( my $config_file, '<', $filename )
         or die "couldn't open config file $filename: $!\n";
 
     my %config;
-    while (<$config_file>) {
-        chomp;
-        next if /\A\s*\Z/sm;
-        if (/\A(\w+):\s*(.+)\Z/sm) { $config{$1} = $2; }
+    while (my $line = <$config_file>) {
+        chomp $line;
+        next if $line =~ /\A\s*\Z/sm;
+        if ($line =~ /\A(\w+):\s*(.+)\Z/sm) { $config{$1} = $2; }
     }
     
     return $self->_config_multi_process(%config);

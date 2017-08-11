@@ -111,7 +111,7 @@ sub _builder {
 
     unless (exists $self->{$builder}) {
         carp("Don't know anything about builder '$builder'.");
-        return;
+        return undef;
     }
 
     return $self->{$builder};

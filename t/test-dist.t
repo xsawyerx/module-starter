@@ -1328,7 +1328,7 @@ sub rstr_module {
     while ($str[0] =~ /^\d+/) {
         $str[0] =~ s/^\d+//;
         shift @str unless ($str[0]);
-        return &rstr_module unless (@str);
+        return rstr_module() unless (@str);
     }
     
     return join('::', @str);

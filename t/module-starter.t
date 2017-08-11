@@ -126,7 +126,8 @@ sub check_generated_files {
   my %generated_files = generated_files($opts);
 
   my $all_files_correct = 1;
-  while (my($k,$v) = each %generated_files) {
+  foreach my $k (keys %generated_files) {
+    my $v = $generated_files{$k};
     if ($v eq 'f') {
       $all_files_correct = 0 unless -f $k;
     } elsif ($v eq 'd') {
@@ -276,7 +277,8 @@ sub run_module_starter {
   my $command = $module_starter;
   my @option_string = ("");
 
-  while(my($k,$v) = each(%opts)){
+  foreach my $k (keys %opts) {
+    my $v = $opts{$k};
     if( ref $v eq 'ARRAY' &&
         int( @$v ) > 1
       ){
