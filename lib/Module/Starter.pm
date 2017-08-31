@@ -169,6 +169,30 @@ Copyright 2010 Sawyer X, All Rights Reserved.
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
 
+=head1 SEE ALSO
+
+=over 4
+
+=item L<mbtiny>
+
+Minimal authoring tool to create and manage distributions using
+L<Module::Build::Tiny> as an installer.
+
+=item L<Dist::Milla>
+
+Easy to use and powerful authoring tool using L<Dist::Zilla> to create and
+manage distributions.
+
+=item L<Minilla>
+
+Authoring tool similar to L<Dist::Milla> but without using L<Dist::Zilla>.
+
+=item L<Dist::Zilla>
+
+Very complex, fully pluggable and customizable distribution builder.
+
+=back
+
 =cut
 
 1;
