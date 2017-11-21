@@ -675,7 +675,7 @@ sub _reference_links {
         link     => 'http://cpanratings.perl.org/d/%s',
       },
       { title    => 'Search CPAN',
-        link     => 'http://search.cpan.org/dist/%s/',
+        link     => 'https://metacpan.org/release/%s',
       },
     );
 }
