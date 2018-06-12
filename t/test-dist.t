@@ -590,7 +590,7 @@ sub parse_file_start {
             "Support and docs 1"
         );
 
-        $self->parse(qr{\AYou can also look for information at:\n\n\s+RT[^\n]+\n\s+\Qhttp://rt.cpan.org/NoAuth/Bugs.html?Dist=$distro\E\n\n}ms,
+        $self->parse(qr{\AYou can also look for information at:\n\n\s+RT[^\n]+\n\s+\Qhttps://rt.cpan.org/NoAuth/Bugs.html?Dist=$distro\E\n\n}ms,
             "RT"
         );
     }
@@ -726,7 +726,7 @@ resources (
    license    => '$license_url',
    #repository => 'git://github.com/$self->{author}/$distro.git',
    #repository => 'https://bitbucket.org/$self->{author}/$self->{distro}',
-   bugtracker => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=$distro',
+   bugtracker => 'https://rt.cpan.org/NoAuth/Bugs.html?Dist=$distro',
 );
 
 EOT
@@ -1149,7 +1149,7 @@ sub parse_module_start {
     $self->parse_paras(
         [
             { re => q/=item \* RT:[^\n]*/, },
-            "L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=$dist_name>",
+            "L<https://rt.cpan.org/NoAuth/Bugs.html?Dist=$dist_name>",
         ],
         "Support - RT",
     );
@@ -1166,7 +1166,7 @@ sub parse_module_start {
     $self->parse_paras(
         [
             { re => q/=item \* CPAN Ratings[^\n]*/, },
-            "L<http://cpanratings.perl.org/d/$dist_name>",
+            "L<https://cpanratings.perl.org/d/$dist_name>",
         ],
         "CPAN Ratings",
     );
@@ -1174,7 +1174,7 @@ sub parse_module_start {
     $self->parse_paras(
         [
             { re => q/=item \* Search CPAN[^\n]*/, },
-            "L<http://search.cpan.org/dist/$dist_name/>",
+            "L<https://metacpan.org/release/$dist_name>",
         ],
         "CPAN Ratings",
     );
