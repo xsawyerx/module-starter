@@ -1,5 +1,8 @@
 Revision history for Perl extension Module::Starter
 
+1.75    Thu Jun 14 12:53:47 EDT 2018
+        * Update additional template URLs for consistency in tests
+
 1.74    Tue Jun 12 18:15:20 EDT 2018
         * GH#66: Update default module template to link to metacpan (Dan Book)
         * GH#67: Update default module template to use HTTPS where appropriate (Chas. J. Owens IV)
