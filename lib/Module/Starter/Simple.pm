@@ -827,7 +827,7 @@ resources (
    license    => '$license_url',
    #repository => 'git://github.com/$self->{author}/$self->{distro}.git',
    #repository => 'https://bitbucket.org/$self->{author}/$self->{distro}',
-   bugtracker => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=$self->{distro}',
+   bugtracker => 'https://rt.cpan.org/NoAuth/Bugs.html?Dist=$self->{distro}',
 );
 
 configure_requires (
@@ -1694,7 +1694,7 @@ sub _module_bugs {
 
     my $bug_email = "bug-\L$self->{distro}\E at rt.cpan.org";
     my $bug_link  =
-      "http://rt.cpan.org/NoAuth/ReportBug.html?Queue=$self->{distro}";
+      "https://rt.cpan.org/NoAuth/ReportBug.html?Queue=$self->{distro}";
 
     my $content = <<"HERE";
 \=head1 BUGS
