@@ -146,7 +146,7 @@ L<http://cpanratings.perl.org/dist/Module-Starter>
 
 L<https://github.com/xsawyerx/module-starter/issues>
 
-=item * Metacpan
+=item * Search CPAN
 
 L<https://metacpan.org/release/Module-Starter>
 

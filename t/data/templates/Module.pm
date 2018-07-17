@@ -84,7 +84,7 @@ L<http://cpanratings.perl.org/d/Foo-Bar>
 
 =item * Search CPAN
 
-L<http://search.cpan.org/dist/Foo-Bar>
+L<https://metacpan.org/release/Foo-Bar>
 
 =back
 
