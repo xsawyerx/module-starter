@@ -560,7 +560,7 @@ sub parse_file_start {
     }
     
     my $msw_re  = qr{use \Q$minperl;\E\n\Quse strict;\E\n\Quse warnings;\E\n};
-    my $mswb_re = $self->{builder} eq 'Module::Install' ? qr{\A$msw_re\Quse inc::$self->{builder};\E\n\n} : qr{\A$msw_re\Quse $self->{builder};\E\n\n};
+    my $mswb_re = $self->{builder} eq 'Module::Install' ? qr{\A$msw_re\Quse inc::$self->{builder};\E\n\n} : qr{\A$msw_re\Quse $self->{builder};\E\n};
     my $mswt_re = qr{\A\Q#!perl -T\E\n$msw_re\Quse Test::More;\E\n\n};
     
     if ($basefn eq 'README') {
@@ -621,13 +621,13 @@ sub parse_file_start {
         );
 
         $self->parse(
-            qr/\A\s*configure_requires => \{\n *\Q'$self->{builder}' => '0'\E,\n\s*\},\n/ms,
+            qr/\A\s*configure_requires => \{\n *\Q'$self->{builder}' => '0.4004'\E,\n\s*\},\n/ms,
             "Configure Requires",
         );
 
         $self->parse(
-            qr/\A\s*build_requires => \{\n *\Q'Test::More' => '0'\E,\n\s*\},\n/ms,
-            "Build Requires",
+            qr/\A\s*test_requires => \{\n *\Q'Test::More' => '0'\E,\n\s*\},\n/ms,
+            "Test Requires",
         );
 
         $self->parse(
@@ -641,7 +641,7 @@ sub parse_file_start {
         );
     }
     elsif ($basefn eq 'Makefile.PL' && $self->{builder} eq 'ExtUtils::MakeMaker') {
-        plan tests => 11;
+        plan tests => 10;
         $self->parse($mswb_re,
             "Min/Strict/Warning/Builder"
         );
@@ -666,10 +666,6 @@ sub parse_file_start {
             "LICENSE",
         );
 
-        $self->parse(qr{\A\s*PL_FILES *=> *\{\},\n}ms,
-            "PL_FILES",
-        );
-
         $self->parse(qr{\A\s*MIN_PERL_VERSION *=> *\Q'$minperl',\E\n}ms,
             "MIN_PERL_VERSION",
         );
@@ -680,8 +676,8 @@ sub parse_file_start {
         );
 
         $self->parse(
-            qr/\A\s*BUILD_REQUIRES => \{\n *\Q'Test::More' => '0'\E,\n\s*\},\n/ms,
-            "BUILD_REQUIRES",
+            qr/\A\s*TEST_REQUIRES => \{\n *\Q'Test::More' => '0'\E,\n\s*\},\n/ms,
+            "TEST_REQUIRES",
         );
 
         $self->parse(
@@ -737,8 +733,8 @@ EOT
         );
 
         $self->parse(
-            qr/\A\s*build_requires \(\n *\Q'Test::More' => '0'\E,\n\s*\);\n/ms,
-            "build_requires",
+            qr/\A\s*test_requires \(\n *\Q'Test::More' => '0'\E,\n\s*\);\n/ms,
+            "test_requires",
         );
 
         $self->parse(

@@ -761,18 +761,17 @@ use strict;
 use $warnings
 use ExtUtils::MakeMaker;
 
-WriteMakefile(
+my %WriteMakefileArgs = (
     NAME             => '$main_module',
     AUTHOR           => q{$author},
     VERSION_FROM     => '$main_pm_file',
     ABSTRACT_FROM    => '$main_pm_file',
     LICENSE          => '$slname',
-    PL_FILES         => {},
     MIN_PERL_VERSION => '$self->{minperl}',
     CONFIGURE_REQUIRES => {
         'ExtUtils::MakeMaker' => '0',
     },
-    BUILD_REQUIRES => {
+    TEST_REQUIRES => {
         'Test::More' => '0',
     },
     PREREQ_PM => {
@@ -782,6 +781,26 @@ WriteMakefile(
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => '$self->{distro}-*' },
 );
+
+# Compatibility with old versions of ExtUtils::MakeMaker
+unless (eval { ExtUtils::MakeMaker->VERSION('6.64'); 1 }) {
+    my \$test_requires = delete \$WriteMakefileArgs{TEST_REQUIRES} || {};
+    \@{\$WriteMakefileArgs{PREREQ_PM}}{keys %\$test_requires} = values %\$test_requires;
+}
+
+unless (eval { ExtUtils::MakeMaker->VERSION('6.55_03'); 1 }) {
+    my \$build_requires = delete \$WriteMakefileArgs{BUILD_REQUIRES} || {};
+    \@{\$WriteMakefileArgs{PREREQ_PM}}{keys %\$build_requires} = values %\$build_requires;
+}
+
+delete \$WriteMakefileArgs{CONFIGURE_REQUIRES}
+    unless eval { ExtUtils::MakeMaker->VERSION('6.52'); 1 };
+delete \$WriteMakefileArgs{MIN_PERL_VERSION}
+    unless eval { ExtUtils::MakeMaker->VERSION('6.48'); 1 };
+delete \$WriteMakefileArgs{LICENSE}
+    unless eval { ExtUtils::MakeMaker->VERSION('6.31'); 1 };
+
+WriteMakefile(%WriteMakefileArgs);
 HERE
 
 }
@@ -834,7 +853,7 @@ configure_requires (
    'Module::Install' => '0',
 );
 
-build_requires (
+test_requires (
    'Test::More' => '0',
 );
 
@@ -902,6 +921,7 @@ use $self->{minperl};
 use strict;
 use $warnings
 use Module::Build;
+Module::Build->VERSION('0.4004');
 
 my \$builder = Module::Build->new(
     module_name         => '$main_module',
@@ -910,9 +930,9 @@ my \$builder = Module::Build->new(
     dist_version_from   => '$main_pm_file',
     release_status      => 'stable',
     configure_requires => {
-        'Module::Build' => '0',
+        'Module::Build' => '0.4004',
     },
-    build_requires => {
+    test_requires => {
         'Test::More' => '0',
     },
     requires => {
