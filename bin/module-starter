@@ -26,7 +26,7 @@ Options:
     --builder=module Build with 'ExtUtils::MakeMaker' or 'Module::Build'
     --eumm           Same as --builder=ExtUtils::MakeMaker
     --mb             Same as --builder=Module::Build
-    --mi             Same as --builder=Module::Install
+    --mi             Same as --builder=Module::Install (discouraged)
 
     --author=name    Author's name (taken from getpwuid if not provided)
     --email=email    Author's email (taken from EMAIL if not provided)
