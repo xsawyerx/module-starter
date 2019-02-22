@@ -196,6 +196,7 @@ sub parse_file_start {
     my $license     = $license_class->new({ holder => $self->{author} });
     my $slname      = $license->meta2_name;
     my $license_url = $license->url;
+    my $license_text = $license->license;
     
     (my $authoremail = "$self->{author} <$self->{email}>") =~ s/'/\'/g;
     (my $libmod = "lib/$mainmod".'.pm') =~ s|::|/|g;
@@ -242,6 +243,11 @@ sub parse_file_start {
         $self->parse(qr{\AYou can also look for information at:\n\n\s+RT[^\n]+\n\s+\Qhttps://rt.cpan.org/NoAuth/Bugs.html?Dist=$distro\E\n\n}ms,
             "RT"
         );
+    }
+    elsif ($basefn eq 'LICENSE') {
+        plan tests => 2;
+        $self->consume($license_text, 'license text');
+        $self->is_end();
     }
     elsif ($basefn eq 'Build.PL' && $self->{builder} eq 'Module::Build') {
         plan tests => 10;
@@ -423,6 +429,7 @@ EOF
             ('Build.PL') x!! ($self->{builder} eq 'Module::Build'),
             'Changes',
             ( map { my $f = $_; $f =~ s|::|/|g; "lib/$f.pm"; } @{$self->{modules}} ),
+            'LICENSE',
             ('Makefile.PL') x!! ($self->{builder} ne 'Module::Build'),
             "MANIFEST\t\t\tThis list of files",
             qw(
@@ -440,7 +447,7 @@ EOF
         plan tests => 2;
         $self->consume(<<'EOF');
 # Top-level filter (only include the following...)
-^(?!(?:script|examples|lib|inc|t|xt|maint)/|(?:(?:Makefile|Build)\.PL|README|MANIFEST|Changes|META\.(?:yml|json))$)
+^(?!(?:script|examples|lib|inc|t|xt|maint)/|(?:(?:Makefile|Build)\.PL|README|LICENSE|MANIFEST|Changes|META\.(?:yml|json))$)
 
 # Avoid version control files.
 \bRCS\b
@@ -894,7 +901,7 @@ sub run_settest {
 
         my $manifest_skip = $distro_var->{ignores_type} && !! grep { /manifest/ } @{ $distro_var->{ignores_type} };
         my @exist_files = (
-            qw(README Changes),
+            qw(README LICENSE Changes),
             $manifest_skip ? 'MANIFEST.SKIP' : 'MANIFEST',
             $distro_var->{builder} eq 'Module::Build' ? 'Build.PL' : 'Makefile.PL',
             [qw(t 00-load.t)],
@@ -990,6 +997,7 @@ run_settest('MyModule-Test', {
     modules => ['MyModule::Test', 'MyModule::Test::App'],
     builder => 'Module::Build',
     license => 'artistic2',
+    genlicense => 1,
     author  => 'Baruch Spinoza',
     email   => 'spinoza@philosophers.tld',
     verbose => 0,
@@ -1006,6 +1014,7 @@ run_settest('Book-Park-Mansfield', {
     ],
     builder => 'Module::Build',
     license => 'artistic2',
+    genlicense => 1,
     author  => 'Jane Austen',
     email   => 'jane.austen@writers.tld',
     verbose => 0,
@@ -1075,6 +1084,7 @@ subtest "builder = $builder" => sub {
                         modules => \@modules,
                         builder => $builder,
                         license => $license,
+                        genlicense => 1,
                         author  => $author,
                         email   => $email,
                         minperl => $minperl,

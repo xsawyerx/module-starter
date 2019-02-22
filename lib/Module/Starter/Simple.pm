@@ -132,6 +132,7 @@ sub create_distro {
 
     push @files, $self->create_Changes;
     push @files, $self->create_README( $build_results{instructions} );
+    push @files, $self->create_LICENSE if $self->{genlicense};
 
     $self->create_MANIFEST( $build_results{'manifest_method'} ) unless ( $self->{manifest_skip} );
     # TODO: put files to ignore in a more standard form?
@@ -623,6 +624,23 @@ Revision history for $self->{distro}
         First version, released on an unsuspecting world.
 
 HERE
+}
+
+=head2 create_LICENSE
+
+This method creates the distribution's LICENSE file.
+
+=cut
+
+sub create_LICENSE {
+    my $self = shift;
+    
+    my $record = $self->{license_record} || return ();
+    my $fname = File::Spec->catfile( $self->{basedir}, 'LICENSE' );
+    $self->create_file( $fname, $record->license );
+    $self->progress( "Created $fname" );
+    
+    return 'LICENSE';
 }
 
 =head2 create_README( $build_instructions )
@@ -1180,7 +1198,7 @@ EOF
         # (also, manifest supports REs.)
         manifest => <<'EOF',
 # Top-level filter (only include the following...)
-^(?!(?:script|examples|lib|inc|t|xt|maint)/|(?:(?:Makefile|Build)\.PL|README|MANIFEST|Changes|META\.(?:yml|json))$)
+^(?!(?:script|examples|lib|inc|t|xt|maint)/|(?:(?:Makefile|Build)\.PL|README|LICENSE|MANIFEST|Changes|META\.(?:yml|json))$)
 
 # Avoid version control files.
 \bRCS\b

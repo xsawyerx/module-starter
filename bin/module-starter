@@ -34,6 +34,7 @@ Options:
     --ignores=type   Ignore type files to include (repeatable)
     --license=type   License under which the module will be distributed
                      (default is artistic2)
+    --genlicense     Generate LICENSE file according to specified license
     --minperl=ver    Minimum Perl version required (optional;
                      default is 5.006)
 
