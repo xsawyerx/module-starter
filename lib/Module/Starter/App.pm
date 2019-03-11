@@ -82,6 +82,7 @@ sub _process_command_line {
         'author=s'   => \$config{author},
         'email=s'    => \$config{email},
         'license=s'  => \$config{license},
+        genlicense   => \$config{genlicense},
         'minperl=s'  => \$config{minperl},
         'fatalize'   => \$config{fatalize},
 

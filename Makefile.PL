@@ -21,6 +21,7 @@ WriteMakefile(
         'Module::Runtime'              => '0',
         'Pod::Usage'                   => '1.21',
         'parent'                       => '0',
+        'Software::License'            => '0.103005',
         'version'                      => '0.77',
     },
     (! eval { ExtUtils::MakeMaker->VERSION('6.46') } ? () :

@@ -8,6 +8,7 @@ use Cwd 'cwd';
 use ExtUtils::Command qw( rm_rf mkpath touch );
 use File::Spec ();
 use Carp qw( carp confess croak );
+use Module::Runtime qw( require_module );
 
 use Module::Starter::BuilderSet;
 
@@ -131,6 +132,7 @@ sub create_distro {
 
     push @files, $self->create_Changes;
     push @files, $self->create_README( $build_results{instructions} );
+    push @files, $self->create_LICENSE if $self->{genlicense};
 
     $self->create_MANIFEST( $build_results{'manifest_method'} ) unless ( $self->{manifest_skip} );
     # TODO: put files to ignore in a more standard form?
@@ -226,391 +228,54 @@ method eventually.)
 =cut
 
 our $LICENSES = {
-    perl => {
-        license => 'perl',
-        slname  => 'perl_5',
-        url     => 'http://dev.perl.org/licenses/',
-        blurb   => <<'EOT',
-This program is free software; you can redistribute it and/or modify it
-under the terms of either: the GNU General Public License as published
-by the Free Software Foundation; or the Artistic License.
-
-See L<http://dev.perl.org/licenses/> for more information.
-EOT
-    },
-    artistic => {
-        license => 'artistic',
-        slname  => 'artistic_1',
-        url     => 'http://www.perlfoundation.org/artistic_license_1_0',
-        blurb   => <<'EOT',
-This program is free software; you can redistribute it and/or modify it
-under the terms of the the Artistic License (1.0). You may obtain a
-copy of the full license at:
-
-L<http://www.perlfoundation.org/artistic_license_1_0>
-
-Aggregation of this Package with a commercial distribution is always
-permitted provided that the use of this Package is embedded; that is,
-when no overt attempt is made to make this Package's interfaces visible
-to the end user of the commercial distribution. Such use shall not be
-construed as a distribution of this Package.
-
-The name of the Copyright Holder may not be used to endorse or promote
-products derived from this software without specific prior written
-permission.
-
-THIS PACKAGE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED
-WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF
-MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
-EOT
-    },
-    artistic2 => {
-        license => 'artistic2',
-        slname  => 'artistic_2',
-        url     => 'http://www.perlfoundation.org/artistic_license_2_0',
-        blurb   => <<'EOT',
-This program is free software; you can redistribute it and/or modify it
-under the terms of the the Artistic License (2.0). You may obtain a
-copy of the full license at:
-
-L<http://www.perlfoundation.org/artistic_license_2_0>
-
-Any use, modification, and distribution of the Standard or Modified
-Versions is governed by this Artistic License. By using, modifying or
-distributing the Package, you accept this license. Do not use, modify,
-or distribute the Package, if you do not accept this license.
-
-If your Modified Version has been derived from a Modified Version made
-by someone other than you, you are nevertheless required to ensure that
-your Modified Version complies with the requirements of this license.
-
-This license does not grant you the right to use any trademark, service
-mark, tradename, or logo of the Copyright Holder.
-
-This license includes the non-exclusive, worldwide, free-of-charge
-patent license to make, have made, use, offer to sell, sell, import and
-otherwise transfer the Package with respect to any patent claims
-licensable by the Copyright Holder that are necessarily infringed by the
-Package. If you institute patent litigation (including a cross-claim or
-counterclaim) against any party alleging that the Package constitutes
-direct or contributory patent infringement, then this Artistic License
-to you shall terminate on the date that such litigation is filed.
-
-Disclaimer of Warranty: THE PACKAGE IS PROVIDED BY THE COPYRIGHT HOLDER
-AND CONTRIBUTORS "AS IS' AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES.
-THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
-PURPOSE, OR NON-INFRINGEMENT ARE DISCLAIMED TO THE EXTENT PERMITTED BY
-YOUR LOCAL LAW. UNLESS REQUIRED BY LAW, NO COPYRIGHT HOLDER OR
-CONTRIBUTOR WILL BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, OR
-CONSEQUENTIAL DAMAGES ARISING IN ANY WAY OUT OF THE USE OF THE PACKAGE,
-EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-EOT
-    },
-    mit => {
-        license => 'mit',
-        slname  => 'mit',
-        url     => 'http://www.opensource.org/licenses/mit-license.php',
-        blurb   => <<'EOT',
-This program is distributed under the MIT (X11) License:
-L<http://www.opensource.org/licenses/mit-license.php>
-
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following
-conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-EOT
-    },
-    mozilla => {
-        license => 'mozilla',
-        slname  => 'mozilla_1_1',
-        url     => 'http://www.mozilla.org/MPL/1.1/',
-        blurb   => <<'EOT',
-The contents of this file are subject to the Mozilla Public License
-Version 1.1 (the "License"); you may not use this file except in
-compliance with the License. You may obtain a copy of the License at
-L<http://www.mozilla.org/MPL/>
-
-Software distributed under the License is distributed on an "AS IS"
-basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
-License for the specific language governing rights and limitations
-under the License.
-EOT
-    },
-    mozilla2 => {
-        license => 'mozilla2',
-        slname  => 'open_source',
-        url     => 'http://www.mozilla.org/MPL/2.0/',
-        blurb   => <<'EOT',
-This Source Code Form is subject to the terms of the Mozilla Public
-License, v. 2.0. If a copy of the MPL was not distributed with this
-file, You can obtain one at L<http://mozilla.org/MPL/2.0/>.
-EOT
-    },
-    bsd => {
-        license => 'bsd',
-        slname  => 'bsd',
-        url     => 'http://www.opensource.org/licenses/BSD-3-Clause',
-        blurb   => <<"EOT",
-This program is distributed under the (Revised) BSD License:
-L<http://www.opensource.org/licenses/BSD-3-Clause>
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions
-are met:
-
-* Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-
-* Redistributions in binary form must reproduce the above copyright
-notice, this list of conditions and the following disclaimer in the
-documentation and/or other materials provided with the distribution.
-
-* Neither the name of ___AUTHOR___'s Organization
-nor the names of its contributors may be used to endorse or promote
-products derived from this software without specific prior written
-permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-EOT
-    },
-    freebsd => {
-        license => 'freebsd',
-        slname  => 'freebsd',
-        url     => 'http://www.opensource.org/licenses/BSD-2-Clause',
-        blurb   => <<"EOT",
-This program is distributed under the (Simplified) BSD License:
-L<http://www.opensource.org/licenses/BSD-2-Clause>
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions
-are met:
-
-* Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-
-* Redistributions in binary form must reproduce the above copyright
-notice, this list of conditions and the following disclaimer in the
-documentation and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-EOT
-    },
-    cc0 => {
-        license => 'cc0',
-        slname  => 'unrestricted',
-        url     => 'http://creativecommons.org/publicdomain/zero/1.0/',
-        blurb   => <<'EOT',
-This program is distributed under the CC0 1.0 Universal License:
-L<http://creativecommons.org/publicdomain/zero/1.0/>
-
-The person who associated a work with this deed has dedicated the work
-to the public domain by waiving all of his or her rights to the work
-worldwide under copyright law, including all related and neighboring
-rights, to the extent allowed by law.
-
-You can copy, modify, distribute and perform the work, even for
-commercial purposes, all without asking permission. See Other
-Information below.
-
-Other Information:
-
-* In no way are the patent or trademark rights of any person affected
-by CC0, nor are the rights that other persons may have in the work or
-in how the work is used, such as publicity or privacy rights. 
-
-* Unless expressly stated otherwise, the person who associated a work
-with this deed makes no warranties about the work, and disclaims
-liability for all uses of the work, to the fullest extent permitted
-by applicable law. 
-
-* When using or citing the work, you should not imply endorsement by
-the author or the affirmer.
-EOT
-    },
-    gpl => {
-        license => 'gpl',
-        slname  => 'gpl_2',
-        url     => 'http://www.gnu.org/licenses/gpl-2.0.html',
-        blurb   => <<'EOT',
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; version 2 dated June, 1991 or at your option
-any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-A copy of the GNU General Public License is available in the source tree;
-if not, write to the Free Software Foundation, Inc.,
-51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
-EOT
-    },
-    lgpl => {
-        license => 'lgpl',
-        slname  => 'lgpl_2_1',
-        url     => 'http://www.gnu.org/licenses/lgpl-2.1.html',
-        blurb   => <<'EOT',
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc.,
-51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
-EOT
-    },
-    gpl3 => {
-        license => 'gpl3',
-        slname  => 'gpl_3',
-        url     => 'http://www.gnu.org/licenses/gpl-3.0.html',
-        blurb   => <<'EOT',
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see L<http://www.gnu.org/licenses/>.
-EOT
-    },
-    lgpl3 => {
-        license => 'lgpl3',
-        slname  => 'lgpl_3_0',
-        url     => 'http://www.gnu.org/licenses/lgpl-3.0.html',
-        blurb   => <<'EOT',
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 3 of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this program.  If not, see
-L<http://www.gnu.org/licenses/>.
-EOT
-    },
-    agpl3 => {
-        license => 'agpl3',
-        slname  => 'agpl_3',
-        url     => 'http://www.gnu.org/licenses/agpl-3.0.html',
-        blurb => <<'EOT',
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU Affero General Public
-License as published by the Free Software Foundation; either
-version 3 of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public
-License along with this program.  If not, see
-L<http://www.gnu.org/licenses/>.
-EOT
-    },
-    apache => {
-        license => 'apache',
-        slname  => 'apache_2_0',
-        url     => 'http://www.apache.org/licenses/LICENSE-2.0',
-        blurb   => <<'EOT',
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    L<http://www.apache.org/licenses/LICENSE-2.0>
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-EOT
-    },
-    qpl => {
-        license => 'qpl',
-        slname  => 'qpl_1_0',
-        url     => 'http://www.opensource.org/licenses/QPL-1.0',
-        blurb   => <<'EOT',
-This program is distributed under the Q Public License (QPL-1.0):
-L<http://www.opensource.org/licenses/QPL-1.0>
-
-The Software and this license document are provided AS IS with NO
-WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY
-AND FITNESS FOR A PARTICULAR PURPOSE.
-EOT
-    },
-    
-    
+    perl      => 'Perl_5',
+    artistic  => 'Artistic_1_0',
+    artistic2 => 'Artistic_2_0',
+    mozilla   => 'Mozilla_1_1',
+    mozilla2  => 'Mozilla_2_0',
+    bsd       => 'BSD',
+    freebsd   => 'FreeBSD',
+    cc0       => 'CC0_1_0',
+    gpl       => 'GPL_2',
+    lgpl      => 'LGPL_2_1',
+    gpl3      => 'GPL_3',
+    lgpl3     => 'LGPL_3_0',
+    agpl3     => 'AGPL_3',
+    apache    => 'Apache_2_0',
+    qpl       => 'QPL_1_0',
 };
 
-sub _license_record { $LICENSES->{ shift->{license} }; }
+sub _license_record {
+    my $self = shift;
+    my $key = $LICENSES->{ $self->{license} };
+    $key = $self->{license} unless defined $key;
+    my $class = $key =~ m/::/ ? $key : "Software::License::$key";
+    {
+        local $@;
+        undef $class unless eval { require_module $class; 1 } and $class->can('new');
+    }
+    unless (defined $class) {
+        require Software::LicenseUtils;
+        ($class) = Software::LicenseUtils->guess_license_from_meta_key($key);
+        return undef unless defined $class;
+    }
+    return $class->new( { holder => $self->{author} } );
+}
 
 sub _license_blurb {
     my $self = shift;
 
     my $record = $self->{license_record};
     my $license_blurb = defined($record) ?
-        $record->{blurb} :
+        $record->notice :
         <<"EOT";
-This program is released under the following license: $self->{license}
+This software is Copyright (c) @{[ $self->_thisyear ]} by $self->{author}.
+
+This program is released under the following license:
+
+  $self->{license}
 EOT
 
-    $license_blurb =~ s/___AUTHOR___/$self->{author}/ge;
     chomp $license_blurb;
     return $license_blurb;
 }
@@ -751,7 +416,7 @@ sub Makefile_PL_guts {
 
     (my $author = "$self->{author} <$self->{email}>") =~ s/'/\'/g;
     
-    my $slname = $self->{license_record} ? $self->{license_record}->{slname} : $self->{license};
+    my $slname = $self->{license_record} ? $self->{license_record}->meta2_name : $self->{license};
 
     my $warnings = sprintf 'warnings%s;', ($self->{fatalize} ? " FATAL => 'all'" : '');
 
@@ -821,7 +486,7 @@ sub MI_Makefile_PL_guts {
     my $author = "$self->{author} <$self->{email}>";
     $author =~ s/'/\'/g;
     
-    my $license_url = $self->{license_record} ? $self->{license_record}->{url} : '';
+    my $license_url = $self->{license_record} ? $self->{license_record}->url : '';
 
     my $warnings = sprintf 'warnings%s;', ($self->{fatalize} ? " FATAL => 'all'" : '');
 
@@ -912,7 +577,7 @@ sub Build_PL_guts {
 
     (my $author = "$self->{author} <$self->{email}>") =~ s/'/\'/g;
 
-    my $slname = $self->{license_record} ? $self->{license_record}->{slname} : $self->{license};
+    my $slname = $self->{license_record} ? $self->{license_record}->meta2_name : $self->{license};
     
     my $warnings = sprintf 'warnings%s;', ($self->{fatalize} ? " FATAL => 'all'" : '');
 
@@ -981,6 +646,23 @@ Revision history for $self->{distro}
 HERE
 }
 
+=head2 create_LICENSE
+
+This method creates the distribution's LICENSE file.
+
+=cut
+
+sub create_LICENSE {
+    my $self = shift;
+    
+    my $record = $self->{license_record} || return ();
+    my $fname = File::Spec->catfile( $self->{basedir}, 'LICENSE' );
+    $self->create_file( $fname, $record->license );
+    $self->progress( "Created $fname" );
+    
+    return 'LICENSE';
+}
+
 =head2 create_README( $build_instructions )
 
 This method creates the distribution's README file.
@@ -1046,13 +728,10 @@ sub _README_information {
 sub _README_license {
     my $self = shift;
 
-    my $year          = $self->_thisyear();
     my $license_blurb = $self->_license_blurb();
 
 return <<"HERE";
 LICENSE AND COPYRIGHT
-
-Copyright (C) $year $self->{author}
 
 $license_blurb
 HERE
@@ -1539,7 +1218,7 @@ EOF
         # (also, manifest supports REs.)
         manifest => <<'EOF',
 # Top-level filter (only include the following...)
-^(?!(?:script|examples|lib|inc|t|xt|maint)/|(?:(?:Makefile|Build)\.PL|README|MANIFEST|Changes|META\.(?:yml|json))$)
+^(?!(?:script|examples|lib|inc|t|xt|maint)/|(?:(?:Makefile|Build)\.PL|README|LICENSE|MANIFEST|Changes|META\.(?:yml|json))$)
 
 # Avoid version control files.
 \bRCS\b
@@ -1775,12 +1454,9 @@ sub _module_license {
     my $rtname = shift;
 
     my $license_blurb = $self->_license_blurb();
-    my $year          = $self->_thisyear();
 
     my $content = qq[
 \=head1 LICENSE AND COPYRIGHT
-
-Copyright $year $self->{author}.
 
 $license_blurb
 ];
