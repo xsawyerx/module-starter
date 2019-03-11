@@ -1,5 +1,10 @@
 Revision history for Perl extension Module::Starter
 
+1.76    Mon Mar 11 14:49:14 EDT 2019
+        * GH#68: Default module templates will now use test_requires where appropriate (Dan Book)
+        * GH#70: License metadata and blurbs are now handled by Software::License (Dan Book)
+        * GH#70: Add --genlicense option to generate LICENSE file (Dan Book)
+
 1.75    Thu Jun 14 12:53:47 EDT 2018
         * Update additional template URLs for consistency in tests
 
