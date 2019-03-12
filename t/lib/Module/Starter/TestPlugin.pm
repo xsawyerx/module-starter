@@ -145,7 +145,7 @@ sub import {
     }
 
     # Otherwise, gather the necessary tools...
-    use ExtUtils::Command qw( mkpath );
+    use File::Path qw( make_path );
     use File::Spec;
     local $| = 1;
 
@@ -163,8 +163,7 @@ sub import {
         = File::Spec->catdir( $ENV{HOME}, '.module-starter', 'PBP' );
     if ( not -d $template_dir ) {
         print {*STDERR} "Creating $template_dir...";
-        local @ARGV = $template_dir;
-        mkpath;
+        make_path $template_dir;
         print {*STDERR} "done.\n";
     }
 
@@ -172,8 +171,7 @@ sub import {
         = File::Spec->catdir( $ENV{HOME}, '.module-starter', 'PBP', 't' );
     if ( not -d $template_test_dir ) {
         print {*STDERR} "Creating $template_test_dir...";
-        local @ARGV = $template_test_dir;
-        mkpath;
+        make_path $template_test_dir;
         print {*STDERR} "done.\n";
     }
 

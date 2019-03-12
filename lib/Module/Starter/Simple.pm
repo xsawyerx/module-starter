@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use Cwd 'cwd';
-use ExtUtils::Command qw( rm_rf mkpath touch );
+use File::Path qw( make_path remove_tree );
 use File::Spec ();
 use Carp qw( carp confess croak );
 use Module::Runtime qw( require_module );
@@ -177,8 +177,7 @@ sub create_basedir {
              "Use --force if you want to stomp on it.\n"
             ) unless $self->{force};
 
-        local @ARGV = $self->{basedir};
-        rm_rf();
+        remove_tree $self->{basedir};
 
         die "Couldn't delete existing $self->{basedir}: $!\n"
           if -e $self->{basedir};
@@ -187,8 +186,7 @@ sub create_basedir {
     CREATE_IT: {
         $self->progress( "Created $self->{basedir}" );
 
-        local @ARGV = $self->{basedir};
-        mkpath();
+        make_path $self->{basedir};
 
         die "Couldn't create $self->{basedir}: $!\n" unless -d $self->{basedir};
     }
@@ -295,8 +293,7 @@ sub _create_module {
     if ( @dirparts ) {
         my $dir = File::Spec->catdir( @dirparts );
         if ( not -d $dir ) {
-            local @ARGV = $dir;
-            mkpath @ARGV;
+            make_path $dir;
             $self->progress( "Created $dir" );
         }
     }
@@ -977,8 +974,7 @@ sub _create_t {
     my @dirparts = ( $self->{basedir}, $directory );
     my $tdir = File::Spec->catdir( @dirparts );
     if ( not -d $tdir ) {
-        local @ARGV = $tdir;
-        mkpath();
+        make_path $tdir;
         $self->progress( "Created $tdir" );
     }
 
