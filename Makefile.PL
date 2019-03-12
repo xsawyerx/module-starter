@@ -13,7 +13,7 @@ WriteMakefile(
     ABSTRACT_FROM       => 'lib/Module/Starter.pm',
     EXE_FILES           => [ 'bin/module-starter' ],
     PREREQ_PM => {
-        'Test::More'                   => '0',
+        'Test::More'                   => '0.94',
         'Test::Harness'                => '0.21',
         'File::Path'                   => '0',
         'File::Spec'                   => '0',
