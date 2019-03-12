@@ -23,3 +23,5 @@ allow_leading_tabs = 0
 
 [-Variables::ProhibitPunctuationVars]
 [-BuiltinFunctions::ProhibitStringyEval]
+
+[-Subroutines::ProhibitExplicitReturnUndef]
