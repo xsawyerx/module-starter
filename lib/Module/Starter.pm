@@ -112,6 +112,8 @@ sub import {
 
 =head1 AUTHORS
 
+Dan Book, C<< <dbook at cpan.org> >>
+
 Sawyer X, C<< <xsawyerx at cpan.org> >>
 
 Andy Lester, C<< <petdance at cpan.org> >>

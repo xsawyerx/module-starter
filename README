@@ -8,6 +8,10 @@ NAME
     Module::Starter, and Module::Starter::Simple.
 
 AUTHORS
+    Dan Book, "<dbook@cpan.org>"
+
+    Sawyer X, "<xsawyerx@cpan.org>"
+
     Andy Lester, "<petdance@cpan.org>"
 
     Ricardo Signes, "<rjbs@cpan.org>"

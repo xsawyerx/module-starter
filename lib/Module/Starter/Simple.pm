@@ -1334,6 +1334,8 @@ as I make changes.
 
 =head1 AUTHOR
 
+Dan Book, L<< <dbook@cpan.org> >>
+
 Sawyer X, C<< <xsawyerx@cpan.org> >>
 
 Andy Lester, C<< <andy@petdance.com> >>
