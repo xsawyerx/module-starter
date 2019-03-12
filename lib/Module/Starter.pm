@@ -19,7 +19,7 @@ our $VERSION = '1.76';
 
 =head1 SYNOPSIS
 
-Nothing in here is meant for public consumption.  Use F<module-starter>
+Nothing in here is meant for public consumption.  Use L<module-starter>
 from the command line.
 
     module-starter --module=Foo::Bar,Foo::Bat \

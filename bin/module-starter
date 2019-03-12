@@ -51,8 +51,8 @@ Available Licenses:
     perl, artistic, artistic2, mit, mozilla, mozilla2, bsd, freebsd, cc0,
     gpl, lgpl, gpl3, lgpl3, agpl3, apache, qpl
 
-You may also specify any Software::License subclass or CPAN::Meta::Spec license
-string.
+You may also specify any L<Software::License> subclass or
+L<CPAN Meta Spec license string|CPAN::Meta::Spec/license>.
 
 Available Ignore Types:
 
