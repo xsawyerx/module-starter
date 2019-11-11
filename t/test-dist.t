@@ -683,7 +683,6 @@ EOF
     }
 
     done_testing();
-    return;
 }
 
 package TestParseModuleFile;
@@ -870,8 +869,6 @@ sub parse_module_start {
         qq{1; # End of $perl_name},
         "End of module",
     );
-
-    return;
 }
 
 
