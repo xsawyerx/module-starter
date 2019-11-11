@@ -10,7 +10,6 @@ lib/Module/Starter/Simple.pm
 LICENSE
 Makefile.PL
 MANIFEST
-perlcriticrc
 README
 t/00-load.t
 t/BuilderSet.t
