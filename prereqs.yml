@@ -1,0 +1,13 @@
+runtime:
+  requires:
+    perl: '5.006001'
+    Test::More: '0.94'
+    Test::Harness: '0.21'
+    File::Path: 0
+    File::Spec: 0
+    Getopt::Long: 0
+    Module::Runtime: 0
+    Pod::Usage: '1.21'
+    parent: 0
+    Software::License: '0.103005'
+    version: '0.77'

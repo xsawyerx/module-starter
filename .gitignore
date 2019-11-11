@@ -4,7 +4,6 @@ Makefile
 Makefile.old
 Build
 Build.bat
-META.*
 MYMETA.*
 .build/
 _build/
@@ -17,7 +16,7 @@ nytprof.out
 pod2htm*.tmp
 pm_to_blib
 module-starter-*
-module-starter-*.tar.gz
+Module-Starter-*
 t/data/MyModule-Test/*
 t/data/Book-Park-Mansfield/*
 t/data/loop/*

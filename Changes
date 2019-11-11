@@ -1,6 +1,6 @@
 Revision history for Perl extension Module::Starter
 
-1.77
+{{$NEXT}}
         * Replace usage of ExtUtils::Command with File::Path
         * Clean up test file shebangs and remove pointless -T
         * Remove references to AnnoCPAN from default module templates

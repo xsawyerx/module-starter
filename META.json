@@ -1,0 +1,137 @@
+{
+   "abstract" : "a simple starter kit for any module",
+   "author" : [
+      "Andy Lester <andy@petdance.com>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Dist::Zilla version 6.015, CPAN::Meta::Converter version 2.150010",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : 2
+   },
+   "name" : "Module-Starter",
+   "no_index" : {
+      "directory" : [
+         "eg",
+         "examples",
+         "inc",
+         "share",
+         "t",
+         "xt"
+      ]
+   },
+   "prereqs" : {
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "develop" : {
+         "requires" : {
+            "File::Spec" : "0",
+            "IO::Handle" : "0",
+            "IPC::Open3" : "0",
+            "Pod::Coverage::TrustPod" : "0",
+            "Test::More" : "0",
+            "Test::Perl::Critic" : "0",
+            "Test::Pod" : "1.41",
+            "Test::Pod::Coverage" : "1.08"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "File::Path" : "0",
+            "File::Spec" : "0",
+            "Getopt::Long" : "0",
+            "Module::Runtime" : "0",
+            "Pod::Usage" : "1.21",
+            "Software::License" : "0.103005",
+            "Test::Harness" : "0.21",
+            "Test::More" : "0.94",
+            "parent" : "0",
+            "perl" : "5.006001",
+            "version" : "0.77"
+         }
+      },
+      "test" : {
+         "recommends" : {
+            "CPAN::Meta" : "2.120900"
+         },
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0",
+            "File::Spec" : "0",
+            "Test::More" : "0.94"
+         }
+      }
+   },
+   "provides" : {
+      "Module::Starter" : {
+         "file" : "lib/Module/Starter.pm",
+         "version" : "1.77"
+      },
+      "Module::Starter::App" : {
+         "file" : "lib/Module/Starter/App.pm",
+         "version" : "1.77"
+      },
+      "Module::Starter::BuilderSet" : {
+         "file" : "lib/Module/Starter/BuilderSet.pm",
+         "version" : "1.77"
+      },
+      "Module::Starter::Plugin::Template" : {
+         "file" : "lib/Module/Starter/Plugin/Template.pm",
+         "version" : "1.77"
+      },
+      "Module::Starter::Simple" : {
+         "file" : "lib/Module/Starter/Simple.pm",
+         "version" : "1.77"
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/xsawyerx/module-starter/issues"
+      },
+      "homepage" : "https://github.com/xsawyerx/module-starter",
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/xsawyerx/module-starter.git",
+         "web" : "https://github.com/xsawyerx/module-starter"
+      },
+      "x_IRC" : "irc://irc.perl.org/#toolchain"
+   },
+   "version" : "1.77",
+   "x_contributors" : [
+      "Brendan Byrd <byrd.b@insightcom.com>",
+      "Brian Manning <cpan@xaoc.org>",
+      "Chas. J. Owens IV <chas.owens@gmail.com>",
+      "cjcollier <cjcollier@bb7b6759-d628-0410-895d-7b6b7dc49dde>",
+      "Colin Ewen <colin@draecas.com>",
+      "Dan Book <grinnz@gmail.com>",
+      "Dan Book <grinnz@grinnz.com>",
+      "David Pottage <david@chrestomanci.org>",
+      "David.Pottage <d.pottage@cv-library.co.uk>",
+      "David Steinbrunner <dsteinbrunner@pobox.com>",
+      "Diab Jerius <djerius@cpan.org>",
+      "Guillermo O. Freschi <kedrot@gmail.com>",
+      "hobbestigrou <hobbestigrou@erakis.eu>",
+      "Ivan Bessarabov <ivan@bessarabov.ru>",
+      "Karen Etheridge <ether@cpan.org>",
+      "MartinMcGrath <mcgrath.martin@gmail.com>",
+      "Pedro Figueiredo <pedro.figueiredo@playfish.com>",
+      "petdance <petdance@bb7b6759-d628-0410-895d-7b6b7dc49dde>",
+      "Richard Poole <richard@2ndQuadrant.com>",
+      "rsignes <rsignes@bb7b6759-d628-0410-895d-7b6b7dc49dde>",
+      "sawyer <sawyer@dungeon.(none)>",
+      "Sawyer X <xsawyerx@cpan.org>",
+      "Shlomi Fish <shlomif@iglu.org.il>",
+      "xdaveg <xdaveg@bb7b6759-d628-0410-895d-7b6b7dc49dde>",
+      "xsawyerx <xsawyerx@bb7b6759-d628-0410-895d-7b6b7dc49dde>"
+   ],
+   "x_generated_by_perl" : "v5.30.2",
+   "x_serialization_backend" : "Cpanel::JSON::XS version 4.19",
+   "x_spdx_expression" : "Artistic-1.0-Perl OR GPL-1.0-or-later"
+}
+
