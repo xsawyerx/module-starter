@@ -1,4 +1,4 @@
-#perl -T
+#!perl
 
 # This test suite ensures that Module::Starter::BuilderSet behaves
 

@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!perl
 
 use strict;
 use warnings;
@@ -211,7 +211,7 @@ sub parse_file_start {
     
     my $msw_re  = qr{use \Q$minperl;\E\n\Quse strict;\E\n\Quse warnings;\E\n};
     my $mswb_re = $self->{builder} eq 'Module::Install' ? qr{\A$msw_re\Quse inc::$self->{builder};\E\n\n} : qr{\A$msw_re\Quse $self->{builder};\E\n};
-    my $mswt_re = qr{\A\Q#!perl -T\E\n$msw_re\Quse Test::More;\E\n\n};
+    my $mswt_re = qr{\A\Q#!perl\E\n$msw_re\Quse Test::More;\E\n\n};
     
     if ($basefn eq 'README') {
         plan tests => 6;

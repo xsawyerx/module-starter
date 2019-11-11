@@ -769,14 +769,14 @@ FAILURE OF THE SOFTWARE TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF
 SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGES.
 _____[ pod-coverage.t ]__________________________________________
-#!perl -T
+#!perl
 
 use Test::More;
 eval "use Test::Pod::Coverage 1.04";
 plan skip_all => "Test::Pod::Coverage 1.04 required for testing POD coverage" if $@;
 all_pod_coverage_ok();
 _____[ pod.t ]___________________________________________________
-#!perl -T
+#!perl
 
 use Test::More;
 eval "use Test::Pod 1.14";

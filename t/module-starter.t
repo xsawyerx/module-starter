@@ -1,4 +1,4 @@
-#!perl -T
+#!perl
 
 =head1 DESCRIPTION
 

@@ -2,6 +2,7 @@ Revision history for Perl extension Module::Starter
 
 1.77
         * Replace usage of ExtUtils::Command with File::Path
+        * Clean up test file shebangs and remove pointless -T
 
 1.76    Mon Mar 11 14:49:14 EDT 2019
         * GH#68: Default module templates will now use test_requires where appropriate (Dan Book)

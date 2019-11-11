@@ -804,7 +804,7 @@ sub t_guts {
     my $warnings = sprintf 'warnings%s;', ($self->{fatalize} ? " FATAL => 'all'" : '');
 
     my $header = <<"EOH";
-#!perl -T
+#!perl
 use $minperl;
 use strict;
 use $warnings
@@ -896,7 +896,7 @@ sub xt_guts {
     my $warnings = sprintf 'warnings%s;', ($self->{fatalize} ? " FATAL => 'all'" : '');
 
     my $header = <<"EOH";
-#!perl -T
+#!perl
 use $minperl;
 use strict;
 use $warnings
