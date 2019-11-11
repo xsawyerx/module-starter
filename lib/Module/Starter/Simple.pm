@@ -16,10 +16,6 @@ use Module::Starter::BuilderSet;
 
 Module::Starter::Simple - a simple, comprehensive Module::Starter plugin
 
-=head1 VERSION
-
-Version 1.76
-
 =cut
 
 our $VERSION = '1.76';
