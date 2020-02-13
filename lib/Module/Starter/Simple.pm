@@ -440,8 +440,9 @@ my %WriteMakefileArgs = (
         #'ABC'              => '1.6',
         #'Foo::Bar::Module' => '5.0401',
     },
-    macro => { TARFLAGS => '--format=ustar -c -v -f' },
-    dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
+    dist  => { COMPRESS => 'gzip -9f',
+               SUFFIX   => 'gz',
+               TARFLAGS => '-o -c -v -f' },
     clean => { FILES => '$self->{distro}-*' },
 );
 
