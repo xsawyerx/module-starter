@@ -11,6 +11,8 @@ use strict;
 
 use Module::Starter::App;
 
+our $VERSION = '0.77';
+
 Module::Starter::App->run;
 
 =head1 SYNOPSIS
