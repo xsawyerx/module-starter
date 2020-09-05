@@ -1,9 +1,12 @@
 Revision history for Perl extension Module::Starter
 
 {{$NEXT}}
+
+1.77      2020-09-05 17:20:43 EDT
         * Replace usage of ExtUtils::Command with File::Path
         * Clean up test file shebangs and remove pointless -T
-        * Remove references to AnnoCPAN from default module templates
+        * GH#76: Remove references to AnnoCPAN from default module templates
+        * GH#72: Convert distribution tooling to Dist::Zilla
 
 1.76    Mon Mar 11 14:49:14 EDT 2019
         * GH#68: Default module templates will now use test_requires where appropriate (Dan Book)
