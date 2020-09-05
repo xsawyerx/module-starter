@@ -700,7 +700,7 @@ sub parse_module_start {
     my $lc_dist_name = lc($dist_name);
     my $minperl      = $self->{minperl} || 5.006;
     
-    Test::More::plan tests => 19;
+    Test::More::plan tests => 18;
 
     $self->parse(
         qr/\Apackage \Q$perl_name\E;\n\nuse $minperl;\nuse strict;\n\Quse warnings;\E\n\n/ms,
@@ -807,14 +807,6 @@ sub parse_module_start {
         "Support - RT",
     );
 
-
-    $self->parse_paras(
-        [
-            { re => q/=item \* AnnoCPAN:[^\n]*/, },
-            "L<http://annocpan.org/dist/$dist_name>",
-        ],
-        "AnnoCPAN",
-    );
 
     $self->parse_paras(
         [
