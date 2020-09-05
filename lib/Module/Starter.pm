@@ -136,10 +136,6 @@ You can also look for information at:
 
 L<https://github.com/xsawyerx/module-starter>
 
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/Module-Starter>
-
 =item * CPAN Ratings
 
 L<http://cpanratings.perl.org/dist/Module-Starter>

@@ -74,10 +74,6 @@ You can also look for information at:
 
 L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Foo-Bar>
 
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/Foo-Bar>
-
 =item * CPAN Ratings
 
 L<http://cpanratings.perl.org/d/Foo-Bar>
