@@ -24,8 +24,8 @@ App::cpanminus first, using the fatpacked `cpanm` script via curl or wget:
     $ curl -L https://cpanmin.us | perl - --installdeps --with-develop .
     $ wget -qO - https://cpanmin.us | perl - --installdeps --with-develop .
 
-Otherwise, look for either a `cpanfile` or `META.json` file for a list of
-dependencies to satisfy.
+Otherwise, look for either a `cpanfile`, `prereqs.json`/`prereqs.yml`, or
+`META.json` file for a list of dependencies to satisfy.
 
 ## Running tests
 
@@ -72,6 +72,11 @@ haven't already installed them with cpanm:
 
     $ dzil listdeps --missing --develop | cpanm
 
+You can instead combine these two steps into one command by installing
+Dist::Zilla::App::Command::installdeps then running:
+
+    $ dzil installdeps
+
 Once everything is installed, here are some dzil commands you might try:
 
     $ dzil build
@@ -100,6 +105,6 @@ without an accompanying patch.
 # CREDITS
 
 This file was adapted from an initial `CONTRIBUTING.mkdn` file from David
-Golden under the terms of the Apache 2 license, with inspiration from the
+Golden under the terms of the [CC0](https://creativecommons.org/share-your-work/public-domain/cc0/), with inspiration from the
 contributing documents from [Dist::Zilla::Plugin::Author::KENTNL::CONTRIBUTING](https://metacpan.org/pod/Dist::Zilla::Plugin::Author::KENTNL::CONTRIBUTING)
 and [Dist::Zilla::PluginBundle::Author::ETHER](https://metacpan.org/pod/Dist::Zilla::PluginBundle::Author::ETHER).
