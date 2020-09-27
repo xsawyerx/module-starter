@@ -70,23 +70,23 @@
    "provides" : {
       "Module::Starter" : {
          "file" : "lib/Module/Starter.pm",
-         "version" : "1.77"
+         "version" : "1.78"
       },
       "Module::Starter::App" : {
          "file" : "lib/Module/Starter/App.pm",
-         "version" : "1.77"
+         "version" : "1.78"
       },
       "Module::Starter::BuilderSet" : {
          "file" : "lib/Module/Starter/BuilderSet.pm",
-         "version" : "1.77"
+         "version" : "1.78"
       },
       "Module::Starter::Plugin::Template" : {
          "file" : "lib/Module/Starter/Plugin/Template.pm",
-         "version" : "1.77"
+         "version" : "1.78"
       },
       "Module::Starter::Simple" : {
          "file" : "lib/Module/Starter/Simple.pm",
-         "version" : "1.77"
+         "version" : "1.78"
       }
    },
    "release_status" : "stable",
@@ -102,7 +102,7 @@
       },
       "x_IRC" : "irc://irc.perl.org/#toolchain"
    },
-   "version" : "1.77",
+   "version" : "1.78",
    "x_contributors" : [
       "Brendan Byrd <byrd.b@insightcom.com>",
       "Brian Manning <cpan@xaoc.org>",
@@ -130,8 +130,8 @@
       "xdaveg <xdaveg@bb7b6759-d628-0410-895d-7b6b7dc49dde>",
       "xsawyerx <xsawyerx@bb7b6759-d628-0410-895d-7b6b7dc49dde>"
    ],
-   "x_generated_by_perl" : "v5.30.2",
-   "x_serialization_backend" : "Cpanel::JSON::XS version 4.19",
+   "x_generated_by_perl" : "v5.32.0",
+   "x_serialization_backend" : "Cpanel::JSON::XS version 4.23",
    "x_spdx_expression" : "Artistic-1.0-Perl OR GPL-1.0-or-later"
 }
 
