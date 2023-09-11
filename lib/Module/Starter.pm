@@ -53,6 +53,7 @@ It takes a hash of params, as follows:
     license      => $license,  # type of license; defaults to 'artistic2'
     author       => $author,   # author's full name (taken from C<getpwuid> if not provided)
     email        => $email,    # author's email address (taken from C<EMAIL> if not provided)
+    github       => $username, # author's github user name (for creating links to git repo)
     ignores_type => $type,     # ignores file type ('generic', 'cvs', 'git', 'hg', 'manifest' )
     fatalize     => $fatalize, # generate code that makes warnings fatal
 
@@ -131,10 +132,6 @@ You can also look for information at:
 =item * Source code at GitHub
 
 L<https://github.com/xsawyerx/module-starter>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/dist/Module-Starter>
 
 =item * GitHub issue tracker
 
