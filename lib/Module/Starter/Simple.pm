@@ -325,6 +325,13 @@ sub _reference_links {
         title    => 'CPAN\'s request tracker (report bugs here)',
         link     => 'https://rt.cpan.org/NoAuth/Bugs.html?Dist=%s',
       },
+      { title    => 'CPAN Ratings',
+        link     => 'https://cpanratings.perl.org/d/%s',
+      },
+      { title    => 'GitHub issue tracker',
+        link     => 'https://github.com/%s/%s/issues',
+        option   => 'github',
+      },
       { title    => 'Search CPAN',
         link     => 'https://metacpan.org/release/%s',
       },
@@ -406,6 +413,8 @@ sub Makefile_PL_guts {
 
     my $warnings = sprintf 'warnings%s;', ($self->{fatalize} ? " FATAL => 'all'" : '');
 
+    my $meta_merge = $self->Makefile_PL_meta_merge;
+
     return <<"HERE";
 use $self->{minperl};
 use strict;
@@ -431,7 +440,7 @@ my %WriteMakefileArgs = (
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => '$self->{distro}-*' },
-);
+$meta_merge);
 
 # Compatibility with old versions of ExtUtils::MakeMaker
 unless (eval { ExtUtils::MakeMaker->VERSION('6.64'); 1 }) {
@@ -454,6 +463,30 @@ delete \$WriteMakefileArgs{LICENSE}
 WriteMakefile(%WriteMakefileArgs);
 HERE
 
+}
+
+=head2 Makefile_PL_meta_merge
+
+Method called by Makefile_PL_guts. Returns the C<META_MERGE> section - currently
+only if the option C<github> is set, in which case the C<resources => repository>
+entry is created.
+
+=cut
+
+sub Makefile_PL_meta_merge {
+    my $self = shift;
+    return '' unless $self->{github};
+    return sprintf "    META_MERGE => {
+        'meta-spec' => { version => 2 },
+        resources   => {
+            repository => {
+                type => 'git',
+                url  => 'git://github.com/%s/%s.git',
+                web  => 'https://github.com/%s/%s',
+            },
+        },
+    },
+", $self->{github}, $self->{distro}, $self->{github}, $self->{distro}
 }
 
 =head2 MI_Makefile_PL_guts( $main_module, $main_pm_file )
@@ -697,10 +730,12 @@ sub _README_information {
     my $content = "You can also look for information at:\n";
 
     foreach my $ref (@reference_links){
+        next if $ref->{option} && !$self->{$ref->{option}};
+
         my $title;
         $title = "$ref->{nickname}, " if exists $ref->{nickname};
         $title .= $ref->{title};
-        my $link  = sprintf($ref->{link}, $self->{distro});
+        my $link  = sprintf($ref->{link}, $ref->{option} ? $self->{$ref->{option}} : (), $self->{distro});
 
         $content .= qq[
     $title
@@ -1417,8 +1452,10 @@ You can also look for information at:
 ];
 
     foreach my $ref (@reference_links) {
+        next if $ref->{option} && !$self->{$ref->{option}};
+
         my $title;
-        my $link = sprintf($ref->{link}, $self->{distro});
+        my $link = sprintf($ref->{link}, $ref->{option} ? $self->{$ref->{option}} : (), $self->{distro});
 
         $title = "$ref->{nickname}: " if exists $ref->{nickname};
         $title .= $ref->{title};
