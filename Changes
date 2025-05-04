@@ -2,6 +2,9 @@ Revision history for Perl extension Module::Starter
 
 {{$NEXT}}
 
+1.78      2025-05-04 04:54:03 EDT
+        * Update LICENSE text
+
 1.77      2020-09-05 17:20:43 EDT
         * Replace usage of ExtUtils::Command with File::Path
         * Clean up test file shebangs and remove pointless -T
