@@ -700,7 +700,7 @@ sub parse_module_start {
     my $lc_dist_name = lc($dist_name);
     my $minperl      = $self->{minperl} || 5.006;
     
-    Test::More::plan tests => 18;
+    Test::More::plan tests => 17;
 
     $self->parse(
         qr/\Apackage \Q$perl_name\E;\n\nuse $minperl;\nuse strict;\n\Quse warnings;\E\n\n/ms,
@@ -805,15 +805,6 @@ sub parse_module_start {
             "L<https://rt.cpan.org/NoAuth/Bugs.html?Dist=$dist_name>",
         ],
         "Support - RT",
-    );
-
-
-    $self->parse_paras(
-        [
-            { re => q/=item \* CPAN Ratings[^\n]*/, },
-            "L<https://cpanratings.perl.org/d/$dist_name>",
-        ],
-        "CPAN Ratings",
     );
 
     $self->parse_paras(
