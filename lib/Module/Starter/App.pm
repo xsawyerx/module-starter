@@ -81,6 +81,7 @@ sub _process_command_line {
 
         'author=s'   => \$config{author},
         'email=s'    => \$config{email},
+        'github=s'   => \$config{github},
         'license=s'  => \$config{license},
         genlicense   => \$config{genlicense},
         'minperl=s'  => \$config{minperl},
