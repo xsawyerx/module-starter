@@ -2,6 +2,11 @@ Revision history for Perl extension Module::Starter
 
 {{$NEXT}}
 
+        * Minimum perl version in generated distros (and Module::Starter) is 5.8.3
+        * Remove link to CPANRatings (lnation)
+        * Add `--github` option with issue tracker in README/POD, replacing CPANRatings
+         (Dimitrios Kechagias)
+
 1.78      2025-05-04 04:54:03 EDT
         * Update LICENSE text
 
