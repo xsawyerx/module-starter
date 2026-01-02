@@ -410,7 +410,7 @@ sub Makefile_PL_guts {
     my $main_pm_file = shift;
 
     my $author = '[' . 
-       join(',', map { s/'/\'/g; "'$_'"; } @{ $self->{author} })
+       join(',', map { "'" . s/'/\'/rg . "'" } @{$self->{author}}) 
        . ']';
     
     my $slname = $self->{license_record} ? $self->{license_record}->meta2_name : $self->{license};
@@ -603,7 +603,7 @@ sub Build_PL_guts {
     my $main_pm_file = shift;
 
     my $author = '[' . 
-       join(',', map { s/'/\'/g; "'$_'"; } @{$self->{author}}) 
+       join(',', map { "'" . s/'/\'/rg . "'" } @{$self->{author}}) 
        . ']';
 
     my $slname = $self->{license_record} ? $self->{license_record}->meta2_name : $self->{license};
