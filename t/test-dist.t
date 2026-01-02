@@ -189,7 +189,7 @@ sub parse_file_start {
     
     my $distro  = $self->{distro};
     my $mainmod = $self->{modules}[0];
-    my $minperl = $self->{minperl} || '5.006';
+    my $minperl = $self->{minperl} || '5.008003';
     
     my $license_class = "Software::License::$LICENSES->{ $self->{license} }";
     require_module $license_class;
@@ -698,7 +698,7 @@ sub parse_module_start {
     my $dist_name    = $self->{distro};
     my $author_name  = $self->{author};
     my $lc_dist_name = lc($dist_name);
-    my $minperl      = $self->{minperl} || 5.006;
+    my $minperl      = $self->{minperl} || 5.008003;
     
     Test::More::plan tests => 17;
 

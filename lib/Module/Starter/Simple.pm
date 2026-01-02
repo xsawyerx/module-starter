@@ -1,6 +1,6 @@
 package Module::Starter::Simple;
 
-use 5.006;
+use 5.008003;
 use strict;
 use warnings;
 
@@ -103,7 +103,7 @@ sub create_distro {
     ($self->{email_obfuscated} = $self->{email}) =~ s/@/ at /;
 
     $self->{license}      ||= 'artistic2';
-    $self->{minperl}      ||= '5.006';
+    $self->{minperl}      ||= '5.008003';
     $self->{ignores_type} ||= ['generic'];
     $self->{manifest_skip} = !! grep { /manifest/ } @{ $self->{ignores_type} };
     
