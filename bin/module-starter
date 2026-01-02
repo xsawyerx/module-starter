@@ -38,7 +38,7 @@ Options:
                      (default is artistic2)
     --genlicense     Generate LICENSE file according to specified license
     --minperl=ver    Minimum Perl version required (optional;
-                     default is 5.006)
+                     default is 5.008003)
 
     --fatalize       Generate code that causes all warnings to be fatal with:
                      use warnings FATAL => 'all'
