@@ -154,7 +154,6 @@ sub parse_paras {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     my ($self, $paras, $msg) = @_;
-
     # Construct a large regex.
     my $regex =
         join '',
@@ -198,7 +197,6 @@ sub parse_file_start {
     my $license_url = $license->url;
     my $license_text = $license->license;
     
-    (my $authoremail = "$self->{author} <$self->{email}>") =~ s/'/\'/g;
     (my $libmod = "lib/$mainmod".'.pm') =~ s|::|/|g;
     
     my $install_pl = $self->{builder} eq 'Module::Build' ? 'Build.PL' : 'Makefile.PL';
@@ -251,6 +249,9 @@ sub parse_file_start {
     }
     elsif ($basefn eq 'Build.PL' && $self->{builder} eq 'Module::Build') {
         plan tests => 10;
+        my $authoremail = join ',', map { "'$_'" } @{$self->{author}};
+        $authoremail =~ s/'/\'/g;
+        
         $self->parse($mswb_re,
             "Min/Strict/Warning/Builder"
         );
@@ -263,7 +264,7 @@ sub parse_file_start {
             "license",
         );
 
-        $self->parse(qr{\A\s*dist_author *=> *\Qq{$authoremail},\E\n}ms,
+        $self->parse(qr{\A\s*dist_author *=> *\Q[$authoremail],\E\n}ms,
             "dist_author",
         );
 
@@ -297,6 +298,9 @@ sub parse_file_start {
     }
     elsif ($basefn eq 'Makefile.PL' && $self->{builder} eq 'ExtUtils::MakeMaker') {
         plan tests => 10;
+        my $authoremail = join ',', map { "'$_'" } @{$self->{author}};
+        $authoremail =~ s/'/\'/g;
+        
         $self->parse($mswb_re,
             "Min/Strict/Warning/Builder"
         );
@@ -305,7 +309,7 @@ sub parse_file_start {
             "NAME",
         );
 
-        $self->parse(qr{\A\s*AUTHOR *=> *\Qq{$authoremail},\E\n}ms,
+        $self->parse(qr{\A\s*AUTHOR *=> *\Q[$authoremail],\E\n}ms,
             "AUTHOR",
         );
 
@@ -341,7 +345,12 @@ sub parse_file_start {
         );
     }
     elsif ($basefn eq 'Makefile.PL' && $self->{builder} eq 'Module::Install') {
-        plan tests => 13;
+       plan tests => 13;
+       # do not quote authoremail combinations for Module::Install since
+       # author is a string not an arrayref
+       my $authoremail = join ',', @{$self->{author}};
+       $authoremail =~ s/'/\'/g;
+       
         $self->parse($mswb_re,
             "Min/Strict/Warning/Builder"
         );
@@ -370,13 +379,15 @@ sub parse_file_start {
             "tests_recursive",
         );
         
+        my $repo_author = $self->{author}->[0];
+        ($repo_author) = (split /\s*\</, $repo_author)[0];
         $self->consume(<<"EOT", 'resources');
 resources (
    #homepage   => 'http://yourwebsitehere.com',
    #IRC        => 'irc://irc.perl.org/#$distro',
    license    => '$license_url',
-   #repository => 'git://github.com/$self->{author}/$distro.git',
-   #repository => 'https://bitbucket.org/$self->{author}/$self->{distro}',
+   #repository => 'git://github.com/$repo_author/$distro.git',
+   #repository => 'https://bitbucket.org/$repo_author/$self->{distro}',
    bugtracker => 'https://rt.cpan.org/NoAuth/Bugs.html?Dist=$distro',
 );
 
@@ -696,7 +707,7 @@ sub parse_module_start {
 
     my $perl_name    = $self->{module};
     my $dist_name    = $self->{distro};
-    my $author_name  = $self->{author};
+    my $author_name  = join ',', @{$self->{author}};
     my $lc_dist_name = lc($dist_name);
     my $minperl      = $self->{minperl} || 5.008003;
     
@@ -771,7 +782,7 @@ sub parse_module_start {
     $self->parse_paras(
         [
             "=head1 AUTHOR",
-            { re => quotemeta($author_name) . q{[^\n]+} },
+            { re => quotemeta($author_name) },
         ],
         "AUTHOR",
     );
@@ -867,6 +878,7 @@ srand($random_seed);
 
 sub run_settest {
     my ($base_dir, $distro_var) = @_;
+
     my $module_base_dir = File::Spec->catdir(qw(t data), ref $base_dir ? @$base_dir : $base_dir);
     $distro_var->{dir} = $module_base_dir;
 
@@ -974,7 +986,10 @@ run_settest('MyModule-Test', {
     builder => 'Module::Build',
     license => 'artistic2',
     genlicense => 1,
-    author  => 'Baruch Spinoza',
+    author  => [ 
+       'Baruch Spinoza <spinoza@philosophers.tld>', 
+       'Sandra OConnor <sdoc@philosphers.tld>' 
+    ],
     email   => 'spinoza@philosophers.tld',
     verbose => 0,
     force   => $DONT_DEL,    
@@ -992,6 +1007,7 @@ run_settest('Book-Park-Mansfield', {
     license => 'artistic2',
     genlicense => 1,
     author  => 'Jane Austen',
+    author  => [ 'Jane Austen <jane.austen@writers.tld>' ],
     email   => 'jane.austen@writers.tld',
     verbose => 0,
     force   => $DONT_DEL,
@@ -1039,7 +1055,8 @@ subtest "builder = $builder" => sub {
                 my $distro = join('-', rstr_array);
                 my $author = rstr.' '.rstr;
                 my $email  = join('.', rstr_array).'@'.join('.', rstr_array).'.tld';
-
+                $author .= ' <$email>';
+                
                 my @modules;
                 my $len = int(rand(20)) + 1;
                 push(@modules, rstr_module ) for (1 .. $len);
@@ -1061,7 +1078,7 @@ subtest "builder = $builder" => sub {
                         builder => $builder,
                         license => $license,
                         genlicense => 1,
-                        author  => $author,
+                        author  => [ $author ],
                         email   => $email,
                         minperl => $minperl,
                         verbose => 0,
