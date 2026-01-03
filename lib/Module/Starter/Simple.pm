@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use Cwd 'cwd';
-use File::Path qw( make_path remove_tree );
+use File::Path qw( make_path );
 use File::Spec ();
 use Carp qw( carp confess croak );
 use Module::Runtime qw( require_module );
