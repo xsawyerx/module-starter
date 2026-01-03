@@ -137,9 +137,8 @@ sub create_distro {
 
     $self->create_MANIFEST( $build_results{'manifest_method'} ) unless ( $self->{manifest_skip} );
     # TODO: put files to ignore in a more standard form?
-    # XXX: no need to return the files created
 
-    return;
+    return @files;
 }
 
 =head2 post_create_distro
