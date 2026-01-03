@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use Cwd 'cwd';
-use File::Path qw( make_path remove_tree );
+use File::Path qw( make_path );
 use File::Spec ();
 use Carp qw( carp confess croak );
 use Module::Runtime qw( require_module );
@@ -173,14 +173,9 @@ sub create_basedir {
 
     # Make sure there's no directory
     if ( -e $self->{basedir} ) {
-        die( "$self->{basedir} already exists.  ".
-             "Use --force if you want to stomp on it.\n"
+        warn( "$self->{basedir} already exists.  ".
+             "Will not overwrite files unless --force is used.\n"
             ) unless $self->{force};
-
-        remove_tree $self->{basedir};
-
-        die "Couldn't delete existing $self->{basedir}: $!\n"
-          if -e $self->{basedir};
     }
 
     CREATE_IT: {
@@ -1302,6 +1297,13 @@ Dies on any error.
 sub create_file {
     my $self = shift;
     my $fname = shift;
+
+    if ( -f $fname ) {
+        if ( !$self->{'force'} ) {
+            warn "Will not overwrite '$fname' (--force option not enabled)";
+            return;
+        }
+    }
 
     my @content = @_;
     open( my $fh, '>', $fname ) or confess "Can't create $fname: $!\n";
