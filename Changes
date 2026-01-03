@@ -2,6 +2,8 @@ Revision history for Perl extension Module::Starter
 
 {{$NEXT}}
 
+1.79      2026-01-03 14:57:20 CET
+
         * GH #79: `--force` will only overwrite files it needs to generate
         * Minimum perl version in generated distros (and Module::Starter) is 5.8.3
         * GH #25: Multiple authors are now supported (Hunter McMillen)

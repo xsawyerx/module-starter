@@ -4,7 +4,7 @@
       "Andy Lester <andy@petdance.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 6.032, CPAN::Meta::Converter version 2.150010",
+   "generated_by" : "Dist::Zilla version 6.036, CPAN::Meta::Converter version 2.150010",
    "license" : [
       "perl_5"
    ],
@@ -70,23 +70,23 @@
    "provides" : {
       "Module::Starter" : {
          "file" : "lib/Module/Starter.pm",
-         "version" : "1.78"
+         "version" : "1.79"
       },
       "Module::Starter::App" : {
          "file" : "lib/Module/Starter/App.pm",
-         "version" : "1.78"
+         "version" : "1.79"
       },
       "Module::Starter::BuilderSet" : {
          "file" : "lib/Module/Starter/BuilderSet.pm",
-         "version" : "1.78"
+         "version" : "1.79"
       },
       "Module::Starter::Plugin::Template" : {
          "file" : "lib/Module/Starter/Plugin/Template.pm",
-         "version" : "1.78"
+         "version" : "1.79"
       },
       "Module::Starter::Simple" : {
          "file" : "lib/Module/Starter/Simple.pm",
-         "version" : "1.78"
+         "version" : "1.79"
       }
    },
    "release_status" : "stable",
@@ -102,23 +102,24 @@
       },
       "x_IRC" : "irc://irc.perl.org/#toolchain"
    },
-   "version" : "1.78",
+   "version" : "1.79",
    "x_contributors" : [
       "Brendan Byrd <byrd.b@insightcom.com>",
       "Brian Manning <cpan@xaoc.org>",
       "Chas. J. Owens IV <chas.owens@gmail.com>",
       "cjcollier <cjcollier@bb7b6759-d628-0410-895d-7b6b7dc49dde>",
       "Colin Ewen <colin@draecas.com>",
-      "Dan Book <grinnz@gmail.com>",
       "Dan Book <grinnz@grinnz.com>",
       "David Pottage <david@chrestomanci.org>",
-      "David.Pottage <d.pottage@cv-library.co.uk>",
       "David Steinbrunner <dsteinbrunner@pobox.com>",
       "Diab Jerius <djerius@cpan.org>",
+      "Dimitrios Kechagias <dimitrios.kechagias@spareroom.co.uk>",
       "Guillermo O. Freschi <kedrot@gmail.com>",
       "hobbestigrou <hobbestigrou@erakis.eu>",
+      "Hunter McMillen <mcmillhj@gmail.com>",
       "Ivan Bessarabov <ivan@bessarabov.ru>",
       "Karen Etheridge <ether@cpan.org>",
+      "lnation <lnation@lnations-MacBook-Pro.local>",
       "MartinMcGrath <mcgrath.martin@gmail.com>",
       "Pedro Figueiredo <pedro.figueiredo@playfish.com>",
       "petdance <petdance@bb7b6759-d628-0410-895d-7b6b7dc49dde>",
@@ -127,11 +128,10 @@
       "sawyer <sawyer@dungeon.(none)>",
       "Sawyer X <xsawyerx@cpan.org>",
       "Shlomi Fish <shlomif@iglu.org.il>",
-      "xdaveg <xdaveg@bb7b6759-d628-0410-895d-7b6b7dc49dde>",
-      "xsawyerx <xsawyerx@bb7b6759-d628-0410-895d-7b6b7dc49dde>"
+      "xdaveg <xdaveg@bb7b6759-d628-0410-895d-7b6b7dc49dde>"
    ],
-   "x_generated_by_perl" : "v5.40.1",
-   "x_serialization_backend" : "Cpanel::JSON::XS version 4.39",
+   "x_generated_by_perl" : "v5.34.1",
+   "x_serialization_backend" : "Cpanel::JSON::XS version 4.40",
    "x_spdx_expression" : "Artistic-1.0-Perl OR GPL-1.0-or-later"
 }
 
