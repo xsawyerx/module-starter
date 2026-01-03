@@ -2,10 +2,10 @@ Revision history for Perl extension Module::Starter
 
 {{$NEXT}}
 
-        * `--force` will only overwrite files it needs to generate.
+        * GH #79: `--force` will only overwrite files it needs to generate
         * Minimum perl version in generated distros (and Module::Starter) is 5.8.3
-        * GH #25: Multiple authors are now supported. (Hunter McMillen)
-        * GH #84: `Module::Starter::Simple::create_distro()` now returns files created.
+        * GH #25: Multiple authors are now supported (Hunter McMillen)
+        * GH #84: `Module::Starter::Simple::create_distro()` now returns files created
         * Add `--github` option with issue tracker in README/POD, replacing CPANRatings
          (Dimitrios Kechagias)
         * Remove link to CPANRatings (lnation)
