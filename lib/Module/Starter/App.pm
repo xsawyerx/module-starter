@@ -52,9 +52,36 @@ sub _config_multi_process {
     my ( $self, %config ) = @_;
 
     # The options that accept multiple arguments must be set to an arrayref
-    foreach my $key (qw( builder ignores_type modules plugins )) {
-        $config{$key} = [ split /(?:\s*,\s*|\s+)/, (ref $config{$key} ? join(',', @{$config{$key}}) : $config{$key}) ] if $config{$key};
+    foreach my $key (qw( author builder ignores_type modules plugins )) {
         $config{$key} = [] unless exists $config{$key};
+
+        if ( $key eq 'author' ) {
+            next if ref $config{$key};
+
+            # Split author strings on whitespace or comma.
+            # Spec: 'Author Name <author-email@domain.tld>'
+            $config{$key} = [
+                split /
+                    \b
+                    (?>
+                        (?:           # Author
+                            [^\s<>]+
+                            \s+
+                        )+
+                    )
+                    <[^<>]+>          # Email
+                    \K
+                    (?:               # Separators (or end of string)
+                        \s*,\s*
+                        | \s+
+                        | \z
+                    )
+                /x, $config{$key}
+            ];
+        }
+        else {
+            $config{$key} = [ split /(?:\s*,\s*|\s+)/, (ref $config{$key} ? join(',', @{$config{$key}}) : $config{$key}) ] if $config{$key};
+        }
     }
 
     return %config;
@@ -80,7 +107,6 @@ sub _process_command_line {
         mi           => sub { push @{$config{builder}}, 'Module::Install' },
 
         'author=s@'  => \@{ $config{author} },
-        'email=s'    => \$config{email},
         'github=s'   => \$config{github},
         'license=s'  => \$config{license},
         genlicense   => \$config{genlicense},
