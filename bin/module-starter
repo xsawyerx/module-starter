@@ -35,6 +35,7 @@ Options:
                      Format: Author Name <author_email@domain.tld>
                      This option can be supplied multiple times for projects 
                      that have multiple authors.
+    --github=login   Create links to the author's GitHub issue tracker
 
     --ignores=type   Ignore type files to include (repeatable)
     --license=type   License under which the module will be distributed
@@ -68,11 +69,11 @@ Available Ignore Types:
 Example:
 
     module-starter --module=Foo::Bar,Foo::Bat \
-        --author="Andy Lester" --email=andy@petdance.com
+        --author="Andy Lester <andy@petdance.com>"
 
     module-starter --module=Foo::Bar,Foo::Bat \
-        --author="Andy Lester <andy@petdance.com> \
-        --author="Sawyer X <sawyerx@cpan.org>
+        --author="Andy Lester <andy@petdance.com>" \
+        --author="Sawyer X <sawyerx@cpan.org>"
 
 =head1 DESCRIPTION
 
@@ -101,17 +102,13 @@ colons.  Values that take lists are just space separated. Note that the
 C<--ignores> command line parameter corresponds to the C<ignores_type>
 configuration file entry. A sample configuration file might read:
 
- author: Ricardo SIGNES
- email:  rjbs@cpan.org
+ author: Ricardo SIGNES <rjbs@cpan.org>
  ignores_type: git
  plugins: Module::Starter::Simple Module::Starter::Plugin::XYZ
  xyz_option: red green blue
 
 This format may become more elaborate in the future, but a file of this type
 should remain valid.
-
-Please note, as of right now the configuration file does *not* have support 
-for multiple authors.
 
 =cut
 
