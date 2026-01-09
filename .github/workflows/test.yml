@@ -1,0 +1,119 @@
+name: 'Build & Test'
+
+on:
+  push:
+    branches:
+      - "*"
+    tags-ignore:
+      - "*"
+  pull_request:
+
+jobs:
+
+###
+### Fast Test on System Perl
+###
+
+  ubuntu-latest:
+    runs-on: ubuntu-latest
+
+    env:
+      PERL_USE_UNSAFE_INC: 0
+      AUTHOR_TESTING: 1
+      AUTOMATED_TESTING: 1
+      RELEASE_TESTING: 1
+      PERL_CARTON_PATH: $GITHUB_WORKSPACE/local
+
+    steps:
+      - uses: actions/checkout@v4
+      - run: perl -V
+      - name: install deps using cpanm
+        uses: perl-actions/install-with-cpanm@v1
+        with:
+          sudo: false
+          args: --sudo --installdeps --with-recommends .
+      - name: configure with Build.PL
+        if: ${{ hashFiles('/Build.PL') != '' }}
+        run: perl Build.PL
+      - name: build with Build.PL
+        if: ${{ hashFiles('/Build.PL') != '' }}
+        run: ./Build
+      - name: test with Build.PL
+        if: ${{ hashFiles('/Build.PL') != '' }}
+        run: ./Build test
+      - name: configure with Makefile.PL
+        if: ${{ hashFiles('/Build.PL') == '' }}
+        run: perl Makefile.PL
+      - name: build with Makefile.PL
+        if: ${{ hashFiles('/Build.PL') == '' }}
+        run: make
+      - name: test with Makefile.PL
+        if: ${{ hashFiles('/Build.PL') == '' }}
+        run: make test
+
+###
+### linux testing multiple Perl versions
+###
+
+  perl-versions:
+    runs-on: ubuntu-latest
+    name: List Perl versions
+    outputs:
+      perl-versions: ${{ steps.action.outputs.perl-versions }}
+    steps:
+      - id: action
+        uses: perl-actions/perl-versions@v1
+        with:
+          since-perl: v5.8
+          with-devel: true
+
+  linux:
+    runs-on: ubuntu-latest
+    name: "perl ${{ matrix.perl-version }}"
+
+    needs:
+      - ubuntu-latest
+      - perl-versions
+
+    strategy:
+      fail-fast: false
+      matrix:
+        perl-version: ${{ fromJson (needs.perl-versions.outputs.perl-versions) }}
+
+    container:
+      image: perldocker/perl-tester:${{ matrix.perl-version }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - run: perl -V
+      - name: install deps using cpanm
+        uses: perl-actions/install-with-cpanm@v1
+        with:
+          sudo: false
+          args: -v --installdeps --with-recommends .
+      - name: configure with Build.PL
+        if: ${{ hashFiles('/Build.PL') != '' }}
+        run: perl Build.PL
+      - name: build with Build.PL
+        if: ${{ hashFiles('/Build.PL') != '' }}
+        run: ./Build
+      - name: test with Build.PL
+        if: ${{ hashFiles('/Build.PL') != '' }}
+        run: ./Build test
+        env:
+          AUTHOR_TESTING: 1
+          AUTOMATED_TESTING: 1
+          RELEASE_TESTING: 1
+      - name: configure with Makefile.PL
+        if: ${{ hashFiles('/Build.PL') == '' }}
+        run: perl Makefile.PL
+      - name: build with Makefile.PL
+        if: ${{ hashFiles('/Build.PL') == '' }}
+        run: make
+      - name: test with Makefile.PL
+        if: ${{ hashFiles('/Build.PL') == '' }}
+        run: make test
+        env:
+          AUTHOR_TESTING: 1
+          AUTOMATED_TESTING: 1
+          RELEASE_TESTING: 1
