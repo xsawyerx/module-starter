@@ -192,7 +192,8 @@ sub parse_file_start {
     
     my $license_class = "Software::License::$LICENSES->{ $self->{license} }";
     require_module $license_class;
-    my $license     = $license_class->new({ holder => $self->{author} });
+    my $author      = join ',', @{$self->{author}};
+    my $license     = $license_class->new({ holder => $author });
     my $slname      = $license->meta2_name;
     my $license_url = $license->url;
     my $license_text = $license->license;
@@ -842,7 +843,8 @@ sub parse_module_start {
 
     my $license_class = "Software::License::$LICENSES->{ $self->{license} }";
     require_module $license_class;
-    my $license = $license_class->new({ holder => $self->{author} });
+    my $author  = join ',', @{$self->{author}};
+    my $license = $license_class->new({ holder => $author });
     my $license_blurb = $license->notice;
     $self->parse_paras(
         [

@@ -90,22 +90,35 @@ sub create_distro {
         croak "Invalid module name: $_" unless /\A[a-z_]\w*(?:::[\w]+)*\Z/i;
     }
 
-    if ( ( not $self->{author} ) && ( $^O ne 'MSWin32' ) ) {
+    if ( ( not @{ $self->{author} } ) && ( $^O ne 'MSWin32' ) ) {
         ( $self->{author} ) = split /,/, ( getpwuid $> )[6];
         $self->{author} = [ 
             exists $ENV{EMAIL} 
                 ? "$self->{author} <$ENV{EMAIL}>" 
                 : $self->{author} 
-        ];
+        ] if defined $self->{author};
     }
 
     croak "Must specify one or more authors\n" 
-        unless $self->{author}
+        unless defined $self->{author}
         && ref($self->{author}) eq 'ARRAY'
         && @{$self->{author}} > 0;
 
     croak "author strings must be in the format: 'Author Name <author-email\@domain.tld>'"
-        if grep { $_ !~ m/^.*?\s*\<.*?\>\s*$/ } @{$self->{author}};
+        if grep {
+            $_ !~ /
+                      \A
+                      (?>
+                          (?:           # Author
+                              [^\s<>]+
+                              \s+
+                          )+
+                      )
+                      <[^<>]+>          # Email
+                      \s*
+                      \z
+                  /x;
+        } @{$self->{author}};
     
     $self->{license}      ||= 'artistic2';
     $self->{minperl}      ||= '5.008003';
@@ -252,7 +265,8 @@ sub _license_record {
         ($class) = Software::LicenseUtils->guess_license_from_meta_key($key);
         return undef unless defined $class;
     }
-    return $class->new( { holder => $self->{author} } );
+    my $author = join ',', @{$self->{author}};
+    return $class->new( { holder => $author } );
 }
 
 sub _license_blurb {
@@ -466,25 +480,33 @@ HERE
 =head2 Makefile_PL_meta_merge
 
 Method called by Makefile_PL_guts. Returns the C<META_MERGE> section - currently
-only if the option C<github> is set, in which case the C<resources => repository>
+only if the option C<github> is set, in which case the C<< resources => repository >>
 entry is created.
 
 =cut
 
 sub Makefile_PL_meta_merge {
     my $self = shift;
-    return '' unless $self->{github};
-    return sprintf "    META_MERGE => {
+    return '' unless defined $self->{github};
+
+    my $username   = $self->{github};
+    my $repository = $self->{distro};
+
+    return <<"HERE";
+    META_MERGE => {
         'meta-spec' => { version => 2 },
         resources   => {
             repository => {
                 type => 'git',
-                url  => 'git://github.com/%s/%s.git',
-                web  => 'https://github.com/%s/%s',
+                url  => 'https://github.com/$username/$repository.git',
+                web  => 'https://github.com/$username/$repository',
+            },
+            bugtracker => {
+                web => 'https://github.com/$username/$repository/issues',
             },
         },
     },
-", $self->{github}, $self->{distro}, $self->{github}, $self->{distro}
+HERE
 }
 
 =head2 MI_Makefile_PL_guts( $main_module, $main_pm_file )
@@ -604,6 +626,8 @@ sub Build_PL_guts {
     
     my $warnings = sprintf 'warnings%s;', ($self->{fatalize} ? " FATAL => 'all'" : '');
 
+    my $meta_merge = $self->Build_PL_meta_merge;
+
     return <<"HERE";
 use $self->{minperl};
 use strict;
@@ -628,11 +652,36 @@ my \$builder = Module::Build->new(
         #'Foo::Bar::Module' => '5.0401',
     },
     add_to_cleanup     => [ '$self->{distro}-*' ],
-);
+$meta_merge);
 
 \$builder->create_build_script();
 HERE
 
+}
+
+=head2 Build_PL_meta_merge
+
+Method called by Build_PL_guts. Returns the C<meta_merge> section - currently
+only if the option C<github> is set, in which case the C<< resources => repository >>
+entry is created.
+
+=cut
+
+sub Build_PL_meta_merge {
+    my $self = shift;
+    return '' unless defined $self->{github};
+
+    my $username   = $self->{github};
+    my $repository = $self->{distro};
+
+    return <<"HERE";
+    meta_merge => {
+        resources => {
+            repository => 'https://github.com/$username/$repository',
+            bugtracker => 'https://github.com/$username/$repository/issues',
+        },
+    },
+HERE
 }
 
 =head2 create_Changes( )
