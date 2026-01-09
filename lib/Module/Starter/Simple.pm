@@ -18,7 +18,7 @@ Module::Starter::Simple - a simple, comprehensive Module::Starter plugin
 
 =cut
 
-our $VERSION = '1.81';
+our $VERSION = '1.82';
 
 =head1 SYNOPSIS
 

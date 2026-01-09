@@ -10,7 +10,7 @@ Module::Starter::Plugin::Template - module starter with templates
 
 =cut
 
-our $VERSION = '1.81';
+our $VERSION = '1.82';
 
 =head1 SYNOPSIS
 
