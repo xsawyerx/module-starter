@@ -2,6 +2,9 @@ Revision history for Perl extension Module::Starter
 
 {{$NEXT}}
 
+        * Fixed problems with the multi-author feature in last release.
+          (Thanks, @ryoskzypu!)
+
 1.79      2026-01-03 14:57:20 CET
 
         * GH #79: `--force` will only overwrite files it needs to generate
