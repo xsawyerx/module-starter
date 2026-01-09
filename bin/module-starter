@@ -11,7 +11,7 @@ use strict;
 
 use Module::Starter::App;
 
-our $VERSION = '1.80';
+our $VERSION = '1.81';
 
 Module::Starter::App->run;
 
