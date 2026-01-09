@@ -2,6 +2,8 @@ Revision history for Perl extension Module::Starter
 
 {{$NEXT}}
 
+1.80      2026-01-09 11:39:15 CET
+
         * Fixed problems with the multi-author feature in last release.
           (Thanks, @ryoskzypu!)
 
