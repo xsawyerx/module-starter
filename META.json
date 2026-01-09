@@ -70,23 +70,23 @@
    "provides" : {
       "Module::Starter" : {
          "file" : "lib/Module/Starter.pm",
-         "version" : "1.80"
+         "version" : "1.81"
       },
       "Module::Starter::App" : {
          "file" : "lib/Module/Starter/App.pm",
-         "version" : "1.80"
+         "version" : "1.81"
       },
       "Module::Starter::BuilderSet" : {
          "file" : "lib/Module/Starter/BuilderSet.pm",
-         "version" : "1.80"
+         "version" : "1.81"
       },
       "Module::Starter::Plugin::Template" : {
          "file" : "lib/Module/Starter/Plugin/Template.pm",
-         "version" : "1.80"
+         "version" : "1.81"
       },
       "Module::Starter::Simple" : {
          "file" : "lib/Module/Starter/Simple.pm",
-         "version" : "1.80"
+         "version" : "1.81"
       }
    },
    "release_status" : "stable",
@@ -102,7 +102,7 @@
       },
       "x_IRC" : "irc://irc.perl.org/#toolchain"
    },
-   "version" : "1.80",
+   "version" : "1.81",
    "x_contributors" : [
       "Brendan Byrd <byrd.b@insightcom.com>",
       "Brian Manning <cpan@xaoc.org>",
