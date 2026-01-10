@@ -2,6 +2,8 @@ Revision history for Perl extension Module::Starter
 
 {{$NEXT}}
 
+1.82      2026-01-10 21:22:39 CET
+
         * Fix compilations on 5.12 and earlier. (Grinnz)
 
 1.81      2026-01-09 21:41:05 CET
