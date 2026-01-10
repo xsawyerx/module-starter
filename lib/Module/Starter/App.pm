@@ -60,24 +60,26 @@ sub _config_multi_process {
 
             # Split author strings on whitespace or comma.
             # Spec: 'Author Name <author-email@domain.tld>'
-            $config{$key} = [
-                split /
-                    \b
-                    (?>
+            my @authors;
+            while ($config{$key} =~ s/
+                    ^\s*
+                    ((?>
                         (?:           # Author
                             [^\s<>]+
                             \s+
                         )+
                     )
-                    <[^<>]+>          # Email
-                    \K
+                    <[^<>]+>)         # Email
                     (?:               # Separators (or end of string)
                         \s*,\s*
                         | \s+
                         | \z
                     )
-                /x, $config{$key}
-            ];
+                //x) {
+                push @authors, $1;
+            }
+            push @authors, $config{$key} if length $config{$key};
+            $config{$key} = \@authors;
         }
         else {
             $config{$key} = [ split /(?:\s*,\s*|\s+)/, (ref $config{$key} ? join(',', @{$config{$key}}) : $config{$key}) ] if $config{$key};
